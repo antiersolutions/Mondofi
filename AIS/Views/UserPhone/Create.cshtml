@@ -1,0 +1,107 @@
+﻿@model AISModels.UserPhones
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+
+}
+
+<style type="text/css">
+    .saveBtn
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #E8867C;
+        border-radius: 5px;
+        color: #373A42;
+        cursor: pointer;
+        float: right;
+        font-family: 'Lato' ,sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        margin-right: 12px;
+        padding: 4px 12px 5px;
+        transition: all 0.3s ease-out 0s;
+    }
+</style>
+
+<div class="middle-section guests">
+    @*<div class="top-filter">
+        <ul>
+            <li><a href="javascript:void(0)">
+                <img src="images/import-icon.png" alt=""><br>
+                Imoprt/Export</a></li>
+            <li><a href="javascript:void(0)">
+                <img src="images/merge-guest.png" alt=""><br>
+                Merge Guests</a></li>
+        </ul>
+    </div>*@
+    @using (Ajax.BeginForm("Create", "UserPhone", null, new AjaxOptions() { HttpMethod = "POST", UpdateTargetId = "formUserPhone" }, new { @id = "ModalCreate" }))
+    {
+        @Html.ValidationSummary(true)
+        <div class="for-edit">
+            <h1>
+                Add Userphones</h1>
+            <input type="button" name="" value="Cancel" id="btnCancel">
+            <input type="submit" id="btnSv" name="" value="Save" class="saveBtn svbtn">
+        </div>
+        <div class="add-new-main content_1">
+            <div class="add-new-inner">
+                <div class="add-new-sec-1">
+                <label>@Html.HiddenFor(model => model.UserPhoneId)</label>
+                    <label>
+                      User Phones</label>
+                    @Html.TextBoxFor(model => model.PhoneNumber)
+                    <label id="pLabel"></label>
+                    @Html.ValidationMessageFor(model => model.PhoneNumber)
+                    @*<label>
+                        First Name</label>
+                    <input type="text" name="" value="">*@
+                </div>
+                @* <div class="add-new-sec-2">
+                    <a href="javascript:void(0)">
+                        <img class="new-pro-pic" src="../../Images/aad-new-pro-pic.png" alt=""></a>
+                </div>*@
+            </div>
+        </div>
+    }
+   
+</div>
+<script>
+
+    $(document).ready(function () {
+        $("#btnCancel").click(function () {
+            $("#PhoneNumber").val("");
+        });
+        $.ajax({
+            type: 'Get',
+            url: '/UserPhone/GetAllUserPhoneLists',
+            success: function (myData) {
+                $("#gg").html(myData);
+                //$("#rightGrid").css("visible", "none");
+            }
+        })
+        $("#searchbox").blur(function () {
+            //alert("dsf");
+            var str = $("#searchbox").val();
+            $.ajax({
+                type: 'Get',
+                url: '/UserPhone/SearchList',
+                data: { pTxt: str },
+                success: function (myData) {
+                    $("#gg").html(myData);
+                    //$("#rightGrid").css("visible", "none");
+                }
+            })
+        });
+
+    });
+    var id = "";
+    function edit(PhoneNumber, idd) {
+        id = idd;
+        $("#PhoneNumber").val(PhoneNumber);
+        var alrTxt = $("#PhoneNumber").val();
+    }
+
+</script>
+

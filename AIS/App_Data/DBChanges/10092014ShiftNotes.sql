@@ -1,0 +1,6 @@
+﻿USE [AISLocal]
+GO
+
+ALTER TABLE [dbo].[ShiftNotes]
+ALTER COLUMN [Notes] NVARCHAR(MAX) NOT NULL
+GO

@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNet.Identity;
+
+@using (var companyUserManger = AIS.ApplicationUserManager.Create(User.Identity.GetDatabaseName()))
+{
+    var superuserrole = companyUserManger.IsInRole(User.Identity.GetUserId<long>(), "SuperAdmin");
+    var userrole = companyUserManger.IsInRole(User.Identity.GetUserId<long>(), "Admin");
+    <div class="menu-bar">
+        @using (var db = new AIS.Models.UsersContext())
+        {
+         var logoSetting = db.tabSettings.Where(s => s.Name.Contains("Logo")).Single();
+            <div class="logo">
+                <a href="javascript:void(0)">
+                    <img src="@logoSetting.Value" alt="">
+                </a>
+            </div>
+            <div class="m-left-btn">
+            </div>
+
+
+            var user = db.Users.Find(User.Identity.GetUserId<long>());
+
+            <div class="manager-info">
+                @if (!string.IsNullOrEmpty(user.PhotoPath))
+                {
+                    <img src="@(user.PhotoPath)" alt="" height="75" width="75" />
+                }
+                else
+                {
+                    <img src="/images/manager-pic.png" alt="" height="75" width="75" />
+                }
+                <h3 style="position: relative;">
+                    <img class="img-logof" src="/Images/1403094036_icon-arrow-down-b.png" alt="" />@user.FirstName
+                    @user.LastName
+                    <div class="logOff">
+                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+                        }
+                    </div>
+                </h3>
+                <span class="d-time">
+                    <span id="d-time-date">Friday, Mar 21, 2014</span><br />
+                    <span id="d-time-time">9:00 AM</span><br />
+                </span>
+                <span class="d-time-timezone"></span>
+            </div>
+        }
+        <div class="left-menu">
+            <ul>
+                <li>
+                    <a id="aCalender" href="@Url.Action("Months", "Calendar")">
+                        <img src="/images/m-cal-icon.png" alt="" />Calender
+                    </a>
+                </li>
+                <li>
+                    <a id="aFloor" href="@Url.Action("FloorPlan", "FloorPlan")">
+                        <img src="/images/m-floor-icon.png" alt="" />Floor
+                    </a>
+                </li>
+                <li>
+                    <a id="aGuests" href="@Url.Action("Index", "Customer")">
+                        <img src="/images/m-guests-icon.png" alt="" />Guests
+                    </a>
+                </li>
+                <li>
+                    <a id="aNotification" href="javascript:void(0)">
+                        <img src="/images/m-notification-icon.png" alt="" />Notification
+                    </a>
+                </li>
+                @if (userrole || superuserrole)
+                {
+                    <li>
+                        <a id="aSettings" href="@Url.Action("Index", "User")">
+                            <img src="/images/m-settings-icon.png" alt="" />Settings
+                        </a>
+                    </li>
+                }
+
+
+            </ul>
+        </div>
+    </div>
+}

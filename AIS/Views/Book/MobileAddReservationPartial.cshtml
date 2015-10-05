@@ -1,0 +1,125 @@
+﻿@model AIS.Models.ReservationVM
+@*<h1 class="add-new-reser">
+        Add New Reservation
+    </h1>
+    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+    }*@
+@using (Ajax.BeginForm(
+    "GetCustomerDetailIfExist",
+    "Reservation",
+    null,
+    new AjaxOptions
+    {
+        HttpMethod = "GET",
+        OnSuccess = "{" +
+                    "   if (data.Status == 'Success') {" +
+                    "       alert(data.Message);" +
+                    "       $('#AdResSaveForm #FirstName').val(data.FirstName).blur();" +
+                    "       $('#AdResSaveForm #LastName').val(data.LastName).blur();" +
+                    "   }" +
+                    "}"
+    },
+    new
+    {
+        @id = "GetCustDetail"
+    }))
+{
+    @Html.Hidden("phoneNumber")
+}
+<div class="frnt-right-rowb reservation-tabs">
+    <div id="tabs">
+        <ul class="main">
+            @*<li><a href="#tabs-1">Booking Information</a></li>*@
+        </ul>
+        <div id="tabs-1">
+            <div class="t-inner content_1">
+                @using (Ajax.BeginForm(
+                     "SaveReservation",
+                     "Reservation",
+                     null,
+                     new AjaxOptions
+                     {
+                         HttpMethod = "POST",
+                         OnSuccess = "{" +
+                                     "   if (data.Status == 'Success') {" +
+                                     "       alert(data.Message);" +
+                                     "       window.location.reload();" +
+                                     "   }" +
+                                     "   else {" +
+                                     "       alert(data.Message);" +
+                                     "   }" +
+                                     "}"
+                     },
+                     new
+                     {
+                         @id = "AdResSaveForm"
+                     }))
+                {
+                    @Html.HiddenFor(m => m.ReservationId)
+                    @Html.HiddenFor(m => m.FloorPlanId)
+                    @Html.HiddenFor(m => m.Covers)
+                    @Html.HiddenFor(m => m.time)
+                    @Html.HiddenFor(m => m.ShiftId)
+                    @Html.HiddenFor(m => m.tableIdd)
+                    @Html.Hidden("resDate", Model.resDate.ToString("dddd, dd MMM, yy"))
+                    @Html.HiddenFor(m => m.Status)
+                    @Html.HiddenFor(m => m.Duration)
+                    @Html.HiddenFor(m => m.TablePositionTop)
+                    @Html.HiddenFor(m => m.TablePositionLeft)
+                    @Html.HiddenFor(m => m.WaitingId)
+                    @Html.HiddenFor(m => m.GuestNote)
+                    @Html.HiddenFor(m => m.MergeTableId)
+
+                    <label>
+                        Date <span>*@Html.ValidationMessageFor(m => m.FirstName)</span>
+                    </label>
+                    @Html.TextBox("resDatePic", Model.resDate)
+                    <label>
+                        Main Phone Number <span>*@Html.ValidationMessageFor(m => m.MobileNumber)</span>
+                    </label>
+                    @Html.TextBoxFor(m => m.MobileNumber,
+                    new
+                    {
+                        @onfocus = "inputPNFocus(this);",
+
+                        @onblur = "{" +
+                                  "     inputPNBlur(this);" +
+                                  "     if (this.value.length > 0 && parseInt(this.value) != 0) {" +
+                                  "         $('#GetCustDetail #phoneNumber').val(this.value);" +
+                                  "         $('#GetCustDetail').submit();" +
+                                  "     }" +
+                                  "}"
+
+
+                    })
+                    <label>
+                        First Name <span>*@Html.ValidationMessageFor(m => m.FirstName)</span>
+                    </label>
+                    @Html.TextBoxFor(m => m.FirstName)
+                    <label>
+                        Last Name <span>*@Html.ValidationMessageFor(m => m.LastName)</span>
+                    </label>
+                    @Html.TextBoxFor(m => m.LastName)
+                    <label>
+                        Email @Html.ValidationMessageFor(m => m.Email)
+                    </label>
+                    @Html.TextBoxFor(m => m.Email)
+                    <label>
+                        Notes @Html.ValidationMessageFor(m => m.ReservationNote)
+                    </label>
+                    @Html.TextAreaFor(m => m.ReservationNote)
+                }
+                <div id="AdResDDL" class="resOptParent">
+                    @Html.Action("UpdateAddReservationOptions", "FloorPlan", new { model = Model, isDateChanged = false, isMobileSource = true })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="t-bottom">
+    <input type="button" value="Save" name="" onclick="{ UpdateAddReservationFormValues(); $('#AdResSaveForm').submit();}" />
+    @*<input type="button" value="Cancel" name="" onclick="Floor.OpenReservationList();" />*@
+</div>

@@ -1,0 +1,21 @@
+﻿<div id="addTabs">
+    <ul class="main">
+        <li><a id="StaffSummaryTab" href="#Addsummary" onclick="StaffManager.GetStaffSummary();">Summary </a></li>
+        <li><a id="StaffListTab"  href="#Addsection" onclick="StaffManager.GetStaffList();">Section/Table Assign</a></li>
+    </ul>
+    <div id="Addsummary">
+        @*@Html.Action("GetStaffSummary", "Staff")*@
+    </div>
+    <div id="Addsection">
+        @*@Html.Action("GetStaffList", "Staff")*@
+    </div>
+</div>
+@*<div class="ftrgGroup">
+        <ul>
+            <li><img src="images/icon-group-2.png"></li>
+            <li><img src="images/icon-group-3.png"></li>
+            <li><img src="images/icon-group-4.png"></li>
+            <li><img src="images/icon-group-5.png"></li>
+            <li><img src="images/icon-group-6.png"></li>
+        </ul>
+    </div>*@

@@ -1,0 +1,19 @@
+﻿@model AIS.Models.TableAvailablity.EditAvailVM
+<div class="sel-m">
+    <label>
+        Start Time
+    </label>
+    <div class="select-main">
+        @Html.DropDownListFor(m => m.StartTime, new SelectList((List<string>)ViewBag.Time, Model.StartTime), new { @id = "selectbox", @previous = Model.StartTime, @onchange = "ValidateSelectedTime(this);" })
+        @Html.ValidationMessageFor(m => m.StartTime)
+    </div>
+</div>
+<div class="sel-m">
+    <label>
+        End Time
+    </label>
+    <div class="select-main">
+        @Html.DropDownListFor(m => m.EndTime, new SelectList((List<string>)ViewBag.Time, Model.EndTime), new { @id = "selectbox", @previous = Model.EndTime, @onchange = "ValidateSelectedTime(this);" })
+        @Html.ValidationMessageFor(m => m.EndTime)
+    </div>
+</div>

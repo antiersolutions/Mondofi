@@ -1,0 +1,373 @@
+﻿@using AIS.Helpers.Caching;
+@{
+    TimeZoneInfo serverTimeZone;
+    using (var _db = new AIS.Models.UsersContext())
+    {
+        serverTimeZone = _db.GetDefaultTimeZone();
+    }
+    DateTime serverDateTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, serverTimeZone);
+    var timeZoneOffset = serverTimeZone.GetUtcOffset(serverDateTime);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <meta name="viewport" content="width=1024, user-scalable=no" />
+    <link href='//fonts.googleapis.com/css?family=Lato:400,700,400italic,300italic,900,700italic,900italic'
+          rel='stylesheet' type='text/css' />
+    @Styles.Render("~/AIS/css")
+    @Styles.Render("~/AIS/alertifyCSS")
+    @RenderSection("styles", false)
+    <style type="text/css">
+        .settings .menu-bar .manager-info span.d-time-timezone {
+            width: 100%;
+            float: left;
+            color: #8a8a8a;
+            font-weight: 700;
+            line-height: 20px;
+            font-size: 12px;
+            font-family: 'Lato', sans-serif;
+            background: #f3f3f3;
+            padding: 10px 0 12px 10px;
+            border-top: solid 1px #e4e4e4;
+            box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+        }
+
+        .field-validation-error {
+            color: red !important;
+            margin: 0 auto;
+        }
+
+        .input-validation-error {
+            border: 1px solid red !important;
+        }
+
+        .settings .menu-bar {
+            z-index: 9 !important;
+        }
+
+        #loadingTop, #InfoTop {
+            background: none repeat scroll 0 0 #E8867C;
+            border-radius: 0 0 7px 7px;
+            color: #FFFFFF;
+            height: 25px;
+            left: 0;
+            line-height: 28px;
+            margin: 0 auto;
+            padding: 3px 6px;
+            position: fixed;
+            right: 0;
+            text-align: center;
+            top: 0;
+            width: 100px;
+            z-index: 2147483647;
+            display: none;
+        }
+
+            #loadingTop > img {
+                float: left;
+                margin: 3px 3px 0 12px;
+            }
+
+            #loadingTop > span, #InfoTop > span {
+                float: left;
+                line-height: 21px;
+            }
+
+
+        .ui-datepicker-today a {
+            background: #e8867c none repeat scroll 0 0 !important;
+            border-color: #e8867c !important;
+            color: #fff !important;
+        }
+    </style>
+    @Scripts.Render("~/bundles/jquery", "~/bundles/modernizr")
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+    @RenderSection("head", false)
+</head>
+<body>
+    <div class="wrapper settings">
+        @Html.Partial("_LeftMenuPartial")
+        @RenderBody()
+    </div>
+    <div id="divLoading" style="width: auto; display: none; z-index: 99999; position: relative;">
+        <img src="../../Images/ajaxLoader.gif" alt="LOADING..." />
+    </div>
+    <div id="loadingTop">
+        <img src="../../Images/ajax-loaderTop.gif" alt="" />
+        <span>Loading...</span>
+    </div>
+    <div id="backfade">
+    </div>
+    @RenderSection("foot", false)
+    @Scripts.Render("~/bundles/jqueryval", "~/js/jquery.mCustomScrollbar.concat.min.js", "~/AIS/alertifyJS")
+    <script type="text/javascript">
+        (function ($) {
+            $(window).load(function () {
+                $(".content_1").mCustomScrollbar({
+                    set_width: false, /*optional element width: boolean, pixels, percentage*/
+                    set_height: false, /*optional element height: boolean, pixels, percentage*/
+                    horizontalScroll: false, /*scroll horizontally: boolean*/
+                    scrollInertia: 0, /*scrolling inertia: integer (milliseconds)*/
+                    mouseWheel: true, /*mousewheel support: boolean*/
+                    mouseWheelPixels: "auto", /*mousewheel pixels amount: integer, "auto"*/
+                    autoDraggerLength: true, /*auto-adjust scrollbar dragger length: boolean*/
+                    autoHideScrollbar: false, /*auto-hide scrollbar when idle*/
+                    scrollButtons: { /*scroll buttons*/
+                        enable: true, /*scroll buttons support: boolean*/
+                        scrollType: "continuous", /*scroll buttons scrolling type: "continuous", "pixels"*/
+                        scrollSpeed: "auto", /*scroll buttons continuous scrolling speed: integer, "auto"*/
+                        scrollAmount: 40 /*scroll buttons pixels scroll amount: integer (pixels)*/
+                    },
+                    advanced: {
+                        updateOnBrowserResize: true, /*update scrollbars on browser resize (for layouts based on percentages): boolean*/
+                        updateOnContentResize: true, /*auto-update scrollbars on content resize (for dynamic content): boolean*/
+                        autoExpandHorizontalScroll: false, /*auto-expand width for horizontal scrolling: boolean*/
+                        autoScrollOnFocus: false, /*auto-scroll on focused elements: boolean*/
+                        normalizeMouseWheelDelta: false /*normalize mouse-wheel delta (-1/1)*/
+                    },
+                    contentTouchScroll: true, /*scrolling by touch-swipe content: boolean*/
+                    callbacks: {
+                        onScrollStart: function () { }, /*user custom callback function on scroll start event*/
+                        onScroll: function () { }, /*user custom callback function on scroll event*/
+                        onTotalScroll: function () { }, /*user custom callback function on scroll end reached event*/
+                        onTotalScrollBack: function () { }, /*user custom callback function on scroll begin reached event*/
+                        onTotalScrollOffset: 0, /*scroll end reached offset: integer (pixels)*/
+                        onTotalScrollBackOffset: 0, /*scroll begin reached offset: integer (pixels)*/
+                        whileScrolling: function () { } /*user custom callback function on scrolling event*/
+                    },
+                    theme: "light" /*"light", "dark", "light-2", "dark-2", "light-thick", "dark-thick", "light-thin", "dark-thin"*/
+                });
+                $(".demo-x").mCustomScrollbar({
+                    axis: "x",
+                    advanced: { autoExpandHorizontalScroll: true }
+                });
+            });
+        })(jQuery);
+
+        function BindScroll(parent, isRebuild) {
+            (function ($) {
+                setTimeout(function () {
+                    try {
+                        if (isRebuild) {
+                            $(parent + " .content_1").mCustomScrollbar('destroy');
+                        }
+                        $(parent + " .content_1").mCustomScrollbar();
+                        $(parent + " .content_1").mCustomScrollbar({ updateOnContentResize: true });
+                    } catch (e) {
+                        //debugger;
+                    }
+                }, 500);
+            })(jQuery);
+
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var className = $('.middle-section').attr('class');
+            if (className == "middle-section middle-section-toggle2 middle-section-toggle1" || className == "middle-section middle-section-toggle1 middle-section-toggle2") {
+                $(".middle-section").addClass("middle-section-view");
+            }
+            else {
+                $(".middle-section").removeClass("middle-section-view");
+            }
+
+            $('img.img-logof').click(function () {
+                $('.logOff').toggleClass('togBtn');
+            });
+        });
+
+    </script>
+    @*<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>*@
+    <script type="text/javascript" src="~/Scripts/jquery-ui-1.10.4.min.js"></script>
+    <script type="text/javascript">
+        var localtime;
+        var serverTimeZone = '@(serverTimeZone.DisplayName)';
+        var serverTimeZoneOffset = parseFloat('@(timeZoneOffset.TotalHours)');
+        var serverDateTime = new Date('@(serverDateTime.Year)',
+        '@(serverDateTime.Month - 1)',
+        '@(serverDateTime.Day)',
+        '@(serverDateTime.Hour)',
+        '@(serverDateTime.Minute)',
+        new Date().getSeconds());
+
+        function dTime() {
+            // create Date object for current location
+            var dd = new Date();
+            // convert to msec
+            // add local time zone offset
+            // get UTC time in msec
+            var utc = dd.getTime() + (dd.getTimezoneOffset() * 60000);
+            // create new Date object for different city
+            // using supplied offset
+            var d = new Date(utc + (3600000 * serverTimeZoneOffset));
+
+            //var d = new Date(serverDateTime.valueOf() + 1000);;
+            var h = d.getHours();
+            var m = (d.getMinutes() < 10) ? "0" + d.getMinutes() : d.getMinutes();
+            //            var s = d.getSeconds();
+
+            //            //add a zero in front of numbers < 10
+            //            m = checkTime(m);
+            //            s = checkTime(s);
+
+            $('.d-time').html($.datepicker.formatDate('D, M d, yy', d) + '<br/>' + h + ':' + m);
+            serverDateTime = d;
+        }
+
+        $(document).ready(function () {
+            $('.d-time-timezone').html('Timezone: ' + serverTimeZone);
+            if (typeof window.jQuery.ui == "undefined") {
+                $.getScript('http://code.jquery.com/ui/1.10.4/jquery-ui.js');
+                t = setInterval('dTime()', 1000);
+            }
+            else {
+                t = setInterval('dTime()', 1000);
+            }
+        });
+    </script>
+    <script type="text/javascript">
+        function showLoadingPanel() {
+            //Popup.showModal('divLoading', null, null, { 'screenColor': '#000', 'screenOpacity': .7 });
+            $('#loadingTop').fadeIn();
+        }
+
+        function hideLoadingPanel() {
+            //Popup.hide('divLoading');
+            $('#loadingTop').fadeOut();
+        }
+
+        $(function () {
+
+            $(document).ajaxStart(function () {
+                showLoadingPanel();
+            });
+
+            $(document).ajaxStop(function () {
+
+                setTimeout(function () {
+                    hideLoadingPanel();
+                }, 0);
+
+            });
+
+            $.ajaxSetup({
+                async: true
+            });
+        })
+
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $(window).on('resize load', function () {
+                SetMiddleWidthOnSideButtonClick();
+            });
+
+            $(window).on('load', function () {
+                SetSectionHeight();
+            });
+
+            $('.m-right-btn').click(function () {
+                $('.manage-section').toggleClass('manage-section-toggle');
+                $('.m-right-btn').toggleClass('m-right-btn-toggle');
+                //debugger;
+
+                SetMiddleWidthOnSideButtonClick();
+            });
+
+            $('.m-left-btn').click(function () {
+                $('.menu-bar').toggleClass('menu-bar-toggle');
+                $('.m-left-btn').toggleClass('m-left-btn-toggle');
+
+                SetMiddleWidthOnSideButtonClick();
+            });
+
+        });
+
+        //        function ManageWidthofMiddleSection(winWidth, winHeight) {
+        //            //debugger;
+        //            var middleWithPercentage = ((winWidth - (285 + 154)) / winWidth) * 100; // left bar width 154px and right bar width 285px
+        //            $('.middle-section').css('width', middleWithPercentage + '%');
+        //        }
+
+        function SetMiddleWidthOnSideButtonClick() {
+            var leftBarOpen = 154;
+            var rightBarOpen = 285;
+            var leftBarClose = 23;
+            var rightBarClose = 25;
+            //debugger;
+            if ($('.m-right-btn').length == 0) {
+                rightBarOpen = 0;
+                rightBarClose = 0;
+            }
+
+            var windowWidth = $(window).width();
+            var width = 0;
+
+            if ($('.m-left-btn').hasClass('m-left-btn-toggle') && $('.m-right-btn').hasClass('m-right-btn-toggle')) {
+                width = (windowWidth - (leftBarClose + rightBarClose));
+            }
+            else if ($('.m-right-btn').hasClass('m-right-btn-toggle') && !($('.m-left-btn').hasClass('m-left-btn-toggle'))) {
+                width = (windowWidth - (rightBarClose + leftBarOpen));
+            }
+            else if ($('.m-left-btn').hasClass('m-left-btn-toggle') && !($('.m-right-btn').hasClass('m-right-btn-toggle'))) {
+
+                width = (windowWidth - (rightBarOpen + leftBarClose));
+            }
+            else {
+                width = (windowWidth - (leftBarOpen + rightBarOpen));
+            }
+
+            var middleWithPercentage = ((width) / windowWidth) * 100; // left bar width 154px and right bar width 285px
+            middleWithPercentage -= 0.3;
+            $('.middle-section').css('width', middleWithPercentage + '%');
+        }
+
+        function SetSectionHeight() {
+            var winHeight = $(window).height();
+            $('.menu-bar, .manage-section').css('height', winHeight + 'px');
+            $('.floorSize').css('height', winHeight + 'px');
+            $('#floorArea').css('height', ($('.middle-section').height() - 87) + 'px');
+            setTimeout(function () {
+                $(".frnt-right-rowb #tabs-1 .resInfo").css('height', ($(".manage-section").height() - 266));
+                $(".frnt-right-rowb #tabs-2 .resInfo").css('height', ($(".manage-section").height() - 282));
+            }, 0);
+        }
+
+        function SetMiddleSectionHeight() {
+            var winHeight = $(window).height();
+            $('.middle-section').css('height', winHeight + 'px');
+            $('.middle-section .profile .add-new-main').css('height', ($('.middle-section').height() - 105) + 'px');
+        }
+    </script>
+    <script type="text/javascript">
+        function ShowPopUp() {
+            $('#backfade').show();
+            $('#popOverlay').show();
+        }
+        function HidePopUp() {
+            var popUp = $('#popOverlay');
+            popUp.hide();
+            $('#backfade').hide();
+            popUp.find('.popOverlay-body').empty();
+            popUp.find('.popOverlay-foot').find('.pop-sec-btn-save').off('click');
+            popUp.find('.popOverlay-head .popOverlay-close-btn a').off('click');
+            popUp.find('.popOverlay-head-left').empty();
+        }
+    </script>
+    <script type="text/javascript">
+        (function ($) {
+            $(".content_1").mCustomScrollbar({ updateOnContentResize: true });
+        })(jQuery);
+    </script>
+    @RenderSection("scripts", false)
+    @Scripts.Render("~/Scripts/jquery-cookie-plugin.js",
+    "~/Scripts/Common/ClientTime.js",
+    "~/Scripts/Common/AuthorizeAjax.js",
+    "~/Scripts/Common/Queue.js")
+</body>
+</html>

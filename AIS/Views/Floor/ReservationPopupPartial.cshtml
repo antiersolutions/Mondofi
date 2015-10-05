@@ -1,0 +1,124 @@
+﻿@model AISModels.Reservation
+@{
+    var customer = Model.Customers;
+    var phnNumbers = Model.Customers.PhoneNumbers.ToList();
+}
+<div class="frnt-right-popup">
+    @using (Ajax.BeginForm("UpdateReservation", "Reservation", new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "" }))
+    {
+        @Html.Hidden("ReservationId", Model.ReservationId)
+        @Html.Hidden("FirstName", Model.Customers.FirstName)
+        @Html.Hidden("LastName", Model.Customers.LastName)
+        @Html.Hidden("Covers", Model.Covers)
+        @Html.Hidden("time")
+        @Html.Hidden("ShiftId", Model.FoodMenuShiftId)
+        @Html.Hidden("tableIdd", Model.FloorTableId)
+        @Html.Hidden("resDate", Model.ReservationDate)
+        @Html.Hidden("Status", Model.StatusId)
+        @Html.Hidden("Duration", Model.Duration)
+        
+        <div class="arrow-right">
+        </div>
+        <div class="pop-sec-a">
+            <div class="colA">
+                <img src="/images/icon-pop-name.png"></div>
+            <div class="colB">
+                @customer.FirstName @customer.LastName<br>
+                <span>@(phnNumbers.Count > 0 ? phnNumbers.FirstOrDefault().PhoneNumbers : string.Empty)</span></div>
+            <div class="colC">
+                <img src="/images/red-s.png" width="15" height="18"></div>
+        </div>
+        <div class="pop-sec-b">
+            <span class="sebHd">Guest Notes
+                <img src="/images/icon-note.png" width="12" height="12"></span>
+            <p>
+                Lorem ipsum dolor sit amet, consectur adipisicing elit, sed do eiusmod.</p>
+        </div>
+        if (customer.SpecialStatus.Count() > 0)
+        {
+        <div class="pop-sec-b">
+            <span class="sebHd">Special Status</span>
+            @foreach (var status in customer.SpecialStatus)
+            {
+                <a href="javascript:void(0)" class="@(@status.SpecialStatus.Status.ToLower().Contains("vip") ? "btnvip" : "btnhip")">@status.SpecialStatus.Status</a>
+            }
+        </div>
+        }
+        if (customer.Allergies.Count() > 0)
+        {
+        <div class="pop-sec-b">
+            <span class="sebHd">Allergies</span>
+            @foreach (var allergy in customer.Allergies)
+            {
+                <span class="alerg">@allergy.Allergies.Allergy</span>
+            }
+        </div>
+        }
+        <div class="pop-sec-c">
+            <div class="statusa">
+                <div class="staIcon">
+                    <img src="/images/@(Model.StatusId == null ? "not-confirmed" : Model.Status.StatusName).png" width="39" height="39"></div>
+                <span class="sft">Status</span>
+                @Html.DropDownList("selectbox1", new SelectList(new List<string>() { Model.Status.StatusName }), new { @id = "selectbox1" })
+            </div>
+            <div class="status" style="margin-left: 2px; border-bottom: 3px solid #a1d17a;">
+                <span class="sft">Covers</span>
+                @Html.DropDownList("selectbox1", new SelectList(new List<string>() { Model.Covers + " Guests" }), new { @id = "selectbox1" })
+            </div>
+        </div>
+        <div class="pop-sec-d">
+            <div class="status">
+                <span class="sft">Date</span>
+                <select id="selectbox1">
+                    <option value="">@(Model.ReservationDate.ToString("dd ddd, MMM yyyy"))</option>
+                </select>
+            </div>
+        </div>
+        <div class="pop-sec-e">
+            <div class="status">
+                <span class="sft">Time</span>
+                <select id="selectbox1">
+                    <option value="">@(Model.TimeForm.ToString("hh:mm tt"))</option>
+                </select>
+            </div>
+        </div>
+        {
+            var timeDiff = Model.TimeTo.Subtract(Model.TimeForm);
+        
+        <div class="pop-sec-e">
+            <div class="status">
+                <span class="sft">Duration</span>
+                <select id="selectbox1">
+                    <option value="">@(timeDiff.Hours > 0 ? timeDiff.Hours + "hr " + timeDiff.Minutes + "min" : timeDiff.Minutes + "min")</option>
+                </select>
+            </div>
+        </div>
+        }
+        <div class="pop-sec-e">
+            <div class="status">
+                <span class="sft">Shift</span>
+                <select id="selectbox1">
+                    <option value="">@(Model.FoodMenuShift.MenuShift)</option>
+                </select>
+            </div>
+        </div>
+        <div class="pop-sec-e">
+            <div class="status">
+                <span class="sft">Table</span>
+                <select id="selectbox1">
+                    <option value="">@(Model.FloorTable.TableName)</option>
+                </select>
+            </div>
+        </div>
+        <div class="pop-sec-b">
+            <span class="sebHd">Reservation Notes
+                <img width="12" height="12" src="/images/icon-note.png"></span>
+            <p>
+                Lorem ipsum dolor sit amet, consectur adipisicing elit, sed do eiusmod.</p>
+        </div>
+        <div class="pop-sec-btn">
+            <input type="submit" value="Save" />
+            <input type="submit" value="Delete this Reservation" />
+        </div>
+    }
+</div>

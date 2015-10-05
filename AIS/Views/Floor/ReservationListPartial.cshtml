@@ -1,0 +1,89 @@
+﻿@model IEnumerable<AISModels.Reservation>
+@using AIS.Extensions;
+@{
+    var RCount = Model.Count();
+    int i = 1;
+
+    var StatusList = (List<AISModels.Status>)ViewBag.statusList;
+    //List<AISModels.Status> StatusList = null;
+    //using (var db = new AIS.Models.UsersContext())
+    //{
+    //    StatusList = db.Status.ToList();
+    //}
+
+    var clientDateTime = DateTime.UtcNow.ToClientTime();
+}
+<div class="show-tooltip-left" style="padding-bottom: 0px; height: auto;">
+    <div class="table-tooltip-inner" style="height: auto;">
+        @foreach (var res in Model)
+        {
+            var allowQuickTableUpdate = clientDateTime < res.TimeTo && res.FloorTableId > 0;
+            var resTimeFromInMin = Math.Round(res.TimeForm.TimeOfDay.TotalMinutes);
+
+            <div class="row" id="@res.ReservationId">
+                <h2>
+                    @(i). @res.Customers.FirstName @res.Customers.LastName
+                    <br />
+                    <span>@res.TimeForm.ToString("hh:mmtt") <strong>@res.FoodMenuShift.MenuShift</strong></span>
+                </h2>
+                <h3 style="width: auto;">
+                    Covers<br />
+                    <strong>@res.Covers Guests</strong>
+                </h3>
+                <h3 @Html.Raw(allowQuickTableUpdate ? "class=\"rowtbl quickEdt\" style=\"width: auto; cursor:pointer;\"" : "class=\"rowtbl\" style=\"width: auto;\"")>
+                    <a href="javascript:void(0)" @Html.Raw(allowQuickTableUpdate ? "onclick=\"EnableQuickTableUpdateMode(event, " + res.ReservationId + ", " + resTimeFromInMin + ");\"" : null)>
+                        Table<br />
+                        <strong>@(res.FloorTableId > 0 ? res.FloorTable.TableName : res.MergedFloorTable.TableName)</strong>
+                    </a>
+                </h3>
+                <span class="stspopup" style="position: relative;">
+                    <span id='@("resImg" + res.ReservationId)'>
+                        <img class="status-img" src="/images/status-@(res.Status.StatusName).png" alt="" />
+                    </span>
+                    <ul class="tab-sta-pop">
+                        @using (Ajax.BeginForm(
+                            "UpdateReservationStatus",
+                            "Reservation",
+                            new AjaxOptions
+                            {
+                                HttpMethod = "POST",
+                                OnFailure = "alert('Failed to update status, please try later...');",
+                                OnSuccess = "UpadateReservationStatusImage(data," + res.ReservationId + ")",
+                                LoadingElementId = "divLoading"
+                            }))
+                        {
+                            @Html.Hidden("ReservationId", res.ReservationId)
+                            @Html.Hidden("StatusId", res.StatusId)
+
+                            foreach (var status in StatusList)
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" title="Status @(status.StatusName)" class="table-tooltip">
+                                        <img class="table-tooltip" src="/images/status-@(status.StatusName).png" width="33" height="33" alt="Status @(status.StatusName)" />
+                                    </a>
+                                    <input id="selectedResStatusId" type="hidden" value="@(status.StatusId)" />
+                                </li>
+                            }
+                        }
+                    </ul>
+                </span>
+                <span class="stsreset">
+                    <a href="javascript:void(0)" title="Reset Reservation" class="table-tooltip">
+                        <img class="status-img" height="33" width="33" src="/images/reset.png" alt="" onclick="ResetResStatus(this,'@AISModels.ReservationStatus.Finished')"
+                             title="" />
+                    </a>
+                </span>
+            </div>
+                        { i++; }
+        }
+    </div>
+    @*<div class="tool-bottom-bar">
+            <h5>
+                Total <strong>@RCount Reservations</strong></h5>
+            <ul class="tool-icon">
+                <li class="add-tool"><a href="/Floor/FloorPlan"></a></li>
+                <li class="edit-tool"><a href="javascript:void(0)"></a></li>
+                <li class="delete-tool"><a href="javascript:void(0)"></a></li>
+            </ul>
+        </div>*@
+</div>

@@ -1,0 +1,24 @@
+﻿@model IList<AIS.Models.WaitListItemVM>
+@{
+    int waitingCount = 0;
+    if (ViewBag.WaitCount is int)
+    {
+        waitingCount = (int)ViewBag.WaitCount;
+    }
+}
+
+<ul class="reslist">
+    @foreach (var waiting in Model)
+    {
+        <li id="waitL@(waiting.Waiting.WaitingId)" class="@(waiting.Waiting.Covers)cover popUp" data-cover="@(waiting.Waiting.Covers)" style="cursor:pointer;">
+            @Html.Raw(waiting.HTMLString)
+            @*@Html.Partial("WaitingListItemPartial", waiting)*@
+        </li>
+    }
+</ul>
+<script type="text/javascript">
+    $(function () {
+        $('#waitListRef').css('background-color', '@(waitingCount==0 ? "green" : "orange")')
+        .val('Waitlist: @(waitingCount)');
+    });
+</script>

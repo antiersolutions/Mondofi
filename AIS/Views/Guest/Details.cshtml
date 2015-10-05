@@ -1,0 +1,58 @@
+﻿@model AIS.Models.UserProfile
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>UserProfile</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.UserName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UserName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FirstName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FirstName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.LastName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DesignationId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DesignationId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhotoPath)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhotoPath)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Availability)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Availability)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.UserId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,19 @@
+﻿@model IEnumerable<AIS.Models.AlphabeticalMapping<AISModels.Restrictions>>
+<div class="main-right-sec-in">
+    @foreach (var oitem in Model)
+    {
+        <div class="section-head">
+            <p>
+                @oitem.FirstLetter</p>
+        </div>
+        foreach (var item in oitem.Items)
+        {
+        <ul class="people-status">
+            <li id="@item.RestrictionId">
+                <img alt="" src="../../Images/available-icon.png" />
+                <h1 class="allergyshow">@item.Restriction</h1>
+            </li>
+        </ul>
+        }
+    }
+</div>

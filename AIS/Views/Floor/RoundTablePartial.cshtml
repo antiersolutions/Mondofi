@@ -1,0 +1,64 @@
+﻿@model AIS.Models.TableDesignVM
+@{
+    var radius = 0;
+
+    switch (Model.Size.ToLower())
+    {
+
+        case "small":
+            {
+                radius = 35 + 25;
+                break;
+            }
+        case "medium":
+            {
+                radius = 55 + 25;
+                break;
+            }
+        case "large":
+            {
+                radius = 75 + 25;
+                break;
+            }
+        default:
+            break;
+
+    }
+
+    var cx = 0;
+    var cy = 0;
+    cx = cy = (radius - 15) / 2;
+    var angle = (360 / Model.MaxCover);
+    var sumAngl = 0;
+}
+<div id="table@(Model.UniqueId)" class="table-main">
+    <div style="height: @(radius + 3)px; width: @(radius + 3)px;" class="c-container">
+        <div style="height: @(radius - 24)px; width: @(radius - 24)px; left: 8px; top: 14px;" class="quan-2-1 table secHover"
+            onclick="EditTable(this);">
+            <div style="" class="rotate">
+                <a class="rotateAnti" href="javascript:void(0);" title="table@(Model.UniqueId)">
+                </a><a class="rotateClock"
+                    href="javascript:void(0);" title="table@(Model.UniqueId)"></a>
+            </div>
+            <h3 class="quan-2-h">@(Model.TableName)</h3>
+            <p class="quan-2-p">@(Model.MinCover)/@(Model.MaxCover)</p>
+        </div>
+        @for (int n = 0; n < Model.MaxCover; n++)
+        {
+            var x = Convert.ToInt32(cx + (cx * Math.Cos(sumAngl * Math.PI / 180)));
+            var y = Convert.ToInt32(cx + (cx * Math.Sin(sumAngl * Math.PI / 180)));
+        
+            <div class="seat right-chair seat@(n)" style="float:left; top:@(y)px; left:@(x)px; position:absolute;margin: 0px;">
+            </div>
+        
+            sumAngl = sumAngl + angle;
+        }
+    </div>
+    <input type="hidden" value="@((Model.TempFloorTableId == 0) ? "" : Model.TempFloorTableId.ToString())" name="TempFloorTableId" id="TempFloorTableId" />
+    <input type="hidden" value="@(Model.TableName)" name="tblname" id="tblname" />
+    <input type="hidden" value="@(Model.Shape)" name="tbldesign" id="tbldesign" />
+    <input type="hidden" value="@(Model.Angle)" name="tblangle" id="tblangle" />
+    <input type="hidden" value="@(Model.MinCover)" name="tblmincover" id="tblmincover" />
+    <input type="hidden" value="@(Model.MaxCover)" name="tblmaxcover" id="tblmaxcover"/>
+    <input type="hidden" value="@((Model.FloorTableId == 0) ? "" : Model.FloorTableId.ToString())" name="FloorTableId" id="FloorTableId" />
+</div>

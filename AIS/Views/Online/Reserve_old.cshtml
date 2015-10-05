@@ -1,0 +1,129 @@
+﻿@model  AIS.Models.ReservationVM
+@{
+    ViewBag.Title = "Reserve";
+    Layout = "~/Views/Shared/_LayoutOnline_old.cshtml";
+}
+@section scripts{
+    @if (Model != null)
+    {
+        <script type="text/javascript">
+            var timeOut = 300;
+            var timer = window.setInterval(function () {
+                if (timeOut == 0) {
+                    clearInterval(timer);
+                    @*ReleaseTable('@Model.tableIdd');*@
+                    window.location.href = '/online/ReserveFail/1';
+                }
+                else {
+                    var min = parseInt(timeOut / 60);
+                    var sec = parseInt(timeOut % 60)
+                    min = min < 10 ? '0' + min : min;
+                    sec = sec < 10 ? '0' + sec : sec;
+                    $('.search-box .row b').text(min + ':' + sec);
+                    timeOut--;
+                }
+            }, 1000);
+
+            $(document).ready(function () {
+                $(window).bind('beforeunload', function (event) {
+                    return ReleaseTable('@(((Guid)ViewBag.BlockId).ToString())');
+                });
+            });
+
+            function ReleaseTable(tableId) {
+                $.ajax({
+                    url: '@Url.Action("ReleaseTable")',
+                    async: false,
+                    timeout: 4000,
+                    data: { id: tableId },
+                    type: 'POST'
+                });
+            }
+        </script>
+    }
+}
+
+<div class="login-inner1">
+    <div class="search-box" style="height: auto !important; min-height:50px;">
+        <div class="row" style="margin-top: 15px;">
+            <h3>TIME TO COMPLETE : <b style="color:maroon;">00:00</b></h3>
+        </div>
+    </div>
+    <div class="results">
+        <div class="search-match availResult">
+            <p>RESERVATION DETAILS</p>
+            <div class="notice">
+                @if (Model != null)
+                {
+                    using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+                    {
+                        @Html.HiddenFor(m => m.Covers)
+                        @Html.HiddenFor(m => m.Duration)
+                        @Html.Hidden("resDate", Model.resDate.ToString("dddd, dd MMM, yy"))
+                        @Html.HiddenFor(m => m.ShiftId)
+                        @Html.HiddenFor(m => m.TablePositionLeft)
+                        @Html.HiddenFor(m => m.TablePositionTop)
+                        @Html.HiddenFor(m => m.time)
+                        @Html.HiddenFor(m => m.tableIdd)
+
+                        <div class="res res-head">
+                            <div class="head-control">
+                                <label>Date</label>
+                                <h2>@Model.resDate.ToString("ddd, MMM dd")</h2>
+                            </div>
+                            <div class="head-control">
+                                <label>Time</label>
+                                <h2>@Model.time</h2>
+                            </div>
+                            <div class="head-control">
+                                <label>Guests</label>
+                                <h2>@Model.Covers Guests</h2>
+                            </div>
+                            <div class="head-control" style="float:right;">
+                                <a href="javascript:void(0)" onclick="window.top.close();" role="button">Cancel</a>
+                            </div>
+                        </div>
+                        <div class="res res-form">
+                            <div class="form-control">
+                                <label>FIRST NAME</label>
+                                @Html.TextBoxFor(m => m.FirstName, new { @placeholder = "First name" })
+                            </div>
+                            <div class="form-control">
+                                <label>LAST NAME</label>
+                                @Html.TextBoxFor(m => m.LastName, new { @placeholder = "Last name" })
+                            </div>
+                            <div class="form-control">
+                                <label>PHONE NUMBER</label>
+                                @*<input type="text" placeholder="(555) 555-5555" name="MobileNumber" id="MobileNumber" data-val-required=" "
+                                    data-val-regex-pattern="^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$" data-val-regex="Please enter a 10 digit phone number."
+                                     data-val="true">*@
+                                @Html.TextBoxFor(m => m.MobileNumber, new { @placeholder = "(555) 555-5555" })
+                            </div>
+                            <div class="form-control">
+                                <label>EMAIL ADDRESS</label>
+                                @Html.TextBoxFor(m => m.Email, new { @placeholder = "you@example.com" })
+                            </div>
+                            <div class="form-control txtarea">
+                                <label>RESERVATION NOTES</label>
+                                @Html.TextAreaFor(m => m.ReservationNote)
+                            </div>
+                            <p>By completing your reservation, you agree to the Terms of Use listed <a href="javascript:void(0)">here</a></p>
+                        </div>
+                        <div class="res res-foot">
+                            <div class="res-foot-left">
+
+                            </div>
+                            <div class="res-foot-right">
+                                <button>Make Reservation</button>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <h2><span style="color:gray;">Sorry! The reservation is no more available.</span></h2>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+﻿@model AISModels.CustomersPhoneNumbers
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>CustomersPhoneNumbers</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Customers.FirstName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Customers.FirstName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhoneTypes.PhoneType)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhoneTypes.PhoneType)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhoneNumbers)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhoneNumbers)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,26 @@
+﻿@model AISModels.Allergies
+@using (Ajax.BeginForm("Edit", "Allergy", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "refreshContent" }, new { @id = "ModalForm" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="for-edit">
+        <h1 id="title">
+            Edit Allergy
+        </h1>
+        <input type="button" onclick="cancelClick()" value="Cancel" id="btnCancel" />
+        <input type="submit" value="Save" class="saveBtn svbtn" />
+    </div>
+    <div class="add-new-main content_1">
+        <div class="add-new-inner">
+            <div class="add-new-sec-1">
+                <label>
+                    Allergy
+                </label>
+                @Html.TextBoxFor(model => model.Allergy)
+                <br />
+                @Html.ValidationMessageFor(model => model.Allergy)
+                @Html.HiddenFor(model => model.AllergyId)
+                <span id="aerror" style="color: Red"></span>
+            </div>
+        </div>
+    </div>
+}

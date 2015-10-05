@@ -1,0 +1,6 @@
+﻿USE [AISLocal]
+GO
+
+ALTER TABLE [dbo].[MergedFloorTable]
+ALTER COLUMN [TableName] NVARCHAR(200) NOT NULL
+GO

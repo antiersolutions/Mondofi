@@ -1,0 +1,1381 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{093E19EE-065A-4B05-BBEF-F6124911D5C1}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AIS</RootNamespace>
+    <AssemblyName>AIS</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMarkupMin.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebMarkupMin.Core.1.0.0\lib\net40\WebMarkupMin.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebMarkupMin.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebMarkupMin.Mvc.1.0.0\lib\net40\WebMarkupMin.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebMarkupMin.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=99472178d266584b, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebMarkupMin.Web.1.0.0\lib\net40\WebMarkupMin.Web.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AllergyController.cs" />
+    <Compile Include="Controllers\BookController.cs" />
+    <Compile Include="Controllers\CalendarController.cs" />
+    <Compile Include="Controllers\CityController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\CustomersAllergyController.cs" />
+    <Compile Include="Controllers\CustomersEmailController.cs" />
+    <Compile Include="Controllers\CustomerSpecialStatusController.cs" />
+    <Compile Include="Controllers\CustomersPhoneNumberController.cs" />
+    <Compile Include="Controllers\CustomersRestrictionController.cs" />
+    <Compile Include="Controllers\DesignationController.cs" />
+    <Compile Include="Controllers\FloorController.cs" />
+    <Compile Include="Controllers\FloorItemController.cs" />
+    <Compile Include="Controllers\FloorPlanController.cs" />
+    <Compile Include="Controllers\FoodMenuShiftController.cs" />
+    <Compile Include="Controllers\GuestController.cs" />
+    <Compile Include="Controllers\HistoryController.cs" />
+    <Compile Include="Controllers\MondofiController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\MenuShiftHourController.cs" />
+    <Compile Include="Controllers\MergeTableController.cs" />
+    <Compile Include="Controllers\OnlineController.cs" />
+    <Compile Include="Controllers\PhoneTypesController.cs" />
+    <Compile Include="Controllers\ReservationController.cs" />
+    <Compile Include="Controllers\RestrictionController.cs" />
+    <Compile Include="Controllers\SectionController.cs" />
+    <Compile Include="Controllers\SettingController.cs" />
+    <Compile Include="Controllers\ShiftHourController.cs" />
+    <Compile Include="Controllers\SpecialStatusController.cs" />
+    <Compile Include="Controllers\StaffController.cs" />
+    <Compile Include="Controllers\TableAvailablityController.cs" />
+    <Compile Include="Controllers\UploadFileController.cs" />
+    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\UserPhoneController.cs" />
+    <Compile Include="Controllers\WaitingController.cs" />
+    <Compile Include="Controllers\WeekDayController.cs" />
+    <Compile Include="EmailSender\MakeEmails.cs" />
+    <Compile Include="Extensions\CalendarExtensions.cs" />
+    <Compile Include="Extensions\CommonExtensions.cs" />
+    <Compile Include="Extensions\ControllerExtentions.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
+    <Compile Include="Extensions\FloorExtensions.cs" />
+    <Compile Include="Extensions\ReservationExtensions.cs" />
+    <Compile Include="Extensions\UIExtensions.cs" />
+    <Compile Include="Filters\AuthorizeAjaxAttribute.cs" />
+    <Compile Include="Filters\BooleanRequiredAttribute.cs" />
+    <Compile Include="Filters\CheckClientTimeAttribute.cs" />
+    <Compile Include="Filters\ConditionalFilterProvider.cs" />
+    <Compile Include="Filters\EncryptedActionParameterAttribute.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Helpers\AjaxHelper.cs" />
+    <Compile Include="Helpers\AlphaNumericComparer.cs" />
+    <Compile Include="Helpers\Caching\CacheKeys.cs" />
+    <Compile Include="Helpers\Caching\DBExtensions.cs" />
+    <Compile Include="Helpers\Caching\Extensions.cs" />
+    <Compile Include="Helpers\Caching\ICacheManager.cs" />
+    <Compile Include="Helpers\Caching\MemoryCacheManager.cs" />
+    <Compile Include="Helpers\Caching\PerRequestCacheManager.cs" />
+    <Compile Include="Helpers\Caching\TwoLevelViewCache.cs" />
+    <Compile Include="Helpers\CopyHelper.cs" />
+    <Compile Include="Helpers\Email\EmailSender.cs" />
+    <Compile Include="Helpers\Email\Token.cs" />
+    <Compile Include="Helpers\Email\Tokenizer.cs" />
+    <Compile Include="Helpers\Email\WorkflowMessageService.cs" />
+    <Compile Include="Helpers\Fakes\Extensions.cs" />
+    <Compile Include="Helpers\Fakes\FakeHttpContext.cs" />
+    <Compile Include="Helpers\Fakes\FakeHttpRequest.cs" />
+    <Compile Include="Helpers\Fakes\FakeHttpResponse.cs" />
+    <Compile Include="Helpers\Fakes\FakeHttpSessionState.cs" />
+    <Compile Include="Helpers\Fakes\FakeIdentity.cs" />
+    <Compile Include="Helpers\Fakes\FakePrincipal.cs" />
+    <Compile Include="Hubs\FloorPlan\AutoUpdateEndingReservation.cs" />
+    <Compile Include="Hubs\FloorPlan\FloorPlanHub.cs" />
+    <Compile Include="Hubs\FloorPlan\TestSignalRTimer.cs" />
+    <Compile Include="Hubs\NotifyType.cs" />
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AllergyViewModel.cs" />
+    <Compile Include="Models\CheckListVM.cs" />
+    <Compile Include="Models\CustomerViewModel.cs" />
+    <Compile Include="Models\FloorPlanVM.cs" />
+    <Compile Include="Models\GetReservationsParamVM.cs" />
+    <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MonthVM.cs" />
+    <Compile Include="Models\OnlineWidgetVM.cs" />
+    <Compile Include="Models\ReservationCustomerVM.cs" />
+    <Compile Include="Models\ReservationEditOptionsVM.cs" />
+    <Compile Include="Models\ReservationListItemVM.cs" />
+    <Compile Include="Models\ReservationVM.cs" />
+    <Compile Include="Models\ResponseStatus.cs" />
+    <Compile Include="Models\RestrictionViewModel.cs" />
+    <Compile Include="Models\ShiftVM.cs" />
+    <Compile Include="Models\SpecialStatusViewModel.cs" />
+    <Compile Include="Models\StaffSummaryVM.cs" />
+    <Compile Include="Models\TableDesignVM.cs" />
+    <Compile Include="Models\TimeAvailablityVM.cs" />
+    <Compile Include="Models\updateFloorTableAndLevelVM.cs" />
+    <Compile Include="Models\UserViewModel.cs" />
+    <Compile Include="Models\WaitingVM.cs" />
+    <Compile Include="Models\WaitListItemVM.cs" />
+    <Compile Include="Models\WeekVM.cs" />
+    <Compile Include="OnlineExtensions\CalendarExtensions.cs" />
+    <Compile Include="OnlineExtensions\CommonExtensions.cs" />
+    <Compile Include="OnlineExtensions\ControllerExtentions.cs" />
+    <Compile Include="OnlineExtensions\DateTimeExtensions.cs" />
+    <Compile Include="OnlineExtensions\FloorExtensions.cs" />
+    <Compile Include="OnlineExtensions\ReservationExtensions.cs" />
+    <Compile Include="OnlineExtensions\UIExtensions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EmailSender\EmailSender.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_Data\DBChanges\03032015DeleteReservations.sql" />
+    <Content Include="App_Data\DBChanges\03072015WaitingNotes.sql" />
+    <Content Include="App_Data\DBChanges\04062015MergedTable.sql" />
+    <Content Include="App_Data\DBChanges\08092014MergedTable.sql" />
+    <Content Include="App_Data\DBChanges\09062015MessageTemplate.sql" />
+    <Content Include="App_Data\DBChanges\10092014DBTruncate.sql" />
+    <Content Include="App_Data\DBChanges\10092014ShiftNotes.sql" />
+    <Content Include="App_Data\DBChanges\12012015FloorPlan.sql" />
+    <Content Include="App_Data\DBChanges\14072015Settings.sql" />
+    <Content Include="App_Data\DBChanges\15102014StaffTable.sql" />
+    <Content Include="App_Data\DBChanges\18032015OnlineWidget.sql" />
+    <Content Include="App_Data\DBChanges\21102014DesignationTable.sql" />
+    <Content Include="App_Data\DBChanges\24022015UserUniqueCode.sql" />
+    <Content Include="App_Data\DBChanges\25022015ReservationAudit.sql" />
+    <Content Include="App_Data\DBChanges\25052015Cancelled2.sql" />
+    <Content Include="App_Data\DBChanges\26032015MessageTemplate.sql" />
+    <Content Include="App_Data\DBChanges\28052015ReservationStatus.sql" />
+    <Content Include="App_Data\DBChanges\29082014MergedTable.sql" />
+    <Content Include="App_Data\DBChanges\30092014MergedTable.sql" />
+    <Content Include="Content\alertifyjs\alertify.js" />
+    <Content Include="Content\alertifyjs\alertify.min.js" />
+    <Content Include="Content\alertifyjs\css\alertify.css" />
+    <Content Include="Content\alertifyjs\css\alertify.min.css" />
+    <Content Include="Content\alertifyjs\css\alertify.rtl.css" />
+    <Content Include="Content\alertifyjs\css\alertify.rtl.min.css" />
+    <Content Include="Content\alertifyjs\css\themes\bootstrap.css" />
+    <Content Include="Content\alertifyjs\css\themes\bootstrap.min.css" />
+    <Content Include="Content\alertifyjs\css\themes\bootstrap.rtl.css" />
+    <Content Include="Content\alertifyjs\css\themes\bootstrap.rtl.min.css" />
+    <Content Include="Content\alertifyjs\css\themes\default.css" />
+    <Content Include="Content\alertifyjs\css\themes\default.min.css" />
+    <Content Include="Content\alertifyjs\css\themes\default.rtl.css" />
+    <Content Include="Content\alertifyjs\css\themes\default.rtl.min.css" />
+    <Content Include="Content\alertifyjs\css\themes\semantic.css" />
+    <Content Include="Content\alertifyjs\css\themes\semantic.min.css" />
+    <Content Include="Content\alertifyjs\css\themes\semantic.rtl.css" />
+    <Content Include="Content\alertifyjs\css\themes\semantic.rtl.min.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Colorbox\colorbox.css" />
+    <Content Include="Content\Colorbox\jquery.colorbox-min.js" />
+    <Content Include="Content\Colorbox\jquery.colorbox.js" />
+    <Content Include="Content\ComingSoon\images\bg-blue.png" />
+    <Content Include="Content\ComingSoon\images\bg-repeat.png" />
+    <Content Include="Content\ComingSoon\images\bg.png" />
+    <Content Include="Content\css\jquery.datetimepicker.css" />
+    <Content Include="Content\Images\controls.png" />
+    <Content Include="Content\Images\Logo.png" />
+    <Content Include="Content\MondofiThemeNew\css\bootstrap-select.css" />
+    <Content Include="Content\MondofiThemeNew\css\bootstrap.min.css" />
+    <Content Include="Content\MondofiThemeNew\css\scrolling-nav.css" />
+    <Content Include="Content\MondofiThemeNew\css\style.css" />
+    <Content Include="Content\MondofiThemeNew\futurico\futurico%402x.png" />
+    <Content Include="Content\MondofiThemeNew\futurico\futurico.css" />
+    <Content Include="Content\MondofiThemeNew\futurico\futurico.png" />
+    <Content Include="Content\MondofiThemeNew\images\bg-gray.jpg" />
+    <Content Include="Content\MondofiThemeNew\images\bg-sec.jpg" />
+    <Content Include="Content\MondofiThemeNew\images\bg_black.jpg" />
+    <Content Include="Content\MondofiThemeNew\images\captcha.png" />
+    <Content Include="Content\MondofiThemeNew\images\footer-logo.png" />
+    <Content Include="Content\MondofiThemeNew\images\icon-emaiid.png" />
+    <Content Include="Content\MondofiThemeNew\images\icon-password.png" />
+    <Content Include="Content\MondofiThemeNew\images\local_dinner_1.png" />
+    <Content Include="Content\MondofiThemeNew\images\local_dinner_2.png" />
+    <Content Include="Content\MondofiThemeNew\images\local_dinner_3.png" />
+    <Content Include="Content\MondofiThemeNew\images\local_dinner_4.png" />
+    <Content Include="Content\MondofiThemeNew\images\logo.png" />
+    <Content Include="Content\MondofiThemeNew\images\make-everyguest-regular.png" />
+    <Content Include="Content\MondofiThemeNew\images\online-easy.png" />
+    <Content Include="Content\MondofiThemeNew\images\premium-arrow.png" />
+    <Content Include="Content\MondofiThemeNew\images\seamless_img.jpg" />
+    <Content Include="Content\MondofiThemeNew\images\slide-1.jpg" />
+    <Content Include="Content\MondofiThemeNew\images\slider-arrow.png" />
+    <Content Include="Content\MondofiThemeNew\images\streamline-your-wait.jpg" />
+    <Content Include="Content\MondofiThemeNew\images\streamline-your-wait.png" />
+    <Content Include="Content\MondofiThemeNew\images\tag.png" />
+    <Content Include="Content\MondofiThemeNew\js\bootstrap.js" />
+    <Content Include="Content\MondofiThemeNew\js\bootstrap.min.js" />
+    <Content Include="Content\MondofiThemeNew\js\icheck.js" />
+    <Content Include="Content\MondofiThemeNew\js\jquery.easing.min.js" />
+    <Content Include="Content\MondofiThemeNew\js\npm.js" />
+    <Content Include="Content\MondofiThemeNew\js\scrolling-nav.js" />
+    <Content Include="Content\MondofiTheme\js\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Content\MondofiTheme\js\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Content\MondofiTheme\css\bootstrap-datepicker.css" />
+    <Content Include="Content\MondofiTheme\css\bootstrap-select.css" />
+    <Content Include="Content\MondofiTheme\css\bootstrap-theme.css" />
+    <Content Include="Content\MondofiTheme\css\bootstrap-theme.min.css" />
+    <Content Include="Content\MondofiTheme\css\bootstrap-timepicker.css" />
+    <Content Include="Content\MondofiTheme\css\bootstrap.css" />
+    <Content Include="Content\MondofiTheme\css\bootstrap.min.css" />
+    <Content Include="Content\MondofiTheme\css\jquery.mCustomScrollbar.css" />
+    <Content Include="Content\MondofiTheme\css\square\aero%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\aero.css" />
+    <Content Include="Content\MondofiTheme\css\square\aero.png" />
+    <Content Include="Content\MondofiTheme\css\square\blue%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\blue.css" />
+    <Content Include="Content\MondofiTheme\css\square\blue.png" />
+    <Content Include="Content\MondofiTheme\css\square\green%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\green.css" />
+    <Content Include="Content\MondofiTheme\css\square\green.png" />
+    <Content Include="Content\MondofiTheme\css\square\grey%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\grey.css" />
+    <Content Include="Content\MondofiTheme\css\square\grey.png" />
+    <Content Include="Content\MondofiTheme\css\square\orange%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\orange.css" />
+    <Content Include="Content\MondofiTheme\css\square\orange.png" />
+    <Content Include="Content\MondofiTheme\css\square\pink%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\pink.css" />
+    <Content Include="Content\MondofiTheme\css\square\pink.png" />
+    <Content Include="Content\MondofiTheme\css\square\purple%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\purple.css" />
+    <Content Include="Content\MondofiTheme\css\square\purple.png" />
+    <Content Include="Content\MondofiTheme\css\square\red%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\red.css" />
+    <Content Include="Content\MondofiTheme\css\square\red.png" />
+    <Content Include="Content\MondofiTheme\css\square\square%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\square.css" />
+    <Content Include="Content\MondofiTheme\css\square\square.png" />
+    <Content Include="Content\MondofiTheme\css\square\yellow%402x.png" />
+    <Content Include="Content\MondofiTheme\css\square\yellow.css" />
+    <Content Include="Content\MondofiTheme\css\square\yellow.png" />
+    <Content Include="Content\MondofiTheme\css\square\_all.css" />
+    <Content Include="Content\MondofiTheme\css\style.css" />
+    <Content Include="Content\MondofiTheme\futurico\futurico%402x.png" />
+    <Content Include="Content\MondofiTheme\futurico\futurico.css" />
+    <Content Include="Content\MondofiTheme\futurico\futurico.png" />
+    <Content Include="Content\MondofiTheme\images\arrow-list.png" />
+    <Content Include="Content\MondofiTheme\images\arrow-select.png" />
+    <Content Include="Content\MondofiTheme\images\banner-main.jpg" />
+    <Content Include="Content\MondofiTheme\images\bg-gray.jpg" />
+    <Content Include="Content\MondofiTheme\images\bg-search.png" />
+    <Content Include="Content\MondofiTheme\images\btn-bg.png" />
+    <Content Include="Content\MondofiTheme\images\btn-close.png" />
+    <Content Include="Content\MondofiTheme\images\btn-facebook.png" />
+    <Content Include="Content\MondofiTheme\images\btn-twitter.png" />
+    <Content Include="Content\MondofiTheme\images\footer-bg.jpg" />
+    <Content Include="Content\MondofiTheme\images\footer-icon-2.png" />
+    <Content Include="Content\MondofiTheme\images\footer-logo.png" />
+    <Content Include="Content\MondofiTheme\images\hd-icon-left.png" />
+    <Content Include="Content\MondofiTheme\images\hd-icon-right.png" />
+    <Content Include="Content\MondofiTheme\images\icon-date.png" />
+    <Content Include="Content\MondofiTheme\images\icon-emaiid.png" />
+    <Content Include="Content\MondofiTheme\images\icon-guest.png" />
+    <Content Include="Content\MondofiTheme\images\icon-heading.png" />
+    <Content Include="Content\MondofiTheme\images\icon-home-search.png" />
+    <Content Include="Content\MondofiTheme\images\icon-like-select.png" />
+    <Content Include="Content\MondofiTheme\images\icon-like.png" />
+    <Content Include="Content\MondofiTheme\images\icon-location.png" />
+    <Content Include="Content\MondofiTheme\images\icon-password.png" />
+    <Content Include="Content\MondofiTheme\images\icon-readmore.png" />
+    <Content Include="Content\MondofiTheme\images\icon-search.png" />
+    <Content Include="Content\MondofiTheme\images\icon-social.png" />
+    <Content Include="Content\MondofiTheme\images\icon-time.png" />
+    <Content Include="Content\MondofiTheme\images\jason.jpg" />
+    <Content Include="Content\MondofiTheme\images\john-haris.jpg" />
+    <Content Include="Content\MondofiTheme\images\local_dinner_1.png" />
+    <Content Include="Content\MondofiTheme\images\local_dinner_2.jpg" />
+    <Content Include="Content\MondofiTheme\images\local_dinner_2.png" />
+    <Content Include="Content\MondofiTheme\images\local_dinner_3.jpg" />
+    <Content Include="Content\MondofiTheme\images\local_dinner_3.png" />
+    <Content Include="Content\MondofiTheme\images\local_dinner_4.png" />
+    <Content Include="Content\MondofiTheme\images\logo.png" />
+    <Content Include="Content\MondofiTheme\images\metthew-faseal.jpg" />
+    <Content Include="Content\MondofiTheme\images\michael-richard.jpg" />
+    <Content Include="Content\MondofiTheme\images\popular-1.png" />
+    <Content Include="Content\MondofiTheme\images\popular-2.png" />
+    <Content Include="Content\MondofiTheme\images\popular-3.png" />
+    <Content Include="Content\MondofiTheme\images\popular-4.png" />
+    <Content Include="Content\MondofiTheme\images\popular-5.png" />
+    <Content Include="Content\MondofiTheme\images\popular-6.png" />
+    <Content Include="Content\MondofiTheme\images\seprator.jpg" />
+    <Content Include="Content\MondofiTheme\js\bootstrap-datepicker.js" />
+    <Content Include="Content\MondofiTheme\js\bootstrap-select.js" />
+    <Content Include="Content\MondofiTheme\js\bootstrap-timepicker.js" />
+    <Content Include="Content\MondofiTheme\js\bootstrap.js" />
+    <Content Include="Content\MondofiTheme\js\bootstrap.min.js" />
+    <Content Include="Content\MondofiTheme\js\icheck.js" />
+    <Content Include="Content\MondofiTheme\js\jquery-2.1.4.min.js" />
+    <Content Include="Content\MondofiTheme\js\jquery.mCustomScrollbar.min.js" />
+    <Content Include="Content\MondofiTheme\js\npm.js" />
+    <Content Include="Content\MondofiTheme\skins\all.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\aero%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\aero.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\aero.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\blue%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\blue.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\blue.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\flat%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\flat.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\flat.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\green%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\green.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\green.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\grey%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\grey.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\grey.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\orange%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\orange.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\orange.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\pink%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\pink.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\pink.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\purple%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\purple.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\purple.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\red%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\red.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\red.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\yellow%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\yellow.css" />
+    <Content Include="Content\MondofiTheme\skins\flat\yellow.png" />
+    <Content Include="Content\MondofiTheme\skins\flat\_all.css" />
+    <Content Include="Content\MondofiTheme\skins\futurico\futurico%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\futurico\futurico.css" />
+    <Content Include="Content\MondofiTheme\skins\futurico\futurico.png" />
+    <Content Include="Content\MondofiTheme\skins\line\aero.css" />
+    <Content Include="Content\MondofiTheme\skins\line\blue.css" />
+    <Content Include="Content\MondofiTheme\skins\line\green.css" />
+    <Content Include="Content\MondofiTheme\skins\line\grey.css" />
+    <Content Include="Content\MondofiTheme\skins\line\line%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\line\line.css" />
+    <Content Include="Content\MondofiTheme\skins\line\line.png" />
+    <Content Include="Content\MondofiTheme\skins\line\orange.css" />
+    <Content Include="Content\MondofiTheme\skins\line\pink.css" />
+    <Content Include="Content\MondofiTheme\skins\line\purple.css" />
+    <Content Include="Content\MondofiTheme\skins\line\red.css" />
+    <Content Include="Content\MondofiTheme\skins\line\yellow.css" />
+    <Content Include="Content\MondofiTheme\skins\line\_all.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\aero%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\aero.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\aero.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\blue%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\blue.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\blue.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\green%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\green.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\green.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\grey%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\grey.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\grey.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\minimal%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\minimal.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\minimal.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\orange%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\orange.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\orange.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\pink%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\pink.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\pink.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\purple%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\purple.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\purple.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\red%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\red.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\red.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\yellow%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\yellow.css" />
+    <Content Include="Content\MondofiTheme\skins\minimal\yellow.png" />
+    <Content Include="Content\MondofiTheme\skins\minimal\_all.css" />
+    <Content Include="Content\MondofiTheme\skins\polaris\polaris%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\polaris\polaris.css" />
+    <Content Include="Content\MondofiTheme\skins\polaris\polaris.png" />
+    <Content Include="Content\MondofiTheme\skins\square\aero%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\aero.css" />
+    <Content Include="Content\MondofiTheme\skins\square\aero.png" />
+    <Content Include="Content\MondofiTheme\skins\square\blue%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\blue.css" />
+    <Content Include="Content\MondofiTheme\skins\square\blue.png" />
+    <Content Include="Content\MondofiTheme\skins\square\green%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\green.css" />
+    <Content Include="Content\MondofiTheme\skins\square\green.png" />
+    <Content Include="Content\MondofiTheme\skins\square\grey%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\grey.css" />
+    <Content Include="Content\MondofiTheme\skins\square\grey.png" />
+    <Content Include="Content\MondofiTheme\skins\square\orange%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\orange.css" />
+    <Content Include="Content\MondofiTheme\skins\square\orange.png" />
+    <Content Include="Content\MondofiTheme\skins\square\pink%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\pink.css" />
+    <Content Include="Content\MondofiTheme\skins\square\pink.png" />
+    <Content Include="Content\MondofiTheme\skins\square\purple%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\purple.css" />
+    <Content Include="Content\MondofiTheme\skins\square\purple.png" />
+    <Content Include="Content\MondofiTheme\skins\square\red%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\red.css" />
+    <Content Include="Content\MondofiTheme\skins\square\red.png" />
+    <Content Include="Content\MondofiTheme\skins\square\square%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\square.css" />
+    <Content Include="Content\MondofiTheme\skins\square\square.png" />
+    <Content Include="Content\MondofiTheme\skins\square\yellow%402x.png" />
+    <Content Include="Content\MondofiTheme\skins\square\yellow.css" />
+    <Content Include="Content\MondofiTheme\skins\square\yellow.png" />
+    <Content Include="Content\MondofiTheme\skins\square\_all.css" />
+    <Content Include="Content\Online\css\bootstrap-select.css" />
+    <Content Include="Content\Online\css\bootstrap.css" />
+    <Content Include="Content\Online\css\bootstrap.min.css" />
+    <Content Include="Content\Online\css\style.css" />
+    <Content Include="Content\Online\css\style20150519.css" />
+    <Content Include="Content\Online\css\style_old.css" />
+    <Content Include="Content\Online\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\Online\img\arrow-down.png" />
+    <Content Include="Content\Online\img\bg-img-center.png" />
+    <Content Include="Content\Online\img\bg-img-left.png" />
+    <Content Include="Content\Online\img\bg-img-right.png" />
+    <Content Include="Content\Online\img\bg-img.png" />
+    <Content Include="Content\Online\img\cal.png" />
+    <Content Include="Content\Online\img\clock.png" />
+    <Content Include="Content\Online\img\glyphicons-halflings-white.png" />
+    <Content Include="Content\Online\img\glyphicons-halflings.png" />
+    <Content Include="Content\Online\img\logo.png" />
+    <Content Include="Content\Online\img\map.png" />
+    <Content Include="Content\Online\img\profile-stripe.png" />
+    <Content Include="Content\Online\img\profile.png" />
+    <Content Include="Content\Online\img\smile.png" />
+    <Content Include="Content\Online\js\bootstrap-select.js" />
+    <Content Include="Content\Online\js\bootstrap.js" />
+    <Content Include="Content\Online\js\jquery-1.3.2.min.js" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
+    <Content Include="Content\themes\base\jquery.ui.all.css" />
+    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
+    <Content Include="Content\themes\base\jquery.ui.base.css" />
+    <Content Include="Content\themes\base\jquery.ui.button.css" />
+    <Content Include="Content\themes\base\jquery.ui.core.css" />
+    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
+    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
+    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
+    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
+    <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
+    <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\uploadify\img\uploadify-cancel.png" />
+    <Content Include="Content\uploadify\jquery.uploadify.js" />
+    <Content Include="Content\uploadify\jquery.uploadify.min.js" />
+    <Content Include="Content\uploadify\uploadify.css" />
+    <Content Include="Content\uploadify\uploadify.swf" />
+    <Content Include="Content\UserData\1\2382618260_Tulips.jpg" />
+    <Content Include="Content\UserData\2990020792_1390829115217.jpg" />
+    <Content Include="Content\UserData\3965002679_Chrysanthemum.jpg" />
+    <Content Include="Content\UserData\4165705354_IMG_06062014_111230.png" />
+    <Content Include="Content\UserData\693200768_Chrysanthemum.jpg" />
+    <Content Include="Content\UserData\6\1004529323_Chrysanthemum.jpg" />
+    <Content Include="Content\UserData\6\1379387525_Penguins.jpg" />
+    <Content Include="Content\UserData\6\1926674342_aaaa.jpg" />
+    <Content Include="Content\UserData\6\2536062886_Hydrangeas.jpg" />
+    <Content Include="Content\UserData\6\295999366_Tulips.jpg" />
+    <Content Include="Content\UserData\6\361405086_Lighthouse.jpg" />
+    <Content Include="Content\UserData\6\4201913001_Penguins.jpg" />
+    <Content Include="Content\UserData\6\618359951_Penguins.jpg" />
+    <Content Include="Content\UserData\6\768825256_Penguins.jpg" />
+    <Content Include="css\Bootstrap-popover.css" />
+    <Content Include="css\Bootstrap-tooltip.css" />
+    <Content Include="css\CustomPopUp.css" />
+    <Content Include="css\drag-slider.css" />
+    <Content Include="css\FloorPlan\FloorPlan.css" />
+    <Content Include="css\jquery.cluetip.css" />
+    <Content Include="css\jquery.mCustomScrollbar.css" />
+    <Content Include="css\jquery.onoff.css" />
+    <Content Include="css\jqueryui-editable.css" />
+    <Content Include="css\mCSB_buttons.png" />
+    <Content Include="css\Online\Online.css" />
+    <Content Include="css\PNotify\pnotify.custom.css" />
+    <Content Include="css\PNotify\pnotify.custom.min.css" />
+    <Content Include="css\style - Copy.css" />
+    <Content Include="css\style.css" />
+    <Content Include="css\style.mobile.css" />
+    <Content Include="css\styleVerified.css" />
+    <Content Include="css\TableAvailability\TACommon.css" />
+    <Content Include="EmailTemplates\ForgotPassword.html" />
+    <Content Include="EmailTemplates\OnlineBookingSuccess.html" />
+    <Content Include="EmailTemplates\Password.html" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\Online\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\Online\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\Online\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\Online\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\uploadify\uploadify.php" />
+    <Content Include="css\.subla98.tmp" />
+    <Content Include="Images\1403094036_icon-arrow-down-b.png" />
+    <Content Include="Images\aad-new-pro-pic.png" />
+    <Content Include="Images\accent.png" />
+    <Content Include="Images\add-cal-img.png" />
+    <Content Include="Images\add-floor.png" />
+    <Content Include="Images\add-people.png" />
+    <Content Include="Images\add-reservation.png" />
+    <Content Include="Images\admin-rating.png" />
+    <Content Include="Images\ajax-loaderTop.gif" />
+    <Content Include="Images\ajaxLoader.gif" />
+    <Content Include="Images\all-arrived.png" />
+    <Content Include="Images\appetizer.png" />
+    <Content Include="Images\arrow-down.png" />
+    <Content Include="Images\arrow-spiner.png" />
+    <Content Include="Images\arrowleft.gif" />
+    <Content Include="Images\arrowright.gif" />
+    <Content Include="Images\available-icon.png" />
+    <Content Include="Images\bar-table.png" />
+    <Content Include="Images\BarTable.png" />
+    <Content Include="Images\blue-c-box.png" />
+    <Content Include="Images\blue-sec.png" />
+    <Content Include="Images\body-bg.png" />
+    <Content Include="Images\btn-add-user.png" />
+    <Content Include="Images\btn-close.png" />
+    <Content Include="Images\btn-high-spender.png" />
+    <Content Include="Images\btn-vip.png" />
+    <Content Include="Images\bullet.png" />
+    <Content Include="Images\c-pic.png" />
+    <Content Include="Images\cal-delete.png" />
+    <Content Include="Images\cal-edit.png" />
+    <Content Include="Images\cal-icon.png" />
+    <Content Include="Images\cal-left.png" />
+    <Content Include="Images\cal-right.png" />
+    <Content Include="Images\cal-time-arrow.png" />
+    <Content Include="Images\call-active.png" />
+    <Content Include="Images\call-disable.png" />
+    <Content Include="Images\call-hold.png" />
+    <Content Include="Images\call-ok.png" />
+    <Content Include="Images\Cancel-Reservation.png" />
+    <Content Include="Images\cancelled-2.png" />
+    <Content Include="Images\cancelled.png" />
+    <Content Include="Images\Chair.png" />
+    <Content Include="Images\chair_bottom.png" />
+    <Content Include="Images\chair_left.png" />
+    <Content Include="Images\chair_right.png" />
+    <Content Include="Images\chair_top.png" />
+    <Content Include="Images\check-add-table-checked.png" />
+    <Content Include="Images\check-add-table.png" />
+    <Content Include="Images\check-dropped.png" />
+    <Content Include="Images\check-paid.png" />
+    <Content Include="Images\checkbox.png" />
+    <Content Include="Images\checkbox_Checked.jpg" />
+    <Content Include="Images\checkbox_Checked.png" />
+    <Content Include="Images\checkbox_Checked_Dis.jpg" />
+    <Content Include="Images\checkbox_Unchecked.jpg" />
+    <Content Include="Images\checkbox_Unchecked.png" />
+    <Content Include="Images\checkbox_Unchecked_Dis.jpg" />
+    <Content Include="Images\clean-table.png" />
+    <Content Include="Images\clear.png" />
+    <Content Include="Images\confirmed-icon.png" />
+    <Content Include="Images\confirmed.png" />
+    <Content Include="Images\correct.gif" />
+    <Content Include="Images\d-left-btn-icon-click.png" />
+    <Content Include="Images\d-left-btn-icon.png" />
+    <Content Include="Images\d-right-btn-icon-click.png" />
+    <Content Include="Images\d-right-btn-icon.png" />
+    <Content Include="Images\delete.png" />
+    <Content Include="Images\dessert.png" />
+    <Content Include="Images\Done.png" />
+    <Content Include="Images\dropdown.png" />
+    <Content Include="Images\Edit-Reservation.png" />
+    <Content Include="Images\edit.png" />
+    <Content Include="Images\entree.png" />
+    <Content Include="Images\fence.png" />
+    <Content Include="Images\finished.png" />
+    <Content Include="Images\floor-edit.png" />
+    <Content Include="Images\floor-icon.png" />
+    <Content Include="Images\floor-list-arrow.png" />
+    <Content Include="Images\floor-tab-arrow.png" />
+    <Content Include="Images\footer-logo.gif" />
+    <Content Include="Images\free-s.png" />
+    <Content Include="Images\full-screen-btn.png" />
+    <Content Include="Images\glass-wall.png" />
+    <Content Include="Images\GlassWall.png" />
+    <Content Include="Images\golden-c-box.png" />
+    <Content Include="Images\green-a.png" />
+    <Content Include="Images\green-c-box.png" />
+    <Content Include="Images\green-sec.png" />
+    <Content Include="Images\guest-pro-pic.png" />
+    <Content Include="Images\has-note.png" />
+    <Content Include="Images\heroAccent.png" />
+    <Content Include="Images\high-spender-icon.png" />
+    <Content Include="Images\icon-add-info-collapse.png" />
+    <Content Include="Images\icon-add-info-expend.png" />
+    <Content Include="Images\icon-group-2.png" />
+    <Content Include="Images\icon-group-3.png" />
+    <Content Include="Images\icon-group-4.png" />
+    <Content Include="Images\icon-group-5.png" />
+    <Content Include="Images\icon-group-6.png" />
+    <Content Include="Images\icon-group-7.png" />
+    <Content Include="Images\icon-group-8.png" />
+    <Content Include="Images\icon-note.png" />
+    <Content Include="Images\icon-pop-delete-hover.png" />
+    <Content Include="Images\icon-pop-delete.png" />
+    <Content Include="Images\icon-pop-edit-hover.png" />
+    <Content Include="Images\icon-pop-edit.png" />
+    <Content Include="Images\icon-pop-name.png" />
+    <Content Include="Images\icon-pop-save-hover.png" />
+    <Content Include="Images\icon-pop-save.png" />
+    <Content Include="Images\import-icon.png" />
+    <Content Include="Images\left-message.png" />
+    <Content Include="Images\loading.gif" />
+    <Content Include="Images\logo.gif" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\m-arrow.png" />
+    <Content Include="Images\m-cal-icon.png" />
+    <Content Include="Images\m-floor-icon.png" />
+    <Content Include="Images\m-guests-icon.png" />
+    <Content Include="Images\m-notification-icon.png" />
+    <Content Include="Images\m-settings-icon.png" />
+    <Content Include="Images\manager-pic.png" />
+    <Content Include="Images\merge-guest.png" />
+    <Content Include="Images\minus-icon.png" />
+    <Content Include="Images\next-arrow.png" />
+    <Content Include="Images\no-answer.png" />
+    <Content Include="Images\no-answere.png" />
+    <Content Include="Images\no-show.png" />
+    <Content Include="Images\none-icon.png" />
+    <Content Include="Images\normal-view-img.png" />
+    <Content Include="Images\not-confirmed.png" />
+    <Content Include="Images\online-booking.png" />
+    <Content Include="Images\orange-c-box.png" />
+    <Content Include="Images\orderedList0.png" />
+    <Content Include="Images\orderedList1.png" />
+    <Content Include="Images\orderedList2.png" />
+    <Content Include="Images\orderedList3.png" />
+    <Content Include="Images\orderedList4.png" />
+    <Content Include="Images\orderedList5.png" />
+    <Content Include="Images\orderedList6.png" />
+    <Content Include="Images\orderedList7.png" />
+    <Content Include="Images\orderedList8.png" />
+    <Content Include="Images\orderedList9.png" />
+    <Content Include="Images\paged.png" />
+    <Content Include="Images\partially-arrived.png" />
+    <Content Include="Images\partially-seated.png" />
+    <Content Include="Images\pillar.png" />
+    <Content Include="Images\pink-sec.png" />
+    <Content Include="Images\plus-icon.png" />
+    <Content Include="Images\pre-arrow.png" />
+    <Content Include="Images\pro-pic-old.png" />
+    <Content Include="Images\pro-pic.png" />
+    <Content Include="Images\purple-c-box.png" />
+    <Content Include="Images\r-table1.png" />
+    <Content Include="Images\r-table2.png" />
+    <Content Include="Images\r-table3.png" />
+    <Content Include="Images\rac-table1.png" />
+    <Content Include="Images\rac-table2.png" />
+    <Content Include="Images\rac-table3.png" />
+    <Content Include="Images\red-c-box.png" />
+    <Content Include="Images\red-s.png" />
+    <Content Include="Images\reset.png" />
+    <Content Include="Images\rotate-arrow.png" />
+    <Content Include="Images\rotate-left-arrow.png" />
+    <Content Include="Images\rotate_anti.gif" />
+    <Content Include="Images\rotate_clock.gif" />
+    <Content Include="Images\running-late.png" />
+    <Content Include="Images\s-note.png" />
+    <Content Include="Images\s-rating-pro.png" />
+    <Content Include="Images\s-table1.png" />
+    <Content Include="Images\s-table2.png" />
+    <Content Include="Images\s-table3.png" />
+    <Content Include="Images\search-icon.png" />
+    <Content Include="Images\seated-icon.png" />
+    <Content Include="Images\seated.png" />
+    <Content Include="Images\section-action-img-add.png" />
+    <Content Include="Images\section-action-img.png" />
+    <Content Include="Images\select-arrow.png" />
+    <Content Include="Images\single-chair.png" />
+    <Content Include="Images\single-table.png" />
+    <Content Include="Images\sofa.png" />
+    <Content Include="Images\SofaTable.png" />
+    <Content Include="Images\solid-wall.png" />
+    <Content Include="Images\SolidWall.png" />
+    <Content Include="Images\sort-icon.png" />
+    <Content Include="Images\spiner.png" />
+    <Content Include="Images\status-all-arrived.png" />
+    <Content Include="Images\status-appetizer.png" />
+    <Content Include="Images\status-cancelled-2.png" />
+    <Content Include="Images\status-cancelled.png" />
+    <Content Include="Images\status-check-dropped.png" />
+    <Content Include="Images\status-check-paid.png" />
+    <Content Include="Images\status-confirmed.png" />
+    <Content Include="Images\status-dessert.png" />
+    <Content Include="Images\status-entree.png" />
+    <Content Include="Images\status-finished.png" />
+    <Content Include="Images\status-gray.png" />
+    <Content Include="Images\status-green.png" />
+    <Content Include="Images\status-left-message.png" />
+    <Content Include="Images\status-no-answer.png" />
+    <Content Include="Images\status-no-answere.png" />
+    <Content Include="Images\status-no-show.png" />
+    <Content Include="Images\status-not-confirmed.png" />
+    <Content Include="Images\status-online-booking.png" />
+    <Content Include="Images\status-paged.png" />
+    <Content Include="Images\status-partially-arrived.png" />
+    <Content Include="Images\status-partially-seated.png" />
+    <Content Include="Images\status-running-late.png" />
+    <Content Include="Images\status-seated.png" />
+    <Content Include="Images\status-table-cleared-11.png" />
+    <Content Include="Images\status-table-cleared.png" />
+    <Content Include="Images\status-wrong-number.png" />
+    <Content Include="Images\table-cleared-11.png" />
+    <Content Include="Images\table-cleared.png" />
+    <Content Include="Images\table1-img.png" />
+    <Content Include="Images\table2-img.png" />
+    <Content Include="Images\table3-img.png" />
+    <Content Include="Images\table4-img.png" />
+    <Content Include="Images\table5-img.png" />
+    <Content Include="Images\time-bar.png" />
+    <Content Include="Images\tool-tip-icon.png" />
+    <Content Include="Images\top-t-btn.png" />
+    <Content Include="Images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Images\upcom-s.png" />
+    <Content Include="Images\vip-icon.png" />
+    <Content Include="Images\voice-mail-icon.png" />
+    <Content Include="Images\wait.gif" />
+    <Content Include="Images\Wall.png" />
+    <Content Include="Images\wall1.png" />
+    <Content Include="Images\wrong-number.png" />
+    <Content Include="Images\wrong.png" />
+    <Content Include="Images\yellow-sec.png" />
+    <Content Include="js\demo.js" />
+    <Content Include="js\jquery.als-1.2.min.js" />
+    <Content Include="js\jquery.cluetip.js" />
+    <Content Include="js\jquery.ddslick.min.js" />
+    <Content Include="js\jquery.hoverIntent.js" />
+    <Content Include="js\jquery.js" />
+    <Content Include="js\jquery.mCustomScrollbar.concat.js" />
+    <Content Include="js\jquery.mCustomScrollbar.concat.min.js" />
+    <Content Include="js\jquery.mCustomScrollbar.concat.min_odl.js" />
+    <Content Include="js\jquery.screwdefaultbuttonsV2.js" />
+    <Content Include="js\jqueryui-editable.js" />
+    <Content Include="js\jqueryui-editable.min.js" />
+    <Content Include="js\jquery_002.js" />
+    <Content Include="js\lemmon-slider.js" />
+    <Content Include="js\require.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Calendar\Calendar.js" />
+    <Content Include="Scripts\Common\AuthorizeAjax.js" />
+    <Content Include="Scripts\Common\ClientTime.js" />
+    <Content Include="Scripts\Common\Queue.js" />
+    <Content Include="Scripts\Extensions\ValidationExtensions.js" />
+    <Content Include="Scripts\FloorPlan\FloorPlan.js" />
+    <Content Include="Scripts\FloorPlan\FloorPlan.QuickTableChange.js" />
+    <Content Include="Scripts\FloorPlan\FloorPlanScripts.js" />
+    <Content Include="Scripts\FloorPlan\Hubs\FloorPlanHub.js" />
+    <Content Include="Scripts\Floor\FloorCommon.js" />
+    <Content Include="Scripts\Floor\FloorManager.js" />
+    <Content Include="Scripts\Floor\OldFloorManager.js" />
+    <Content Include="Scripts\Floor\Reservations.js" />
+    <Content Include="Scripts\hilitor.js" />
+    <Content Include="Content\MondofiTheme\css\bootstrap-theme.css.map" />
+    <Content Include="Content\MondofiTheme\css\bootstrap.css.map" />
+    <Content Include="Content\MondofiTheme\css\timepicker.less" />
+    <Content Include="Content\MondofiTheme\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\MondofiTheme\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\MondofiTheme\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\MondofiTheme\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\MondofiTheme\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\MondofiThemeNew\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\MondofiThemeNew\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\MondofiThemeNew\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\MondofiThemeNew\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\MondofiThemeNew\fonts\glyphicons-halflings-regular.woff2" />
+    <None Include="Properties\PublishProfiles\NewAISMondo.pubxml" />
+    <None Include="Scripts\jquery-1.7.1-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\jquery-1.7.1.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-cookie-plugin.js" />
+    <Content Include="Scripts\jquery-ui-1.10.4.js" />
+    <Content Include="Scripts\jquery-ui-1.10.4.min.js" />
+    <Content Include="Scripts\jquery-ui-1.8.20.js" />
+    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\jquery.datetimepicker.js" />
+    <Content Include="Scripts\jquery.signalR-1.1.4.js" />
+    <Content Include="Scripts\jquery.signalR-1.1.4.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
+    <Content Include="Scripts\jquery.ui.touch-punch.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-2.1.0.debug.js" />
+    <Content Include="Scripts\knockout-2.1.0.js" />
+    <Content Include="Scripts\MergeTable\MergeTable.js" />
+    <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\multidraggable\jquery-1.4.4.min.js" />
+    <Content Include="Scripts\multidraggable\jquery-ui-1.8.8.custom.min.js" />
+    <Content Include="Scripts\multidraggable\jquery.ui.multidraggable-1.8.8.js" />
+    <Content Include="Scripts\multidraggable\ui.multidraggable.js" />
+    <Content Include="Scripts\PNotify\pnotify.custom.js" />
+    <Content Include="Scripts\PNotify\pnotify.custom.min.js" />
+    <Content Include="Scripts\PNotify\ProgressNotifier.js" />
+    <Content Include="Scripts\Popover\bootstrap-popover-extra-placements.js" />
+    <Content Include="Scripts\Popover\bootstrap-popover.js" />
+    <Content Include="Scripts\Popover\bootstrap-tooltip.js" />
+    <Content Include="Scripts\Popover\popover-extra-placements.js" />
+    <Content Include="Scripts\popup.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.js" />
+    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\sorttable.js" />
+    <Content Include="Scripts\Staff\Staff.js" />
+    <Content Include="Scripts\TableAvailability\TACommon.js" />
+    <Content Include="Scripts\ui.multidraggable.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
+    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Allergy\Create.cshtml" />
+    <Content Include="Views\Allergy\Delete.cshtml" />
+    <Content Include="Views\Allergy\Details.cshtml" />
+    <Content Include="Views\Allergy\Edit.cshtml" />
+    <Content Include="Views\Allergy\Index.cshtml" />
+    <Content Include="Views\Allergy\_rightAllergyPartialView.cshtml" />
+    <Content Include="Views\Book\Index.cshtml" />
+    <Content Include="Views\Book\MobileAddReservationOptionsPartial.cshtml" />
+    <Content Include="Views\Book\MobileAddReservationPartial.cshtml" />
+    <Content Include="Views\Book\ReservationListItemPartial.cshtml" />
+    <Content Include="Views\Book\ReservationListPartial.cshtml" />
+    <Content Include="Views\Calendar\DayList.cshtml" />
+    <Content Include="Views\Calendar\Days.cshtml" />
+    <Content Include="Views\Calendar\MonthList.cshtml" />
+    <Content Include="Views\Calendar\Months.cshtml" />
+    <Content Include="Views\Calendar\ShiftNotes.cshtml" />
+    <Content Include="Views\Calendar\WeekList.cshtml" />
+    <Content Include="Views\Calendar\Weeks.cshtml" />
+    <Content Include="Views\City\Create.cshtml" />
+    <Content Include="Views\City\Delete.cshtml" />
+    <Content Include="Views\City\Details.cshtml" />
+    <Content Include="Views\City\Edit.cshtml" />
+    <Content Include="Views\City\Index.cshtml" />
+    <Content Include="Views\City\_rightlCityPartialView.cshtml" />
+    <Content Include="Views\CustomersAllergy\Create.cshtml" />
+    <Content Include="Views\CustomersAllergy\Delete.cshtml" />
+    <Content Include="Views\CustomersAllergy\Details.cshtml" />
+    <Content Include="Views\CustomersAllergy\Edit.cshtml" />
+    <Content Include="Views\CustomersAllergy\Index.cshtml" />
+    <Content Include="Views\CustomersEmail\Create.cshtml" />
+    <Content Include="Views\CustomersEmail\Delete.cshtml" />
+    <Content Include="Views\CustomersEmail\Details.cshtml" />
+    <Content Include="Views\CustomersEmail\Edit.cshtml" />
+    <Content Include="Views\CustomersEmail\Index.cshtml" />
+    <Content Include="Views\CustomerSpecialStatus\Create.cshtml" />
+    <Content Include="Views\CustomerSpecialStatus\Delete.cshtml" />
+    <Content Include="Views\CustomerSpecialStatus\Details.cshtml" />
+    <Content Include="Views\CustomerSpecialStatus\Edit.cshtml" />
+    <Content Include="Views\CustomerSpecialStatus\Index.cshtml" />
+    <Content Include="Views\CustomersPhoneNumber\Create.cshtml" />
+    <Content Include="Views\CustomersPhoneNumber\Delete.cshtml" />
+    <Content Include="Views\CustomersPhoneNumber\Details.cshtml" />
+    <Content Include="Views\CustomersPhoneNumber\Edit.cshtml" />
+    <Content Include="Views\CustomersPhoneNumber\Index.cshtml" />
+    <Content Include="Views\CustomersRestriction\Create.cshtml" />
+    <Content Include="Views\CustomersRestriction\Delete.cshtml" />
+    <Content Include="Views\CustomersRestriction\Details.cshtml" />
+    <Content Include="Views\CustomersRestriction\Edit.cshtml" />
+    <Content Include="Views\CustomersRestriction\Index.cshtml" />
+    <Content Include="Views\Customer\Create.cshtml" />
+    <Content Include="Views\Customer\Delete.cshtml" />
+    <Content Include="Views\Customer\Details.cshtml" />
+    <Content Include="Views\Customer\Edit.cshtml" />
+    <Content Include="Views\Customer\Index.cshtml" />
+    <Content Include="Views\Customer\_rightSideCustomerPartialView.cshtml" />
+    <Content Include="Views\Designation\Create.cshtml" />
+    <Content Include="Views\Designation\Delete.cshtml" />
+    <Content Include="Views\Designation\Details.cshtml" />
+    <Content Include="Views\Designation\Edit.cshtml" />
+    <Content Include="Views\Designation\Index.cshtml" />
+    <Content Include="Views\Designation\_rightDesignationPartialView.cshtml" />
+    <Content Include="Views\FloorPlan\AddReservationAdditionalDetailPartial.cshtml" />
+    <Content Include="Views\FloorPlan\AddReservationAdditionalOptionsPartial.cshtml" />
+    <Content Include="Views\FloorPlan\AddReservationCustomerDetailPartial.cshtml" />
+    <Content Include="Views\FloorPlan\AddReservationCustomerVisitsPartial.cshtml" />
+    <Content Include="Views\FloorPlan\AddReservationOptionsPartial.cshtml" />
+    <Content Include="Views\FloorPlan\EndingReservationPartial.cshtml" />
+    <Content Include="Views\FloorPlan\FloorMiddleSectionPartial.cshtml" />
+    <Content Include="Views\FloorPlan\FloorPlan.cshtml" />
+    <Content Include="Views\FloorPlan\FloorRightAddReservationPartial.cshtml" />
+    <Content Include="Views\FloorPlan\FloorRightReservationTabsPartial.cshtml" />
+    <Content Include="Views\FloorPlan\FloorRightSectionPartial.cshtml" />
+    <Content Include="Views\FloorPlan\GuestNoteUpdatePartial.cshtml" />
+    <Content Include="Views\FloorPlan\ReservationEditPopupOptionsPartial.cshtml" />
+    <Content Include="Views\FloorPlan\ReservationEditPopupOptionsStaticPartial.cshtml" />
+    <Content Include="Views\FloorPlan\ReservationEditPopUpPartial.cshtml" />
+    <Content Include="Views\FloorPlan\ReservationListItemPartial.cshtml" />
+    <Content Include="Views\FloorPlan\ReservationListPartial.cshtml" />
+    <Content Include="Views\FloorPlan\ReservationNoteUpdatePartial.cshtml" />
+    <Content Include="Views\FloorPlan\_FloorPlanPartial.cshtml" />
+    <Content Include="Views\Floor\AddFloorElementPartial.cshtml" />
+    <Content Include="Views\Floor\Edit.cshtml" />
+    <Content Include="Views\Floor\FloorPlan.cshtml" />
+    <Content Include="Views\Floor\GetFloorItemTemplate.cshtml" />
+    <Content Include="Views\Floor\Index.cshtml" />
+    <Content Include="Views\Floor\NewFloorPlan.cshtml" />
+    <Content Include="Views\Floor\RectangleTablePartial.cshtml" />
+    <Content Include="Views\Floor\RectangleTableTemplate.cshtml" />
+    <Content Include="Views\Floor\ReservationAdd.cshtml" />
+    <Content Include="Views\Floor\ReservationEdit.cshtml" />
+    <Content Include="Views\Floor\ReservationEditPopupOptionsPartial.cshtml" />
+    <Content Include="Views\Floor\ReservationEditPopUpPartial.cshtml" />
+    <Content Include="Views\Floor\ReservationList.cshtml" />
+    <Content Include="Views\Floor\ReservationListPartial.cshtml" />
+    <Content Include="Views\Floor\ReservationPopupPartial.cshtml" />
+    <Content Include="Views\Floor\RoundTablePartial.cshtml" />
+    <Content Include="Views\Floor\RoundTableTemplate.cshtml" />
+    <Content Include="Views\Floor\SquareTablePartial.cshtml" />
+    <Content Include="Views\Floor\SquareTableTemplate.cshtml" />
+    <Content Include="Views\Floor\TableDetailEditPartial.cshtml" />
+    <Content Include="Views\Floor\_CurrentFloorPlanPartial.cshtml" />
+    <Content Include="Views\Floor\_EmptyFloorPlansPartial.cshtml" />
+    <Content Include="Views\Floor\_FloorPlanPartial.cshtml" />
+    <Content Include="Views\FoodMenuShift\Create.cshtml" />
+    <Content Include="Views\FoodMenuShift\Delete.cshtml" />
+    <Content Include="Views\FoodMenuShift\Details.cshtml" />
+    <Content Include="Views\FoodMenuShift\Edit.cshtml" />
+    <Content Include="Views\FoodMenuShift\Index.cshtml" />
+    <Content Include="Views\Guest\Create.cshtml" />
+    <Content Include="Views\Guest\Delete.cshtml" />
+    <Content Include="Views\Guest\Details.cshtml" />
+    <Content Include="Views\Guest\Edit.cshtml" />
+    <Content Include="Views\Guest\Index.cshtml" />
+    <Content Include="Views\History\HistoryList.cshtml" />
+    <Content Include="Views\History\Index.cshtml" />
+    <Content Include="Views\MenuShiftHour\Create.cshtml" />
+    <Content Include="Views\MenuShiftHour\Delete.cshtml" />
+    <Content Include="Views\MenuShiftHour\Details.cshtml" />
+    <Content Include="Views\MenuShiftHour\Edit.cshtml" />
+    <Content Include="Views\MenuShiftHour\Index.cshtml" />
+    <Content Include="Views\MergeTable\MergedTableTemplate.cshtml" />
+    <Content Include="Views\MergeTable\MergeTablePartial.cshtml" />
+    <Content Include="Views\Online\Cancel.cshtml" />
+    <Content Include="Views\Online\Cancel_old.cshtml" />
+    <Content Include="Views\Online\Edit.cshtml" />
+    <Content Include="Views\Online\Edit_old.cshtml" />
+    <Content Include="Views\Online\Index.cshtml" />
+    <Content Include="Views\Online\Index_old.cshtml" />
+    <Content Include="Views\Online\Reserve.cshtml" />
+    <Content Include="Views\Online\ReserveFail.cshtml" />
+    <Content Include="Views\Online\ReserveSuccess.cshtml" />
+    <Content Include="Views\Online\ReserveSuccess_old.cshtml" />
+    <Content Include="Views\Online\Reserve_old.cshtml" />
+    <Content Include="Views\PhoneTypes\Create.cshtml" />
+    <Content Include="Views\PhoneTypes\Delete.cshtml" />
+    <Content Include="Views\PhoneTypes\Details.cshtml" />
+    <Content Include="Views\PhoneTypes\Edit.cshtml" />
+    <Content Include="Views\PhoneTypes\Index.cshtml" />
+    <Content Include="Views\PhoneTypes\_rightPhoneTypePartialView.cshtml" />
+    <Content Include="Views\Reservation\ReservationEdit.cshtml" />
+    <Content Include="Views\Reservation\ReservationListItemPartial.cshtml" />
+    <Content Include="Views\Restriction\Create.cshtml" />
+    <Content Include="Views\Restriction\Delete.cshtml" />
+    <Content Include="Views\Restriction\Details.cshtml" />
+    <Content Include="Views\Restriction\Edit.cshtml" />
+    <Content Include="Views\Restriction\Index.cshtml" />
+    <Content Include="Views\Restriction\_rightRestrictionPartialView.cshtml" />
+    <Content Include="Views\Section\Assign.cshtml" />
+    <Content Include="Views\Section\Index.cshtml" />
+    <Content Include="Views\Shared\MainLayout.cshtml" />
+    <Content Include="Views\Shared\_LayoutAddGuests.cshtml" />
+    <Content Include="Views\Shared\_LayoutBase.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.Mobile.cshtml" />
+    <Content Include="Views\Shared\_LayoutMobile.cshtml" />
+    <Content Include="Views\Shared\_LayoutOnline.cshtml" />
+    <Content Include="Views\Shared\_LayoutOnline_old.cshtml" />
+    <Content Include="Views\Shared\_LayoutSetting.cshtml" />
+    <Content Include="Views\Shared\_LeftMenuPartial.cshtml" />
+    <Content Include="Views\ShiftHour\Index.cshtml" />
+    <Content Include="Views\SpecialStatus\Create.cshtml" />
+    <Content Include="Views\SpecialStatus\Delete.cshtml" />
+    <Content Include="Views\SpecialStatus\Details.cshtml" />
+    <Content Include="Views\SpecialStatus\Edit.cshtml" />
+    <Content Include="Views\SpecialStatus\Index.cshtml" />
+    <Content Include="Views\SpecialStatus\_rightSpecialStatusPartialView.cshtml" />
+    <Content Include="Views\Staff\StaffCheckBoxListPartial.cshtml" />
+    <Content Include="Views\Staff\StaffListItemPartial.cshtml" />
+    <Content Include="Views\Staff\StaffListPartial.cshtml" />
+    <Content Include="Views\Staff\StaffSummaryPartial.cshtml" />
+    <Content Include="Views\Staff\StaffTabPartial.cshtml" />
+    <Content Include="Views\TableAvailablity\CheckboxListPartial.cshtml" />
+    <Content Include="Views\TableAvailablity\Edit.cshtml" />
+    <Content Include="Views\TableAvailablity\FilterPartial.cshtml" />
+    <Content Include="Views\TableAvailablity\GetAvailableTablesList.cshtml" />
+    <Content Include="Views\TableAvailablity\getTableAvailablity.cshtml" />
+    <Content Include="Views\TableAvailablity\getTableAvailablityNew.cshtml" />
+    <Content Include="Views\TableAvailablity\Index.cshtml" />
+    <Content Include="Views\TableAvailablity\TimeRangePartial.cshtml" />
+    <Content Include="Views\UserPhone\Create.cshtml" />
+    <Content Include="Views\UserPhone\Delete.cshtml" />
+    <Content Include="Views\UserPhone\Details.cshtml" />
+    <Content Include="Views\UserPhone\Edit.cshtml" />
+    <Content Include="Views\UserPhone\Index.cshtml" />
+    <Content Include="Views\UserPhone\_rightUserPhoneNumberPartialView.cshtml" />
+    <Content Include="Views\User\Create.cshtml" />
+    <Content Include="Views\User\Delete.cshtml" />
+    <Content Include="Views\User\Details.cshtml" />
+    <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\User\RightSideBarPartial.cshtml" />
+    <Content Include="Views\Waiting\AddToWaitListPartial.cshtml" />
+    <Content Include="Views\Waiting\WaitingListItemPartial.cshtml" />
+    <Content Include="Views\Waiting\WaitingListPartial.cshtml" />
+    <Content Include="Views\Waiting\WaitingNoteUpdatePartial.cshtml" />
+    <Content Include="Views\WeekDay\Create.cshtml" />
+    <Content Include="Views\WeekDay\Delete.cshtml" />
+    <Content Include="Views\WeekDay\Details.cshtml" />
+    <Content Include="Views\WeekDay\Edit.cshtml" />
+    <Content Include="Views\WeekDay\Index.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\Login.Mobile.cshtml" />
+    <Content Include="Views\Account\Manage.cshtml" />
+    <Content Include="Views\Account\oldLogin.cshtml" />
+    <Content Include="Views\Account\_RemoveExternalLoginsPartial.cshtml" />
+    <Content Include="Views\Shared\_LayoutMondofi.cshtml" />
+    <Content Include="Views\Mondofi\Index.cshtml" />
+    <Content Include="Views\Mondofi\_SignInModal.cshtml" />
+    <Content Include="Views\Mondofi\Index2.cshtml" />
+    <Content Include="Views\Setting\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutMondofiNew.cshtml" />
+    <Content Include="Views\Shared\_LayoutMondofiHeader.cshtml" />
+    <Content Include="Views\Shared\_LayoutMondofiFooter.cshtml" />
+    <Content Include="Views\Account\ThankYouRegister.cshtml" />
+    <Content Include="Views\Shared\_LayoutMondofiHeaderReplace.cshtml" />
+    <Content Include="Views\Mondofi\Price.cshtml" />
+    <Content Include="Views\Account\EmailSend.cshtml" />
+    <Content Include="Views\Account\NotRegister.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AISModels\AISModels.csproj">
+      <Project>{65150dcf-b790-4ea5-b250-6f587c920c50}</Project>
+      <Name>AISModels</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config" />
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>54056</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:54056/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

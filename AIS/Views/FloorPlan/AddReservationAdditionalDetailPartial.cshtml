@@ -1,0 +1,88 @@
+﻿@using AIS.Extensions;
+@model AIS.Models.ReservationVM
+<style type="text/css">
+    .additional-info .pop-sec-e .status {
+        padding: 10px 0 0 4px;
+    }
+
+        .additional-info .pop-sec-e .status .select-wrapper, .status .select-wrapper select {
+            margin: 7px 0 0;
+            width: 92px;
+        }
+
+    .additional-info .select-wrapper .holder {
+        cursor: pointer;
+        display: block;
+        margin: 0 15px 0 8px;
+        overflow: hidden;
+        position: relative;
+        white-space: nowrap;
+    }
+
+    .additional-info .pop-sec-d .status .select-wrapper, .status .select-wrapper select {
+        margin: 8px 0 0;
+        width: 218px;
+    }
+
+    .additional-info .select-wrapper, .select-wrapper select {
+        height: 26px;
+        line-height: 26px;
+        width: 179px;
+    }
+
+    .additional-info .pop-sec-c .status {
+        background: none repeat scroll 0 0 #F5F5F5;
+        border-bottom: 3px solid #FF9166;
+        box-sizing: border-box;
+        float: left;
+        height: auto;
+        min-height: 60px;
+        padding: 10px 0 0 15px;
+        position: relative;
+        width: 93px;
+    }
+
+    .additional-info .pop-sec-c .statusa {
+        background: none repeat scroll 0 0 #F5F5F5;
+        border-bottom: 3px solid #FF9166;
+        box-sizing: border-box;
+        float: left;
+        height: auto;
+        min-height: 60px;
+        padding: 10px 0 0 15px;
+        position: relative;
+        width: 66%;
+    }
+</style>
+<div id="AdResAdditionalDetail" class="additional-info content_1">
+    <div id="AdResCustDetail">
+        @Html.Action("GetCustomerDetailPartial", "FloorPlan", Model)
+    </div>
+    <div id="AdResAddiOpts" class="resOptParent">
+        @Html.Action("UpdateAddReservationAdditionalOptions", "FloorPlan", Model)
+    </div>
+    @*<div class="pop-sec-b">
+            <span class="sebHd">
+                Reservation Notes
+                <img width="12" height="12" src="/images/icon-note.png" alt="" onclick="EditReservationNote('#AdResAdditionalDetail')"
+                     style="cursor: pointer;" />
+            </span>
+            @{
+                ViewBag.Parent = "#AdResAdditionalDetail";
+                ViewBag.Target = "#AdResSaveForm";
+                {
+                    Html.RenderPartial("~/Views/FloorPlan/ReservationNoteUpdatePartial.cshtml", Model);
+                }
+            }
+        </div>*@
+    <div id="AdResCustVisits">
+        @Html.Action("GetCustomerVisits", "FloorPlan", Model)
+    </div>
+    @if (Model.ReservationId > 0)
+    {
+        <div class="pop-sec-btn">
+            @*<input type="submit" value="Save" />*@
+            <input type="submit" value="Delete this Reservation" onclick="DeleteReservation(true);" />
+        </div>
+    }
+</div>

@@ -1,0 +1,87 @@
+﻿@model AIS.Models.UserProfile
+@{
+    var isAnyServingTable = Model.ServingTables != null && Model.ServingTables.Any();
+}
+<p>
+    <span>@(Model.Id)</span>
+</p>
+<p style="width: 20px; ">
+    <span class="staff-color" style="background: @(Model.StaffColor)"></span>
+</p>
+<p style="width:137px;">
+    <span>
+        <strong>
+            @Model.LastName, @Model.FirstName
+        </strong>
+        <br />
+        @Model.Designation.Desgination
+    </span>
+</p>
+<p class="addTab">&nbsp;</p>
+<div class="col-assTable">
+    @using (Ajax.BeginForm(
+        "UpdateServer",
+        "Staff",
+        null,
+        new AjaxOptions
+        {
+            HttpMethod = "POST",
+            OnSuccess = "{" +
+                        "   if (data.Status == 'Success') {" +
+                        "       alert(data.Message);" +
+                        "       StaffManager.GetStaffList();" +
+                        "   }" +
+                        "   else {" +
+                        "       alert(data.Message);" +
+                        "   }" +
+                        "}"
+        },
+        new
+        {
+            @id = "UpdateStaff" + Model.Id
+        }))
+    {
+        @Html.Hidden("ServerId", Model.Id)
+        <h1>
+            <div style="width:32px; float:right; position:relative;">
+                @Html.Hidden("ServerColor", Model.StaffColor, new { @class = "colorPicker evo-cp0 server-color-pick" })
+            </div>
+            Assign Tables
+        </h1>
+        <div>
+            <div class="select-t selTables">
+                Sections
+            </div>
+            <ul class="boxSelect content_1">
+                <li>
+                    <label for="">
+                        None
+                    </label>
+                    <input class="custom_check" type="checkbox" title="None" name="" id="selectedSectionIdsNone" />
+                </li>
+                @Html.Action("GetServerSectionCheckList", new { ServerId = Model.Id })
+            </ul>
+        </div>
+        <div>
+            <div class="select-t selTables">
+                Tables
+            </div>
+            <ul class="boxSelect content_1">
+                <li>
+                    <label for="">
+                        None
+                    </label>
+                    <input class="custom_check" type="checkbox" title="None" name="" id="selectedFloorTableIdsNone" />
+                </li>
+                @Html.Action("GetServerTableCheckList", new { ServerId = Model.Id })
+            </ul>
+        </div>
+        <div class="select-t">
+            @Html.DropDownList("AssignTo", (SelectList)ViewBag.OtherStaff, (isAnyServingTable ? "Assign To" : "No serving table"), (!isAnyServingTable ? new { @disabled = "disabled" } : null))
+        </div>
+        <div class="col-btn">
+            <input name="" type="button" value="Cancel" onclick="StaffManager.GetStaffList();" />
+            <input name="" type="submit" value="Save" class="svbtn" />
+        </div>
+    }
+</div>

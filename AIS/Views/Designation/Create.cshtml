@@ -1,0 +1,71 @@
+﻿@model  AISModels.Designations
+@using (Ajax.BeginForm("Create", "Designation", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "refreshContent" }, new { @id = "ModalForm" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="for-edit">
+        <h1 id="title">
+            Add Designation
+        </h1>
+        <input type="button" name="" value="Cancel" onclick="cancelClick()" id="btnCancel" />
+        <input type="submit" value="Save" class="saveBtn svbtn" />
+    </div>
+    <div class="add-new-main content_1">
+        <div class="add-new-inner">
+            <div class="add-new-sec-1">
+                <label>
+                    Status
+                </label>
+                @Html.TextBoxFor(model => model.Desgination)
+                @Html.ValidationMessageFor(model => model.Desgination)
+                <span id="Rerror" style="color: Red"></span>
+            </div>
+        </div>
+        <div class="add-new-inner">
+            <div class="add-new-sec-1">
+                <p>
+                    Availability for Section/Table Assignment
+                </p>
+                <img id="iconAvail" class="admin-available-icon" src="/images/available-icon.png"
+                     alt="">
+                <div class="uswitch">
+                    <div class="onoffswitch">
+                        <span class="tooltip_p">
+                            <div class="arrow-down">
+                            </div>
+                            <span>
+                                Available for Section/Table Assignment
+                            </span>
+                        </span>
+                        <input id="Availability" name="IsAssignable" class="onoffswitch-checkbox" value="true"
+                               type="checkbox" />
+                        <label class="onoffswitch-label" for="Availability">
+                            <div style="" class="onoffswitch-inner avail">
+                            </div>
+                            <div style="" class="onoffswitch-switch avail">
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        chkAvailability();
+
+        $("#Availability").click(function (e) {
+            chkAvailability();
+        });
+    });
+    function chkAvailability() {
+        if ($("#Availability").is(":checked")) {
+            $("#Availability").prev('span').addClass('onBtn');
+            $("#iconAvail").attr("src", "/images/available-icon.png");
+        } else {
+            $("#iconAvail").attr("src", "/images/none-icon.png");
+            $("#Availability").prev('span').removeClass('onBtn');
+        }
+    }
+</script>

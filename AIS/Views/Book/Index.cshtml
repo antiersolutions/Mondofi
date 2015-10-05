@@ -1,0 +1,191 @@
+﻿@using AIS.Extensions;
+@{
+    ViewBag.Title = "Book Reservation";
+    Layout = "~/Views/Shared/_LayoutMobile.cshtml";
+}
+@section styles{
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <style type="text/css">
+        .wrapper {
+            min-height: 0 !important;
+        }
+
+        .t-inner {
+            height: auto !important;
+        }
+
+            .t-inner textarea {
+                background: none repeat scroll 0 0 #ffffff;
+                border: 1px solid #c1c1c1;
+                box-shadow: 0 2px 2px #e8e8e8;
+                box-sizing: border-box;
+                color: #959595;
+                float: left;
+                font-family: "Lato",sans-serif;
+                font-size: 16px;
+                font-weight: 500;
+                height: 100px;
+                padding: 5px 0 5px 7px;
+                width: 96%;
+            }
+
+        #logoutForm a {
+            background: none repeat scroll 0 0 #fff;
+            border: 1px solid #e8867c;
+            border-radius: 5px;
+            color: #373a42;
+            cursor: pointer;
+            float: right;
+            font-family: "Lato",sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 12px;
+            padding: 4px 12px 5px;
+            position: absolute;
+            right: 0;
+            top: 8px;
+            transition: all 0.3s ease-out 0s;
+        }
+    </style>
+    <style>
+        .frnt-right-rowb .nav-m {
+            padding: 0px;
+        }
+
+        .t-inner {
+            padding: 0px;
+        }
+
+        .tabs ul.main a {
+            display: block;
+        }
+
+        .tabsC2 {
+            padding: 0px !important;
+        }
+
+            .tabsC2 .ui-datepicker-trigger {
+                float: right;
+                padding-right: 23px;
+                padding-top: 6px;
+            }
+
+        #tabs-1 {
+            padding: 1em 0.4em;
+        }
+    </style>
+    @Styles.Render("~/Content/themes/base/jquery.ui.datepicker.css")
+}
+@section scripts{
+    @Scripts.Render("~/Scripts/Floor/Reservations.js",
+                    "~/Scripts/jquery.ui.touch-punch.min.js",
+                    "~/Scripts/FloorPlan/FloorPlan.js")
+    <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script type="text/javascript">
+        var Floor = {};
+        Floor.currentFloorId = 1;
+
+        $(function () {
+            //var n = $("ul.main li").length;
+            //var w = (100 / n);
+            //$("ul.main li").width(w + '%');
+
+            $('#AdResSaveForm #resDatePic').datepicker({
+                altField: "#resDate",
+                altFormat: "DD, d MM, yy"
+            }).datepicker('setDate', '0');
+            $("#dp").datepicker({
+                dateFormat: 'DD, d M, y',
+                buttonImage: '../Images/cal-icon.png',
+                buttonImageOnly: true,
+                changeMonth: true,
+                changeYear: true,
+                showOn: 'both',
+            });
+            $('#tabs').tabs();
+        });
+
+        function SendDate() {
+            $.ajax({
+                type: 'Post',
+                url: '/Book/GetAllReservationList',
+                data: { date: $("#dp").val() },
+                beforeSend: function () {
+                    var date = $("#dp").val();
+                    $(".datechange").empty();
+                    $(".datechange").append(date);
+                },
+                success: function (data) {
+                    $("#ResAllList").empty();
+                    $("#ResAllList").append(data);
+                },
+                complete: function () {
+
+                }
+            });
+        }
+    </script>
+}
+<div class="frnt-right-rowb" id="floorSideTabs">
+    <div style="  width: 100%;font-size: 22px;padding: 10px;">
+        Reservations
+    </div>
+    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+    }
+    <div id="tabs" class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
+        <ul class="main">
+            <li>
+                <a id="tabRESERVATION" href="#tabs-1">
+                    ADD Reservation
+                </a>
+            </li>
+            <li>
+                <a id="tabWAITING" href="#tabs-2">
+                    View List
+                </a>
+            </li>
+
+        </ul>
+        <div id="tabs-1" class="RTabs">
+            <div class="nav-m">
+                @Html.Action("GetAddReservtionPartial", "FloorPlan", new { resDate = DateTime.UtcNow.Date, isMobileSource = true })
+
+            </div>
+        </div>
+        <div id="tabs-2" class="RTabs tabsC2">
+            <div style="  width: 100%;font-size: 22px;padding: 10px;">
+                <span class="datechange">
+                    @DateTime.UtcNow.ToString("dddd, dd MMM, yy")
+                </span>
+
+                @Html.Hidden("dp", "{0:yyyy/MM/dd}", new { @onchange = "SendDate()" })
+                @*<input type="hidden" id="dp" onchange="SendDate()" />*@
+
+                @*<input id="datepic" type="text" name="name" value=" " />*@
+            </div>
+
+            <div class="hdStatus">
+                <ul>
+                    <li data-order="asc" onclick="SortReservation('cover', this)" style="cursor: pointer;">
+                        #
+                        <img src="/images/sort-icon.png" width="7" height="5" />
+                    </li>
+                    <li data-order="asc" onclick="SortReservation('time', this)" style="cursor: pointer;">
+                        Reservation/Time
+                        <img src="/images/sort-icon.png" width="7" height="5" />
+                    </li>
+                    <li>Table </li>
+                    <li>Status </li>
+                </ul>
+            </div>
+            <div class="frnt-right-rowb reservation-tabs">
+                <div id="ResAllList" class="resInfo resListH">
+                    @Html.Action("GetAllReservationList", "Book", new { Date = DateTime.UtcNow.ToClientTime().Date })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

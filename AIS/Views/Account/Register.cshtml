@@ -1,0 +1,312 @@
+﻿@model AIS.Models.RegisterViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutMondofiNew.cshtml";
+    ViewBag.Title = "Register";
+}
+
+@*@Scripts.Render("~/bundles/jquery")
+
+@Scripts.Render("~/bundles/jqueryval", "~/j*@s/jquery.mCustomScrollbar.concat.min.js")
+@*<script src="~/js/require.js"></script>*@
+<style>
+    .blackToltop {
+    }
+
+    .validation-summary-errors {
+        color: #a94442;
+        margin-left: 48px;
+        margin-bottom: 20px;
+    }
+
+    .blackToltop .tooltip-inner {
+        max-width: 249px !important;
+        padding: 8px !important;
+        color: #fff;
+        font-size: 14px;
+        text-align: left;
+        text-decoration: none;
+        background-color: #000;
+        border-radius: 0px;
+    }
+
+    .blackToltop .tooltip-arrow {
+        top: -3px !important;
+        left: 5px !important;
+        margin-left: 0px !important;
+        border-bottom-color: #000;
+        border-width: 0 14px 11px !important;
+    }
+</style>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @id = "RegisterUser", role = "form", enctype = "multipart/form-data" }))
+{
+    <div class="container-fluid">
+        <div class="container">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pricing-hd register-sec " style="margin-top: 68px;">
+                <h1>Get Started with <strong>Mondo<span>fi</span></strong> Hospitality for Venue Management System</h1>
+                <p>We love talking with customers about their unique businesses. Give us a ring at (001) 123-6541, send an email to <br><a href="mailto:accounts@mondofi.com">accounts@mondofi.com</a>, or tell us a little bit about you and your venue.</p>
+
+            </div>
+
+            @Html.AntiForgeryToken()
+
+            @Html.Hidden("Address.City", "test")
+            @Html.Hidden("Address.State", "test")
+            @Html.Hidden("Address.PostalCode", "test")
+            @Html.Hidden("Address.CountryId", "2")
+            @Html.ValidationSummary(true)
+
+            <div class="col-xs-12  col-sm-12 col-md-12 reg-form">
+                <div class="col-lg-12 center-block noLeft clearfix">
+                    <div class="col-lg-12 col-sm-12 clearfix">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 fname-fld">
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group f-left">
+                                    <div class="cust-field">
+
+                                        @*<span class="holder" >FIRST NAME<span class="small">*</span></span>*@
+                                        @*<input class="form-control" type="text" />*@
+                                        @Html.TextBoxFor(m => m.FirstName, new { @required = "required", @id = "FirstName", @name = "Venue Name", @class = "form-control", @placeholder = "FIRST NAME" })
+                                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group f-right">
+                                    <div class="cust-field">
+                                        @*<span class="holder">SURNAME<span class="small">*</span></span>*@
+                                        @Html.TextBoxFor(m => m.LastName, new { @id = "LastName", @class = "form-control", @required = "required", @placeholder = "SURNAME" })
+                                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
+
+                                <div class="cust-field">
+                                    @*<span class="holder">Venue Name <span class="small">*</span></span>*@
+                                    @Html.TextBoxFor(m => m.RestaurantName, new { @id = "RestaurantName", @class = "form-control", @placeholder = "Venue Name", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.RestaurantName, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
+
+                                <div class="cust-field">
+                                    @*<span class="holder">EMAIL <span class="small">*</span></span>*@
+                                    @Html.TextBoxFor(m => m.UserName, new { @id = "UserName", @class = "form-control", @required = "required", @placeholder = "EMAIL" })
+                                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 clearfix">
+                        <div class="row">
+                            <div class="col-sm-4 col-md-4 col-lg-4 form-group">
+
+                                <div class="cust-field">
+                                    @*<span class="holder"> VENUE PHONE # <span class="small">*</span></span>*@
+                                    @Html.TextBoxFor(m => m.phone, new { @id = "phone", @class = "form-control", @onkeypress = "return IsNumeric(event);", @ondrop = "return false;", @required = "required", @placeholder = "VENUE PHONE # " })
+                                    @Html.ValidationMessageFor(model => model.phone, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-4 col-md-4 col-lg-4 form-group">
+
+                                <div class="cust-field">
+                                    @*<span class="holder">PASSWORD <span class="small">*</span></span>*@
+                                    @Html.PasswordFor(m => m.Password, new { @id = "Password", @class = "form-control buttonClick", @required = "required", @placeholder = "PASSWORD", @data_toggle = "tooltip", @title = "Must be at least 7 characters and contain at least one capital letter, one number and one lowercase letter." })
+                                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+
+                                </div>
+
+                            </div>
+                            <div class="col-sm-4 col-md-4 col-lg-4 form-group">
+
+                                <div class="cust-field">
+                                    @*<span class="holder">CONFIRM PASSWORD <span class="small">*</span></span>*@
+
+                                    @Html.PasswordFor(m => m.ConfirmPassword, new { @placeholder = "CONFIRM PASSWORD", @id = "ConfirmPassword", @class = "form-control cbuttonClick ", @required = "required" })
+                                    @Html.ValidationMessageFor(model => model.ConfirmPassword, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group cust-field">
+                        @*<textarea name="" id="input" class="form-control" rows="3" placeholder="Additional Comments" required="required"></textarea>*@
+
+                        @Html.TextAreaFor(m => m.Notes, new { @id = "Notes", @placeholder = "Additional Comments", @rows = "3", @required = "required", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group terms-cond ">
+                        @Html.CheckBoxFor(m => m.TermAndCondition, new { @required = "required" })
+                        @Html.ValidationMessageFor(model => model.TermAndCondition, "", new { @class = "text-danger" })
+                        @*<input id="rembMe" type="checkbox">*@ <label for="rembMe"><a data-toggle="modal" data-target="#TermsConditions" style="color:white">I Agree with the Terms & Conditions</a>  </label>
+                    </div>
+
+                    <div class="form-group clearfix">
+                        <div class="col-xs-12  col-lg-6">
+                            <div id="example2"></div>
+                            <div id="captcha">
+
+                            </div>
+                            @*<img src="~/Content/MondofiThemeNew/images/captcha.png" />*@
+                        </div>
+                        <div class="col-xs-12 col-lg-6 text-right forgotPw">
+                            @*<button onclick="submitForm()" type="button" class="btn btn-orange btnLogin btnreg text-uppercase">SEND</button>*@
+                            <button id="sub" type="button" onclick="submitForm()" class="btn btn-orange btnLogin btnreg text-uppercase">SEND</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<!--/container-->
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+<script>
+
+
+    var verifyCallback = function (response) {
+        alert(response);
+    };
+    //var widgetId1;
+    var widgetId2;
+    var onloadCallback = function () {
+
+        widgetId2 = grecaptcha.render('example2', {
+            'sitekey': '6LcKww0TAAAAAAph6oaAsQHAtxilh01F8LQ8oZdV',
+            'theme': 'light'
+        });
+
+    };
+
+    function submitForm() {
+
+        if (grecaptcha.getResponse() != "") {
+            $("#sub").remove("type", "button")
+            $("#sub").attr("type", "submit")
+            $("#captcha").remove();
+            //$("form#RegisterUser").isvalid.submit();
+        }
+        else {
+            $("#captcha").empty();
+            $('<div style="color:#a94442;">The Captcha Code you entered is invalid.</div>').appendTo('#captcha');
+        }
+    }
+
+
+    $("#Password").tooltip({
+        html: true,
+        placement: 'bottom',
+        //trigger:'click',
+        template: '<div class="tooltip blackToltop" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+
+
+    })
+
+    var specialKeys = new Array();
+    specialKeys.push(8); //Backspace
+    function IsNumeric(e) {
+        debugger;
+        var keyCode = e.which ? e.which : e.keyCode
+        var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
+        return ret;
+    }
+
+
+
+
+
+
+
+</script>
+@*<script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>*@
+
+<script type="text/javascript">
+        $(function () {
+            $(".buttonClick").blur(function () {
+                //alert("ok");
+                $(".buttonClick").each(function () {
+
+                    var validated = true;
+                    if (this.value.length < 7)
+                        validated = false;
+                    //if (!/\d/.test(this.value))
+                    //    validated = false;
+                    if (!/[a-z]/.test(this.value))
+                        validated = false;
+                    if (!/[A-Z]/.test(this.value))
+                        validated = false;
+                    if (!/[0-9]/.test(this.value))
+                        validated = false;
+                    $("#passwordcheck").html(validated ? "<i class='halflings-icon ok green'></i>" :
+
+                        alert("Must be at least 7 characters and contain at least one capital letter, one number and one lowercase letter.", $("#passwordcheck").empty())
+                   
+                         );
+                });
+            });
+        });
+    </script>
+
+
+<script type="text/javascript">
+    $(function () {
+        $(".cbuttonClick").blur(function () {
+            //alert("ok");
+            $(".buttonClick").each(function () {
+
+                var validated = true;
+                if (this.value.length < 7)
+                    validated = false;
+                //if (!/\d/.test(this.value))
+                //    validated = false;
+                if (!/[a-z]/.test(this.value))
+                    validated = false;
+                if (!/[A-Z]/.test(this.value))
+                    validated = false;
+                if (!/[0-9]/.test(this.value))
+                    validated = false;
+                $("#passwordcheck").html(validated ? "<i class='halflings-icon ok green'></i>" :
+
+                    alert("Must be at least 7 characters and contain at least one capital letter, one number and one lowercase letter.", $("#passwordcheck").empty())
+
+                     );
+            });
+        });
+    });
+</script>
+
+
+
+
+
+<div class="modal fade" id="TermsConditions">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#3b3b41; color:white">
+                <button type="button" style="color: white;" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Terms & Conditions</h4>
+            </div>
+            <div class="modal-body">
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

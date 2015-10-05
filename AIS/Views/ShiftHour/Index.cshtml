@@ -1,0 +1,419 @@
+﻿@using System.Linq;
+@using AIS.Helpers.Caching;
+@model IEnumerable<AISModels.MenuShiftHours>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutBase.cshtml";
+}
+@{
+    var defaultTimeZone = string.Empty;
+    var shiftsModel = Model.ToList();
+    var days = shiftsModel.Select(s => s.WeekDays).OrderBy(d => d.DayId).Distinct().ToList();
+
+    using (var db = new AIS.Models.UsersContext())
+    {
+        defaultTimeZone = (db.GetDefaultTimeZone() ?? TimeZoneInfo.Local).Id;
+    }
+
+    var timeZoneList = System.TimeZoneInfo.GetSystemTimeZones().Select(tz => new SelectListItem
+    {
+        Text = tz.DisplayName,
+        Value = tz.Id,
+        Selected = tz.Id.Equals(defaultTimeZone)
+    });
+
+}
+@section styles{
+    <style type="text/css">
+        .tzone {
+            float: left;
+            margin-left: 35px;
+            margin-top: 6px;
+        }
+    </style>
+}
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.m-left-btn').off('click').click(function () {
+                $('.menu-bar').toggleClass('menu-bar-toggle');
+                $('.m-left-btn').toggleClass('m-left-btn-toggle');
+                $('.middle-section').toggleClass('middle-section-toggle1');
+                $('.hours-section').toggleClass('hours-section-toggle1');
+            });
+
+            $('.m-right-btn').off('click').click(function () {
+                $('.manage-section').toggleClass('manage-section-toggle');
+                $('.m-right-btn').toggleClass('m-right-btn-toggle');
+                $('.middle-section').toggleClass('middle-section-toggle2');
+            });
+
+            document.getElementById("aSettings").className = "active";
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            setStartTimeVal();
+        });
+
+        function setStartTimeVal() {
+            var div = $(".Day");
+            $.each(div, function (indx, d) {
+                var breakOpenTime = $(d).find('.shift-row.Breakfast select.OpenAt option:selected').val();
+                var brunchOpenTime = $(d).find('.shift-row.Brunch select.OpenAt option:selected').val();
+                var lunchOpenTime = $(d).find('.shift-row.Lunch select.OpenAt option:selected').val();
+                var dinnerOpenTime = $(d).find('.shift-row.Dinner select.OpenAt option:selected').val();
+
+                if (breakOpenTime == "" && brunchOpenTime != "") {
+                    $(d).find('.shift-head select.OpenAt').val(brunchOpenTime);
+                } else if (brunchOpenTime == "" && breakOpenTime == "") {
+                    $(d).find('.shift-head select.OpenAt').val(lunchOpenTime);
+                } else if (lunchOpenTime == "" && dinnerOpenTime != "") {
+                    $(d).find('.shift-head select.OpenAt').val(dinnerOpenTime);
+                }
+            });
+        }
+
+
+        function Save() {
+            var arr = [];
+            $(".Day").each(function () {
+                obj = {
+                    DayId: $(this).find('#DayId').val(),
+                    BreakfastOpen: $(this).find(".Breakfast .OpenAt").val(),
+                    BreakfastClose: $(this).find(".Breakfast .CloseAt").val(),
+                    BrunchOpen: $(this).find(".Brunch .OpenAt").val(),
+                    BrunchClose: $(this).find(".Brunch .CloseAt").val(),
+                    LunchOpen: $(this).find(".Lunch .OpenAt").val(),
+                    LunchClose: $(this).find(".Lunch .CloseAt").val(),
+                    DinnerOpen: $(this).find(".Dinner .OpenAt").val(),
+                    DinnerClose: $(this).find(".Dinner .CloseAt").val()
+                };
+                arr.push(obj);
+            });
+            $.ajax({
+                type: 'Post',
+                url: '/ShiftHour/Update',
+                //data: JSON.stringify(arr),
+                data: JSON.stringify({
+                    hours: arr,
+                    timezone: $('#timezone').val()
+                }),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function (myData) {
+                    if (myData.IsSucess) {
+                        window.location.href = "/ShiftHour/Index";
+                        // Reset();
+                    }
+                }
+            })
+        }
+
+        function startTime(e) {
+            var crntTime = $(e.selectedOptions).val();
+            if (crntTime == "") {
+                var cl = $(e.parentNode).parents('.shift-timing-name');
+                $(cl.find("#CloseAt")).find('option:eq(0)').prop("selected", "selected");
+                var parentDiv = $(e.parentNode).parentsUntil('div').parent();
+                var type = $(parentDiv).attr("class").split(" ")[1];
+                changeTimeNA(type, e);
+
+            } else {
+                var nxtTime = "";
+                var parentDiv = $(e.parentNode).parentsUntil('div').parent();
+
+                var type = $(parentDiv).attr("class").split(" ")[1];
+
+                if (type == "Breakfast") {
+                    var sunTime = $(e.parentNode).parentsUntil('div').parent().prev('.shift-head').find("select.OpenAt option:selected").val();
+                    sundayCom(e, crntTime);
+                }
+                if (type == "Brunch") {
+                    brunchCom(e, crntTime, "Brunch");
+                }
+                if (type == "Lunch") {
+                    lunchCom(e, crntTime, "Lunch");
+                }
+                if (type == "Dinner") {
+                    dinnerCom(e, crntTime, "Dinner");
+                }
+            }
+        }
+        function dinnerCom(e, crntTime, Msz) {
+            var lunchTime = $(e.parentNode).parents('div.Day').find('.shift-row.Lunch').find("select.OpenAt option:selected").val();
+            if (lunchTime == "") {
+                lunchCom(e, crntTime, "Dinner");
+            } else {
+                var lunchTimeClose = $(e.parentNode).parents('div.Day').find('.shift-row.Lunch').find("select.CloseAt option:selected").val();
+                if (lunchTimeClose != "") {
+                    if (lunchTimeClose != crntTime) {
+                        alert("" + Msz + " Time open must be same Lunch close time.");
+                        $(e).val(lunchTimeClose);
+                    }
+                } else {
+                    alert("Please select Breakfast close time.");
+                    $(e).find('option:eq(0)').prop("selected", "selected");
+                }
+            }
+        }
+
+        function brunchCom(e, crntTime, Msz) {
+            var brekTime = $(e.parentNode).parents('div.Day').find('.shift-row.Breakfast').find("select.OpenAt option:selected").val();
+            if (brekTime == "") {
+                sundayCom(e, crntTime);
+            } else {
+                var brekTimeClose = $(e.parentNode).parents('div.Day').find('.shift-row.Breakfast').find("select.CloseAt option:selected").val();
+                if (brekTimeClose != "") {
+                    if (brekTimeClose != crntTime) {
+                        alert("" + Msz + " opening time must be same as Break fast closing time.");
+                        $(e).val(brekTimeClose);
+                    }
+                } else {
+                    alert("Please select Breakfast close time.");
+                    $(e).find('option:eq(0)').prop("selected", "selected");
+                }
+            }
+        }
+        function lunchCom(e, crntTime, msz) {
+            var bruhTime = $(e.parentNode).parents('div.Day').find('.shift-row.Brunch').find("select.OpenAt option:selected").val();
+            if (bruhTime == "") {
+                brunchCom(e, crntTime, "Lunch");
+            } else {
+                var brTimeClose = $(e.parentNode).parents('div.Day').find('.shift-row.Brunch').find("select.CloseAt option:selected").val();
+                if (brTimeClose != crntTime) {
+                    alert("" + msz + " opening time must be same as Brunch closing time.");
+                    $(e).val(brTimeClose);
+                }
+            }
+        }
+        function sundayCom(e, crntTime) {
+            var sunTime = $(e.parentNode).parents('div.Day').find('div.shift-head').find("select.OpenAt option:selected").val();
+            if (sunTime != "") {
+                if (crntTime != sunTime) {
+                    alert("Open time must be same day open time.");
+                    $(e).val(sunTime);
+                }
+            } else {
+                alert("Please select sunday opening time.");
+                $(e).find('option:eq(0)').prop("selected", "selected");
+            }
+        }
+        function endTime(e) {
+            var crntTime = $(e.selectedOptions).val();
+            if (crntTime == "") {
+                $(e.parentNode).parents('.shift-timing-name').find("select.OpenAt").find('option:eq(0)').prop("selected", "selected");
+
+                var dayClose = $(e.parentNode).parents('div.Day').find(".shift-head select.CloseAt option:selected").val();
+
+                var lunchClose = $(e.parentNode).parents('.shift-row.Dinner').prev().find("select.CloseAt").val();
+                if (lunchClose != "") {
+                    $(e.parentNode).parents('.shift-row.Dinner').prev().find("select.CloseAt").val(dayClose);
+                } else {
+                    var brClose = $(e.parentNode).parents('div.Day').find(".shift-row.Brunch select.CloseAt").val();
+                    if (brClose != "") {
+                        $(e.parentNode).parents('div.Day').find(".shift-row.Brunch select.CloseAt").val(dayClose);
+                    }
+                }
+            } else {
+                var openTime = $(e.parentNode).parents('.shift-timing-name').find("select.OpenAt option:selected").val();
+                if (openTime != "") {
+                    if (getTimeDiff(openTime, crntTime)) {
+                        alert("Close time greater then open time.");
+                        $(e).find('option:eq(0)').prop("selected", "selected");
+                    } else {
+                        if ($(e.parentNode).parents('.shift-row').next().length > 0) {
+                            $(e.parentNode).parents('.shift-row').next().find("select.OpenAt").val(crntTime);
+                        }
+                        else {
+                            alert("Close time must be same with day close time.");
+                            $(e).val($(e.parentNode).parents('div.Day').find(".shift-head select.CloseAt option:selected").val());
+                        }
+                    }
+
+                } else {
+                    $(e).find('option:eq(0)').prop("selected", "selected");
+                }
+            }
+        }
+
+        function mainStartTime(e) {
+            var crntTime = $(e.selectedOptions).val();
+            if (crntTime == "") {
+                if (confirm("Are you sure reset all values.")) {
+                    var selects = $(e.parentNode).parents("div.Day").find("select");
+                    $.each(selects, function myfunction(a, b) {
+                        $(b).find('option:eq(0)').prop("selected", "selected");
+                    })
+                } else {
+                    $(e).val($(e.parentNode).parents("div.Day").find(".shift-row.Breakfast select.OpenAt option:selected").val());
+                }
+            } else {
+                $(e.parentNode).parents("div.Day").find(".shift-row.Breakfast select.OpenAt").val(crntTime);
+            }
+        }
+        function mainEndTime(e) {
+            var crntTime = $(e.selectedOptions).val();
+            var dinnerOpentime = $(e.parentNode).parents('.shift-timing').find("select.OpenAt option:selected").val();
+
+            stime = new Date(crntTime);
+            etime = new Date(dinnerOpentime);
+
+            st = Date.parse(stime);
+            et = Date.parse(etime);
+
+            if (st <= et) {
+                alert("Close day must be greater then open time.")
+                $(e).val($(e.parentNode).parents("div.Day").find(".shift-row.Dinner select.CloseAt option:selected").val());
+            } else {
+                $(e.parentNode).parents("div.Day").find(".shift-row.Dinner select.CloseAt").val(crntTime);
+            }
+        }
+
+        function changeTimeNA(type, e) {
+            if (type == "Breakfast") {
+                var crntTime = $(e.parentNode).parentsUntil('div').parent().prev('.shift-head').find("select.OpenAt option:selected").val();
+                $(e.parentNode).parents("div.Day").find(".shift-row.Brunch select.OpenAt").val(crntTime);
+            }
+
+            if (type == "Brunch") {
+                var breakfastClose = $(e.parentNode).parents("div.Day").find(".shift-row.Breakfast select.CloseAt option:selected").val();
+                var crnt = $(e.parentNode).parentsUntil('div').parent().parent().find('.shift-head').find("select.OpenAt option:selected").val();
+
+                if (breakfastClose != "") {
+                    $(e.parentNode).parents("div.Day").find(".shift-row.Lunch select.OpenAt").val(breakfastClose);
+
+                } else {
+                    $(e.parentNode).parents("div.Day").find(".shift-row.Lunch select.OpenAt").val(crnt);
+                }
+            }
+
+            if (type == "Lunch") {
+                var brClose = $(e.parentNode).parents("div.Day").find(".shift-row.Brunch select.CloseAt option:selected").val();
+                var breakClose = $(e.parentNode).parents("div.Day").find(".shift-row.Breakfast select.CloseAt option:selected").val();
+
+                var crnt = $(e.parentNode).parentsUntil('div').parent().parent().find('.shift-head').find("select.OpenAt option:selected").val();
+
+                var tim = crnt;
+
+
+                if (brClose != "") {
+                    tim = brClose;
+                } else if (breakClose != "") {
+                    tim = breakClose;
+                }
+
+                $(e.parentNode).parents("div.Day").find(".shift-row.Dinner select.OpenAt").val(tim);
+            }
+            if (type == "Dinner") {
+                endTime(e);
+            }
+        }
+
+        function getTimeDiff(stime, etime) {
+            stime = new Date(stime);
+            etime = new Date(etime);
+
+            s = Date.parse(stime);
+            e = Date.parse(etime);
+            return s > e;
+        }
+
+    </script>
+}
+<div class="middle-section hours-section">
+    <div class="top-filter">
+        <ul>
+            <li><a href="/Setting/Index">Settings</a></li>
+            <li><a href="/User/Index">Users</a></li>
+            <li><a class="active" href="/ShiftHour/Index">Hours</a></li>
+            <li><a href="/Floor/Index">Floorplan</a></li>
+            <li><a href="/TableAvailablity/Index">Table Availability</a></li>
+             
+        </ul>
+    </div>
+    <div class="for-edit">
+        <h1>
+            Set Venue and Shift opening & closing time
+        </h1>
+        <div class="tzone">
+            <label>TimeZone: </label>
+            @Html.DropDownList("timezone", timeZoneList, "- Select TimeZone -")
+        </div>
+        <input type="button" name="" value="Cancel" onclick="javascript:window.location.reload();" />
+        <input type="button" name="" value="Save" onclick="Save();" class="svbtn" />
+    </div>
+    <div class="venue-shift">
+        <ul class="venue-timing">
+            <li>Day</li>
+            <li>Open</li>
+            <li>Close</li>
+        </ul>
+        <div class="venue-shift-inner content_1">
+            @foreach (var day in days)
+            {
+                DateTime dayOpenAt = new DateTime();
+                DateTime dayCloseAt = new DateTime();
+
+                var isAM = !string.IsNullOrEmpty(day.MenuShiftHours.Where(s => s.FoodMenuShiftId == 4).Single().CloseAt) ? day.MenuShiftHours.Where(s => s.FoodMenuShiftId == 4).Single().CloseAt.Contains("AM") : false;
+
+                var DayOpenAtTime = DateTime.TryParse(day.MenuShiftHours.Where(s => s.FoodMenuShiftId == 1).Single().OpenAt, out dayOpenAt) ? (DateTime?)dayOpenAt : null;
+                var DayCloseAtTime = DateTime.TryParse(day.MenuShiftHours.Where(s => s.FoodMenuShiftId == 4).Single().CloseAt, out dayCloseAt) ? (DateTime?)(isAM ? dayCloseAt.AddDays(1) : dayCloseAt) : null;
+                <div class="Day">
+                    <div class="shift-head">
+                        <ul class="shift-timing">
+                            <li>
+                                <h2>
+                                    @day.DayName
+                                </h2>
+                            </li>
+                            <li>
+                                <div class="select-t">
+                                    @Html.DropDownList("DayOpenAt", new SelectList((List<AIS.Models.TimeIntervalVM>)ViewBag.Time, "timeVal", "text", (DayOpenAtTime.HasValue ? DayOpenAtTime.Value.ToString("dd/MM/yyyy hh:mm tt").Replace("-", "/") : null)), "N/A", new { @class = "OpenAt", onChange = "mainStartTime(this)" })
+                                </div>
+                            </li>
+                            <li>
+                                <div class="select-t">
+                                    @Html.DropDownList("DayCloseAt", new SelectList((List<AIS.Models.TimeIntervalVM>)ViewBag.Time, "timeVal", "text", (DayCloseAtTime.HasValue ? DayCloseAtTime.Value.ToString("dd/MM/yyyy hh:mm tt").Replace("-", "/") : null)), "N/A", new { @class = "CloseAt", onChange = "mainEndTime(this)" })
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    @foreach (var menuShift in day.MenuShiftHours)
+                    {
+                        DateTime OpenAT = new DateTime();
+                        DateTime CloseAT = new DateTime();
+
+                        var isOpenAM = !string.IsNullOrEmpty(menuShift.OpenAt) ? menuShift.OpenAt.Contains("AM") : false;
+                        var isCloseAM = !string.IsNullOrEmpty(menuShift.CloseAt) ? menuShift.CloseAt.Contains("AM") : false;
+
+                        var openTime = DateTime.TryParse(menuShift.OpenAt, out OpenAT) ? (DateTime?)((isOpenAM && menuShift.FoodMenuShiftId == 4) ? OpenAT.AddDays(1) : OpenAT) : null;
+                        var closeTime = DateTime.TryParse(menuShift.CloseAt, out CloseAT) ? (DateTime?)((isCloseAM && menuShift.FoodMenuShiftId == 4) ? CloseAT.AddDays(1) : CloseAT) : null;
+
+                        <div class="shift-row @menuShift.FoodMenuShift.MenuShift">
+                            <ul class="shift-timing-name">
+                                <li>
+                                    <h3>
+                                        @menuShift.FoodMenuShift.MenuShift
+                                    </h3>
+                                    @Html.Hidden("DayId", menuShift.DayId)
+                                </li>
+                                <li>
+                                    <div class="select-t">
+                                        @Html.DropDownList("OpenAt", new SelectList((List<AIS.Models.TimeIntervalVM>)ViewBag.Time, "timeVal", "text", (openTime.HasValue ? openTime.Value.ToString("dd/MM/yyyy hh:mm tt").Replace("-", "/") : "abc")), "N/A", new { @class = "OpenAt", onChange = "startTime(this)" })
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="select-t">
+                                        @Html.DropDownList("CloseAt", new SelectList((List<AIS.Models.TimeIntervalVM>)ViewBag.Time, "timeVal", "text", (closeTime.HasValue ? closeTime.Value.ToString("dd/MM/yyyy hh:mm tt").Replace("-", "/") : "abc")), "N/A", new { @class = "CloseAt", onChange = "endTime(this)" })
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>

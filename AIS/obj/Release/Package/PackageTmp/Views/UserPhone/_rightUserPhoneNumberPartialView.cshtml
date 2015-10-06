@@ -1,0 +1,23 @@
+﻿@model IEnumerable<AISModels.UserPhones>
+
+
+<div class="main-right-sec content_1">
+    @foreach (var item in Model)
+    {
+        <div class="section-head">
+            <p>
+                A</p>
+        </div>
+        <ul class="people-status" id="@item.UserPhoneId">
+            <li onclick="edit('@item.PhoneNumber','@item.UserPhoneId')">
+                <img alt="" src="../../Images/available-icon.png">
+                <h1 class="allergyshow">@item.PhoneNumber<br>
+                    <span>(604) 555-2431</span></h1>
+            </li>
+            @*<li>
+			<img alt="" src="../../Images/available-icon.png">
+			<h1>Albert, Mark<br> <span>(604) 555-2431</span></h1>
+		</li>*@
+        </ul>
+    }
+</div>

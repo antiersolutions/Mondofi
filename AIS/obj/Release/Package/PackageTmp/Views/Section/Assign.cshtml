@@ -1,0 +1,498 @@
+﻿@model AISModels.FloorPlan
+@{
+    ViewBag.Title = "Assign";
+    Layout = "~/Views/Shared/_LayoutBase.cshtml";
+}
+@{
+    var array = new string[] { "Sofa", "Chair", "SofaTable", "Wall", "SolidWall", "GlassWall", "BarTable", "Fence", "Pillar" };
+    var table = Model.FloorTables.Where(t => t.IsDeleted == false).AsEnumerable()
+        .Where(p => !array.Contains(p.TableName.Split('-')[0]) && p.SectionId == 0).OrderBy(s => s.TableName, new AIS.Helpers.AlphaNumericComparer());
+
+}
+@section styles{
+    <style>
+        #gallery {
+            min-height: 500px;
+        }
+
+        .selected {
+            border: 1px solid red !important;
+        }
+
+        .selectedTbl {
+            background-color: orange;
+        }
+
+        body li.ui-draggable-dragging {
+            float: left;
+            margin: 4px 0 0 8px;
+            padding: 6px 7px;
+            text-align: center;
+            width: 113px !important;
+        }
+
+            body li.ui-draggable-dragging input[type="text"] {
+                background: none repeat scroll 0 0 #fff;
+                border: 1px solid #c1c1c1;
+                border-radius: 5px;
+                box-shadow: 0 0 5px #d8d8d8;
+                box-sizing: border-box;
+                color: #000;
+                cursor: move;
+                float: left;
+                font-family: 'Lato',sans-serif;
+                font-size: 18px;
+                font-weight: 500;
+                height: 46px;
+                padding: 5px 0 5px 7px;
+                width: 100%;
+            }
+    </style>
+}
+@section scripts
+{
+    <script type="text/javascript" src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            document.getElementById("aSettings").className = "active";
+
+            $('.m-left-btn').off('click');
+            $('.m-right-btn').off('click');
+
+            var className = $('.middle-section').attr('class');
+            if (className == "middle-section Sections-tab middle-section-toggle2 middle-section-toggle1" || className == "middle-section Sections-tab middle-section-toggle1 middle-section-toggle2") {
+                $(".middle-section").addClass("middle-section-view");
+            }
+            else {
+                $(".middle-section").removeClass("middle-section-view");
+            }
+
+            $('.m-left-btn').click(function () {
+                $('.menu-bar').toggleClass('menu-bar-toggle');
+                $('.m-left-btn').toggleClass('m-left-btn-toggle');
+                $('.middle-section').toggleClass('middle-section-toggle1');
+                $('.hours-section').toggleClass('hours-section-toggle1');
+                $('.floor-section').toggleClass('floor-section-toggle1');
+
+                var className = $('.middle-section').attr('class');
+                if (className == "middle-section Sections-tab middle-section-toggle2 middle-section-toggle1" || className == "middle-section Sections-tab middle-section-toggle1 middle-section-toggle2") {
+                    $(".middle-section").addClass("middle-section-view");
+                }
+                else {
+                    $(".middle-section").removeClass("middle-section-view");
+                }
+
+            });
+            $('.m-right-btn').click(function () {
+                $('.manage-section').toggleClass('manage-section-toggle');
+                $('.m-right-btn').toggleClass('m-right-btn-toggle');
+                $('.middle-section').toggleClass('middle-section-toggle2');
+
+                var className = $('.middle-section').attr('class');
+                if (className == "middle-section Sections-tab middle-section-toggle2 middle-section-toggle1" || className == "middle-section Sections-tab middle-section-toggle1 middle-section-toggle2") {
+                    $(".middle-section").addClass("middle-section-view");
+                }
+                else {
+                    $(".middle-section").removeClass("middle-section-view");
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $(window).on('beforeunload', function () {
+                if (isChange == true) {
+                    return 'Are you sure you want to leave?';
+                }
+            });
+            // for all section draggable and dropable each other
+            var sectionDiv = $("#assignTables div.trash");
+
+            var selectedClass = 'selectedTbl',
+                clickDelay = 600,
+                // click time (milliseconds)
+                lastClick, diffClick; // timestamps
+
+            $.each(sectionDiv, function (i, c) {
+                var i = $(c).parent().attr('id');
+                $("#" + i).droppable({
+                    accept: ".trash li",
+                    activeClass: "ui-state-highlight",
+                    drop: function (event, ui) {
+                        var tblItem = this;
+
+                        $('.' + selectedClass).appendTo($(this)).each(function () {
+                            deleteImage($(this), tblItem);
+                        }) // ui.draggable is appended by the script, so add it after
+                        .removeClass(selectedClass).css({
+                            top: 0,
+                            left: 0
+                        });
+
+                        var targetElem = $(this).attr("id");
+
+
+                        /******** 02/09/2014 changes dharminder*********/
+
+                        var str1 = event.target.id.replace(/[^\d.]/g, '');
+                        var total = parseInt(str1);
+                        var test2 = $("#" + total + " li").length;
+                        var sum = test2 + 1;
+                        //$("."+total+"count1:contains("+test+")").text(sum);
+                        $("#" + total + "count").text(sum);
+
+                        /**********************/
+                    }
+                });
+            });
+
+            // there's the gallery and the trash
+            var $gallery = $("#gallery"), $trash = $(".trash"); //$( "#trash,#trash2" );
+            // let the gallery items be draggable
+            $("li", $gallery).bind('mousedown mouseup', function (e) {
+                if (e.type == "mousedown") {
+                    lastClick = e.timeStamp; // get mousedown time
+                } else {
+                    diffClick = e.timeStamp - lastClick;
+                    if (diffClick < clickDelay) {
+                        // add selected class to group draggable objects
+                        $(this).toggleClass(selectedClass);
+                    }
+                }
+            }).draggable({
+                appendTo: "body",
+                helper: "clone",
+                cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+                revert: "invalid", // when not dropped, the item will revert back to its initial position
+                containment: "document",
+                cursor: "move",
+                start: function (e, ui) {
+                    ui.helper.removeClass(selectedClass);
+                },
+                drag: function (e, ui) {
+                    $('.' + selectedClass).css({
+                        top: ui.position.top,
+                        left: ui.position.left
+                    });
+                },
+                stop: function (e, ui) {
+                    $('.' + selectedClass).css({
+                        top: 0,
+                        left: 0
+                    });
+                }
+                //alsoDrag: ".ui-selected"
+            });
+            $("li", $trash).bind('mousedown mouseup', function (e) {
+                if (e.type == "mousedown") {
+                    lastClick = e.timeStamp; // get mousedown time
+                } else {
+                    diffClick = e.timeStamp - lastClick;
+                    if (diffClick < clickDelay) {
+                        // add selected class to group draggable objects
+                        $(this).toggleClass(selectedClass);
+                    }
+                }
+            }).draggable({
+                appendTo: "body",
+                cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+                revert: "invalid", // when not dropped, the item will revert back to its initial position
+                containment: "document",
+                helper: "clone",
+                cursor: "move",
+                start: function (e, ui) {
+                    ui.helper.removeClass(selectedClass);
+                },
+                drag: function (e, ui) {
+                    $('.' + selectedClass).css({
+                        top: ui.position.top,
+                        left: ui.position.left
+                    });
+                },
+                stop: function (event, ui) {
+                    $('.' + selectedClass).css({
+                        top: 0,
+                        left: 0
+                    });
+
+                    /******** 02/09/2014 changes dharminder*********/
+                    var str1 = event.target.parentElement.id.replace(/[^\d.]/g, '');
+                    total = parseInt(str1);
+                    var test1 = $("#" + total + " li").length;
+                    var sub = test1 - 1;
+                    $("#" + total + "count").text(sub);
+
+                    /**********************/
+                }
+            });
+
+            $gallery.droppable({
+                accept: ".trash > li",
+                activeClass: "ui-state-highlight",
+                drop: function (event, ui) {
+                    var tblItem = this;
+                    $('.' + selectedClass).appendTo($(this)).each(function () {
+                        deleteImage($(this), tblItem);
+                    }) // ui.draggable is appended by the script, so add it after
+                    .removeClass(selectedClass).css({
+                        top: 0,
+                        left: 0
+                    });
+
+                    var targetElem = $(this).attr("id");
+                    // deleteImage(ui.draggable, this);
+                }
+            });
+
+            // let the trash be droppable, accepting the gallery items
+            $trash.droppable({
+                accept: "#gallery > li",
+                activeClass: "ui-state-highlight",
+                drop: function (event, ui) {
+                    var tblItem = this;
+                    $('.' + selectedClass).appendTo($(this)).each(function () {
+                        deleteImage($(this), tblItem);
+                    }) // ui.draggable is appended by the script, so add it after
+                    .removeClass(selectedClass).css({
+                        top: 0,
+                        left: 0
+                    });
+
+                    var targetElem = $(this).attr("id");
+                    // deleteImage(ui.draggable, this);
+                }
+            });
+            // let the gallery be droppable as well, accepting items from the trash
+            $gallery.droppable({
+                accept: ".trash li",
+                activeClass: "custom-state-active",
+                drop: function (event, ui) {
+
+                    $('.' + selectedClass).appendTo($(this)).each(function () {
+                        recycleImage($(this));
+                    }) // ui.draggable is appended by the script, so add it after
+                    .removeClass(selectedClass).css({
+                        top: 0,
+                        left: 0
+                    });
+                }
+            });
+            // image deletion function
+            var recycle_icon = "<a href='javascript:void(0)' title='Recycle this image' class='ui-icon ui-icon-refresh'>X</a>";
+            function deleteImage($item, obj) {
+                //debugger;
+                updateTable($item, obj)
+                $item.fadeOut(function () {
+                    var $list = $("ul", $(obj)).length ? $("ul", $(obj)) : $("<ul class='gallery ui-helper-reset'/>").appendTo($(obj));
+                    $item.find("a.ui-icon-trash").remove();
+                    $item.append(recycle_icon).appendTo($list).fadeIn(function () {
+                        $item.animate({ width: "48px" }).find("img").animate({ height: "36px" });
+                    });
+                });
+            }
+            // image recycle function
+            var trash_icon = "<a href='javascript:void(0)' title='Delete this image' class='ui-icon ui-icon-trash'></a>";
+            function recycleImage($item) {
+                removeTableSection($item);
+                $item.fadeOut(function () {
+                    $item
+								.find("a.ui-icon-refresh")
+								.remove()
+								.end()
+								.css("width", "96px")
+								.append(trash_icon)
+								.find("img")
+								.css("height", "72px")
+								.end()
+								.appendTo($gallery)
+                                .removeClass(selectedClass)
+								.fadeIn();
+                });
+            }
+            // image preview function, demonstrating the ui.dialog used as a modal window
+            function viewLargerImage($link) {
+                var src = $link.attr("href"),
+						title = $link.siblings("img").attr("alt"),
+						$modal = $("img[src$='" + src + "']");
+                if ($modal.length) {
+                    $modal.dialog("open");
+                } else {
+                    var img = $("<img alt='" + title + "' width='384' height='288' style='display: none; padding: 8px;' />")
+							.attr("src", src).appendTo("body");
+                    setTimeout(function () {
+                        img.dialog({
+                            title: title,
+                            width: 400,
+                            modal: true
+                        });
+                    }, 1);
+                }
+            }
+            // resolve the icons behavior with event delegation
+            $("ul.gallery > li").click(function (event) {
+                var $item = $(this),
+							$target = $(event.target);
+                if ($target.is("a.ui-icon-trash")) {
+                    deleteImage($item);
+                } else if ($target.is("a.ui-icon-zoomin")) {
+                    viewLargerImage($target);
+                } else if ($target.is("a.ui-icon-refresh")) {
+                    recycleImage($item);
+                }
+                return false;
+            });
+        });
+
+        var assignTableIds = [];
+
+        var isChange = false;
+        function updateTable($tbl, sec) {
+            isChange = true;
+            if ($(sec).hasClass('assign-table-inner-section')) {
+                assignTableIds.push({
+                    tId: $tbl.find("input").attr('id').replace('tbl', ''),
+                    secId: $(sec).attr("id").replace('secId', '')
+                });
+
+            } else {
+                assignTableIds.push({
+                    tId: $tbl.find("input").attr('id').replace('tbl', ''),
+                    secId: $(sec).parent().attr("id").replace('secId', '')
+                });
+            }
+        }
+
+        var removeTableIds = "";
+        function removeTableSection($item) {
+            isChange = true;
+            var isNewAdd = false;
+
+            var tableId = $item.find('input').attr("id").replace('tbl', '');
+            var ids = assignTableIds;
+
+            $.each(ids, function (indx, a) {
+                if (a.tId == tableId) {
+                    assignTableIds.pop(indx);
+                    isNewAdd = true;
+                }
+            });
+
+            if (isNewAdd == false) {
+                removeTableIds = (removeTableIds == "" ? tableId : removeTableIds + "," + tableId);
+            }
+        }
+        function cancelClick() {
+            if (confirm("Are you sure.")) {
+                window.location.href = '/Section/Assign/' + '@Model.FloorPlanId';
+            }
+        }
+
+        function save() {
+            if ((assignTableIds.length > 0 && assignTableIds != "") || removeTableIds != "") {
+                $.ajax({
+                    url: '/Section/addTableSection',
+                    data: { addIds: JSON.stringify(assignTableIds), remIds: removeTableIds },
+                    success: function (data) {
+                        if (data) {
+                            alert("Table Assignment Saved.");
+                            $("#floopPlanBtn").css("display", "block");
+                            isChange = false;
+                            assignTableIds = [];
+                            removeTableIds = "";
+                        } else {
+                            alert("Some error occur.");
+                        }
+                    }
+                });
+            } else {
+                alert("Please select Table.");
+            }
+        }
+
+        //function countTable() {
+        //    var div = $("#assignTables .assign-table-inner-section.ui-droppable");
+        //    $.each(div, function (i, p) {
+        //        $(p).find('h2').html('<span>' + $(p).find('li').length + '</span>Tables');
+        //    })
+        //}
+    </script>
+}
+<div class="middle-section Sections-tab">
+    <div class="top-filter">
+        <ul>
+            <li><a href="/Setting/Index">Settings</a></li>
+            <li><a href="/User/Index">Users</a></li>
+            <li><a href="/ShiftHour/Index">Hours</a></li>
+            <li><a href="/Floor/Index">Floorplan</a></li>
+            <li><a class="active" href="/Section">Sections</a></li>
+            <li><a href="/TableAvailablity/Index">Table Availability</a></li>
+           
+        </ul>
+    </div>
+    <div class="for-edit-section">
+        <ul class="sections-links">
+            <li><a href="/Section/Index/@ViewBag.floorId">Add/Edit Sections</a></li>
+            <li><a class="active" href="javascript:void(0)">Assign Tables</a></li>
+        </ul>
+    </div>
+    <div class="assign-table-main content_1" id="assignTables">
+        @foreach (var item in @Model.Sections)
+        {
+            <div id="@(item.SectionId + "secId")" class="assign-table-inner-section">
+                <div class="row">
+                    <span class="sec-c-box" style="background-color:@item.Color;width:20px;height:20px;float:left;margin-left:20px;margin-top:7px">
+                    </span>
+                    <h3>
+                        @item.Name
+                    </h3>
+                    <h2>
+                        <span id="@(item.SectionId + "count")" class="@(item.SectionId + "count1") outputText">@(item.FloorTable == null ? 0 : item.FloorTable.Count())</span>
+                        Tables
+                    </h2>
+                </div>
+                <div id="trash" class="trash ui-widget-content ui-state-default">
+                    <ul class="gallery ui-helper-reset @item.SectionId" id="@item.SectionId">
+                        @if (item.FloorTable != null)
+                        {
+                            var secTables = item.FloorTable.Where(t => t.IsDeleted == false).ToList();
+
+                            foreach (var tbl in secTables)
+                            {
+                                <li class="ui-widget-content ui-corner-tr ui-draggable" style="display: list-item;
+                                width: 48px;">
+                                    <input type="text" placeholder="@tbl.TableName" name="" value="" id="@(tbl.FloorTableId + "tbl")" />
+                                    <a class="ui-icon ui-icon-refresh" title="Recycle this image" href="javascript:void(0)">
+                                        X
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <hr style="border:1px solid @item.Color; width:100%;float:left" />
+        }
+    </div>
+</div>
+<div class="manage-section unassign-table-sec">
+    <div class="m-right-btn">
+    </div>
+    <h2>
+        Unassigned Tables
+    </h2>
+    <div class="unassign-table-inner content_1">
+        <div class="ui-widget ui-helper-clearfix">
+            <ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
+                @foreach (var it in table)
+                {
+                    <li class="ui-widget-content ui-corner-tr">
+                        <input id="@it.FloorTableId" type="text" value="" name="" placeholder="@it.TableName" />
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+    <input type="button" value="Save" name="" onclick="save()" />
+    <input type="button" value="Cancel" name="" onclick="cancelClick()" />
+    <input id="floopPlanBtn" style="display:none" type="button" value="Click here for floorplan" onclick="javascript:window.location.href='/Floor/Index/@Model.FloorPlanId' " />
+</div>

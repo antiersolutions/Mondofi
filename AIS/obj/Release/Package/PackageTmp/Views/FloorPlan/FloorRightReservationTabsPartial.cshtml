@@ -1,0 +1,167 @@
+﻿@using AIS.Extensions;
+
+@{
+    var clientTime = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName());
+}
+
+<div id="tabs" class="tabs">
+    <ul class="main">
+        <li>
+            <a id="tabRESERVATION" href="#tabs-1" onclick="Floor.UpdateReservationList('', 'RESERVATION', Floor.currentResFilterTab, true);">
+                Reservation
+            </a>
+        </li>
+        <li>
+            <a id="tabWAITING" href="#tabs-2" onclick="Floor.UpdateReservationList('', 'WAITING', Floor.currentResFilterTab, true)">
+                Wait List
+            </a>
+        </li>
+        <li>
+            <a id="tabSTAFF" href="#tabs-3" onclick="$('#StaffSummaryTab').click();">
+                Staff
+            </a>
+        </li>
+    </ul>
+    <div id="tabs-1" class="RTabs">
+        <div class="nav-m">
+            <ul class="navStatus">
+                <li onclick="{ $('.RTabs .navStatus li a').removeClass('active');  $(this).children('a').addClass('active'); }">
+                    <a class="resUPCOMING" href="javascript:void(0)" onclick="Floor.UpdateReservationList('', 'RESERVATION', 'UPCOMING', true);">
+                        upcoming
+                    </a>
+                </li>
+                <li onclick="{ $('.RTabs .navStatus li a').removeClass('active');  $(this).children('a').addClass('active'); }">
+                    <a class="resSEATED" href="javascript:void(0)" onclick="Floor.UpdateReservationList('', 'RESERVATION', 'SEATED', true);">
+                        seated
+                    </a>
+                </li>
+                <li onclick="{ $('.RTabs .navStatus li a').removeClass('active');  $(this).children('a').addClass('active'); }">
+                    <a class="resALL active" href="javascript:void(0)" onclick="Floor.UpdateReservationList('', 'RESERVATION', 'ALL', true);">
+                        all
+                    </a>
+                </li>
+            </ul>
+            <a href="javascript:void(0)" onclick="Floor.OpenAddReservation();" class="add-user" data-toggle="tooltip" data-placement="top" title="Add New Reservation">
+                add user
+            </a>
+        </div>
+        <div class="hdStatus">
+            <ul>
+                <li data-order="asc" onclick="SortReservation('cover', this)" style="cursor: pointer;">
+                    #
+                    <img src="/images/sort-icon.png" width="7" height="5" />
+                </li>
+                <li data-order="asc" onclick="SortReservation('time', this)" style="cursor: pointer;">
+                    Reservation/Time
+                    <img src="/images/sort-icon.png" width="7" height="5" />
+                </li>
+                <li>Table </li>
+                <li>Status </li>
+            </ul>
+        </div>
+        <div id="ResAllList" class="resInfo resListH">
+            @Html.Action("GetAllReservationList20150617", "FloorPlan", (ViewBag.ResParam != null) ? (AIS.Models.GetReservationsParamVM)ViewBag.ResParam : new AIS.Models.GetReservationsParamVM { Date = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName()).Date })
+        </div>
+        <div class="ftrgGroup walkin">
+            <ul>
+                <li onclick="Floor.OpenAddReservation(null, 2, true);">
+                    <img data-toggle="tooltip" data-placement="top" title="Walk In Table Assignment" src="/images/icon-group-2.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddReservation(null, 3, true);">
+                    <img data-toggle="tooltip" data-placement="top" title="Walk In Table Assignment" src="/images/icon-group-3.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddReservation(null, 4, true);">
+                    <img data-toggle="tooltip" data-placement="top" title="Walk In Table Assignment" src="/images/icon-group-4.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddReservation(null, 5, true);">
+                    <img data-toggle="tooltip" data-placement="top" title="Walk In Table Assignment" src="/images/icon-group-5.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddReservation(null, 6, true);">
+                    <img data-toggle="tooltip" data-placement="top" title="Walk In Table Assignment" src="/images/icon-group-6.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddReservation(null, 7, true);">
+                    <img data-toggle="tooltip" data-placement="top" title="Walk In Table Assignment" src="/images/icon-group-7.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddReservation(null, 8, true);">
+                    <img data-toggle="tooltip" data-placement="top" title="Walk In Table Assignment" src="/images/icon-group-8.png" alt="" />
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="tabs-2" class="RTabs">
+        <div class="nav-m">
+            @*<ul class="navStatus">
+                    <li onclick="{ $('.RTabs .navStatus li a').removeClass('active');  $(this).children('a').addClass('active'); }">
+                        <a class="resUPCOMING" href="javascript:void(0)" onclick="Floor.UpdateReservationList('', 'WAITING', 'UPCOMING', true);">
+                            upcoming</a></li>
+                    <li onclick="{ $('.RTabs .navStatus li a').removeClass('active');  $(this).children('a').addClass('active'); }">
+                        <a class="resSEATED" href="javascript:void(0)" onclick="Floor.UpdateReservationList('', 'WAITING', 'SEATED', true);">
+                            seated</a></li>
+                    <li onclick="{ $('.RTabs .navStatus li a').removeClass('active');  $(this).children('a').addClass('active'); }">
+                        <a class="resALL  active" href="javascript:void(0)" onclick="Floor.UpdateReservationList('', 'WAITING', 'ALL', true);">
+                            all</a></li>
+                </ul>*@ <a href="javascript:void(0)" onclick="Floor.OpenAddWaiting();" class="add-user" data-toggle="tooltip" data-placement="top" title="Add New Booking">
+                add user
+            </a>
+        </div>
+        <div class="hdStatus">
+            <ul>
+                <li>
+                    # @*<img src="/images/sort-icon.png" width="7" height="5" style="cursor: pointer;" data-order="asc"
+                        onclick="SortReservation('cover', this)" />*@
+                </li>
+                <li>
+                    Customer @*<img src="/images/sort-icon.png" width="7" height="5" style="cursor: pointer;" data-order="asc"
+                        onclick="SortReservation('time', this)" />*@
+                </li>
+                <li>Actions </li>
+                @*<li>Status </li>*@
+            </ul>
+        </div>
+        <div id="ResWaitList" class="resInfo resListH">
+            @Html.Action("GetAllWaitingList", "Waiting", (ViewBag.ResParam != null) ? new { WaitDate = ((AIS.Models.GetReservationsParamVM)ViewBag.ResParam).Date } : new { WaitDate = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName()).Date })
+        </div>
+        <div class="ftrgGroup">
+            <ul>
+                <li onclick="Floor.OpenAddWaiting(2);">
+                    <img data-toggle="tooltip" data-placement="top" title="WaitList Booking" src="/images/icon-group-2.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddWaiting(3);">
+                    <img data-toggle="tooltip" data-placement="top" title="WaitList Booking" src="/images/icon-group-3.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddWaiting(4);">
+                    <img data-toggle="tooltip" data-placement="top" title="WaitList Booking" src="/images/icon-group-4.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddWaiting(5);">
+                    <img data-toggle="tooltip" data-placement="top" title="WaitList Booking" src="/images/icon-group-5.png" alt="" />
+                </li>
+                <li onclick="Floor.OpenAddWaiting(6);">
+                    <img data-toggle="tooltip" data-placement="top" title="WaitList Booking" src="/images/icon-group-6.png" alt="" />
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="tabs-3" class="RTabs">
+        @Html.Partial("~/Views/Staff/StaffTabPartial.cshtml")
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('body .tooltip').remove();
+        $('.RTabs [data-toggle="tooltip"]').tooltip({
+            container: 'body'
+        });
+        //$('.RTabs [data-toggle="tooltip"]').tooltip().on("mouseenter", function () {
+        //    var $this = $(this),
+        //        tooltip = $this.next(".tooltip");
+        //    debugger;
+        //    tooltip.find(".tooltip-inner").css({
+        //        backgroundColor: "#fff",
+        //        color: "#333",
+        //        borderColor: "#333",
+        //        borderWidth: "1px",
+        //        borderStyle: "solid"
+        //    });
+        //});;
+    });
+</script>

@@ -1,0 +1,74 @@
+﻿@model AIS.Models.UserProfile
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>UserProfile</legend>
+
+        @Html.HiddenFor(model => model.UserId)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.UserName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.UserName)
+            @Html.ValidationMessageFor(model => model.UserName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FirstName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.FirstName)
+            @Html.ValidationMessageFor(model => model.FirstName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.LastName)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.LastName)
+            @Html.ValidationMessageFor(model => model.LastName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.DesignationId)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.DesignationId)
+            @Html.ValidationMessageFor(model => model.DesignationId)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.PhotoPath)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.PhotoPath)
+            @Html.ValidationMessageFor(model => model.PhotoPath)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Availability)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.Availability)
+            @Html.ValidationMessageFor(model => model.Availability)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

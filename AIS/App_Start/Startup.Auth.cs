@@ -24,7 +24,7 @@ namespace AIS
             // Configure the sign in cookie
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                ExpireTimeSpan = TimeSpan.FromMinutes(1000),
+                ExpireTimeSpan = TimeSpan.FromHours(3000),
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
                 Provider = new CookieAuthenticationProvider
@@ -32,7 +32,7 @@ namespace AIS
                     // Enables the application to validate the security stamp when the user logs in.
                     // This is a security feature which is used when you change a password or add an external login to your account.  
                     OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, UserProfile, long>(
-                        validateInterval: TimeSpan.FromMinutes(30),
+                        validateInterval: TimeSpan.FromHours(3000),
                         getUserIdCallback: (user) => user.GetUserId<long>(),
                         regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }

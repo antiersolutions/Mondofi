@@ -1,0 +1,146 @@
+﻿@model AIS.Models.OnlineAvailTables
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutOnline_old.cshtml";
+    var date = (DateTime)ViewBag.date;
+    AISModels.Reservation Reservation = ViewBag.CurrentReservation;
+}
+@section styles{
+    @Styles.Render("~/Content/themes/base/minified/jquery-ui.min.css",
+    "~/Content/themes/base/minified/jquery.ui.datepicker.min.css")
+}
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#date").datepicker();
+            //$('#date').datepicker("option", "dateFormat", 'mm/dd/yy');// live
+            $('#date').datepicker("option", "dateFormat", 'dd/MM/yy');// local
+            $("#date").datepicker("option", "minDate", new Date());
+            $('#date').datepicker('setDate', new Date('@date.Year', '@(date.Month - 1)', '@date.Day'));
+        });
+    </script>
+}
+<div class="login-inner1">
+    <div class="search-box">
+        @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+        {
+            <div class="row">
+                <p>EDIT A RESERVATION</p>
+                <div class="control-group">
+                    <label for="date">Date</label>
+                    @Html.TextBox("date", (DateTime)ViewBag.date, new
+                    {
+                        data_val_required = "",
+                        data_val = "true",
+                    })
+                </div>
+                <div class="control-group">
+                    <label for="time">Time</label>
+                    @Html.DropDownList("time", new SelectList(ViewBag.TimeList, "Value", "Text"), "-Select Time-", new
+                    {
+                        data_val_required = "",
+                        data_val = "true"
+                    })
+                </div>
+                <div class="control-group">
+                    <label for="covers">Party Size</label>
+                    @Html.DropDownList("covers", new SelectList(ViewBag.CoverList, "Value", "Text"), "-Select covers-", new
+                    {
+                        data_val_required = "",
+                        data_val = "true"
+                    })
+                </div>
+
+                <button type="submit"> Search for Reservations</button>
+            </div>
+        }
+    </div>
+    <div class="results" style="width: 600px; color: #444;">
+        <div class="search-match availResult">
+            <h1>Your origional reservation details are:</h1>
+            <div class="notice">
+                <div class="res res-head" style="border-bottom:none; border-radius:5px 5px 0 0;">
+                    <div class="head-control">
+                        <img src="~/Images/logo.png" style="padding-left:10px" />
+                    </div>
+                    <div class="head-control" style="float: right;">
+                        <label>Guests</label>
+                        <h2>@Reservation.Covers Guests</h2>
+                    </div>
+                    <div class="head-control" style="float:right;">
+                        <label>Time</label>
+                        <h2>@Reservation.TimeForm.ToString("h:mm tt")</h2>
+                    </div>
+                    <div class="head-control" style="float:right;">
+                        <label>Date</label>
+                        <h2>@Reservation.ReservationDate.ToString("ddd, MMM dd")</h2>
+                    </div>
+                </div>
+                <div class="res res-foot" style="border: 1px solid #bbb; line-height: 2em;">
+                    <div class=" res-foot-left" style="float: left; width: 47%;">
+                        <div class="address">
+                            <h6>RESTAURANT</h6>
+                            <h2 style="color:skyblue;">The Vancouver Fish Company</h2>
+                            <h5>1517 Anderson St. Vancouver, BC</h5>
+                            <h4>(778)VANFISH (778 826 3434)</h4>
+                        </div>
+                    </div>
+                    <div class="res-foot-right" style="float: right; width: 47%;">
+                        <div class="user-detail">
+                            <div class="pro-pic">
+                                <img src="~/Images/pro-pic.png" height="75" width="75" />
+                            </div>
+                            <div class="desc">
+                                <h6>DINER</h6>
+                                <h2>@ViewBag.UserName</h2>
+                                <h4>Contact Info Hidden</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model != null)
+    {
+        <div class="results">
+            <div class="search-match availResult">
+                <p>AVAILABILITIES:</p>
+                @if ((bool)ViewBag.IsCurrentReservation)
+                {
+                    <div class="notice">
+                        <h2> Please change the above parameters to see other availabilities for your reservation.</h2>
+                    </div>
+                }
+                else if (Model.ExactMatch != null)
+                {
+                    <div class="avail">
+                        <h3>@Model.ExactMatch.StartTime.ToString("h:mm tt")</h3>
+                        @using (Html.BeginForm("Update", "Online", new AIS.Models.ReservationVM
+                        {
+                            ReservationId = Reservation.ReservationId,
+                            resDate = (DateTime)ViewBag.date,
+                            time = Model.ExactMatch.StartTime.ToString("h:mm tt"),
+                            tableIdd = Model.ExactMatch.AvailableTables.First().FloorTableId.ToString(),
+                            Covers = (int)ViewBag.covers
+                        }, FormMethod.Post))
+                        {
+                            <a href="javascript:void(0)" onclick="$(this).parent('form').submit()">Update</a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    var tt = ((string)ViewBag.time).Split('-');
+                    var startTime = DateTime.ParseExact(tt[0].Trim(), "ddMMyyyyhhmmtt", System.Globalization.CultureInfo.InvariantCulture).ToString("h:mm tt");
+
+                    <div class="notice">
+                        <h2> Sorry, No tables are available for your newly requested parameters. Please either cancel this reservation and call the restaurant at <span style="color:skyblue;">(604) 559-3474</span> for additional information or maintain existing reservation.</h2>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

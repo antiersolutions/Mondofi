@@ -1,0 +1,105 @@
+﻿@using (Html.BeginForm(null, null, FormMethod.Get, new { @id = "filterForm" }))
+{
+    <div class="for-edit-section" style="border-bottom: 0px;">
+        <div class="ta-main">
+            <ul>
+                <li>
+                    <div class="ta-col-a">
+                        Time Range</div>
+                    <div class="sel-m">
+                        <label>
+                            Start Time</label>
+                        <div class="select-main">
+                            @Html.DropDownList("StartTime", new SelectList((List<string>)ViewBag.Time, ViewBag.MinTime), new { @id = "selectbox" })
+                        </div>
+                    </div>
+                    <div class="sel-m">
+                        <label>
+                            End Time</label>
+                        <div class="select-main">
+                            @Html.DropDownList("EndTime", new SelectList((List<string>)ViewBag.Time, ViewBag.MaxTime), new { @id = "selectbox" })
+                        </div>
+                    </div>
+                </li>
+                @*<li>
+                <div class="ta-col-a">
+                    Days of week to show</div>
+                <div class="row-check">
+                    @Html.Action("GetDayofWeekList", new { selectedDay = 0, isCheckAll = true })
+                </div>
+            </li>*@
+                <li>
+                    <div class="ta-col-a">
+                        Seating Status</div>
+                    <div class="row-check">
+                        @Html.Action("GetSeatingAvailabilityList", new { selectedAvail = 0, isCheckAll = true, isFilter = true })
+                    </div>
+                </li>
+                <li>
+                    <div class="ta-col-a">
+                        Table Name</div>
+                    <div class="row-check">
+                        <span class="col-check">
+                            <input class="custom_check" type="checkbox" name="apple" checked="checked" id="all"
+                                value="days" /><label for="all">All</label></span><a class="showall" href="#">Show All</a>
+                        <div class="row-check">
+                            @Html.Action("GetAvailableTablesList", new { selectedTable = 0, isCheckAll = true })
+                        </div>
+                    </div>
+                </li>
+                @*    <li>
+                <div class="ta-col-a">
+                    Level</div>
+                <div class="row-check">
+                    <span class="col-check">
+                        <input class="custom_check" type="checkbox" name="apple" checked="checked" id="all"
+                            value="days" /><label for="all">All</label></span>
+                    <div class="row-check">
+                        <div class="col-check-mianb">
+                            <span class="col-checkb">
+                                <input class="custom_check" type="checkbox" name="apple" checked="checked" id="1"
+                                    value="days" /><label for="1">1</label></span> <span class="col-checkb">
+                                        <input class="custom_check" type="checkbox" name="apple" checked="checked" id="2"
+                                            value="days" /><label for="2">2</label></span>
+                        </div>
+                        <div class="col-check-mianb">
+                            <span class="col-checkb">
+                                <input class="custom_check" type="checkbox" name="apple" checked="checked" id="3"
+                                    value="days" /><label for="3">3</label></span> <span class="col-checkb">
+                                        <input class="custom_check" type="checkbox" name="apple" id="4" value="days" /><label
+                                            for="4">4</label></span>
+                        </div>
+                        <div class="col-check-mianb">
+                            <span class="col-checkb">
+                                <input class="custom_check" type="checkbox" name="apple" checked="checked" id="5"
+                                    value="days" /><label for="5">5</label></span> <span class="col-checkb">
+                                        <input class="custom_check" type="checkbox" name="apple" id="6" value="days" /><label
+                                            for="6">6</label></span>
+                        </div>
+                        <div class="col-check-mianb">
+                            <span class="col-checkb">
+                                <input class="custom_check" type="checkbox" name="apple" checked="checked" id="7"
+                                    value="days" /><label for="7">7</label></span> <span class="col-checkb">
+                                        <input class="custom_check" type="checkbox" name="apple" id="8" value="days" /><label
+                                            for="8">8</label></span>
+                        </div>
+                        <div class="col-check-mianb">
+                            <span class="col-checkb">
+                                <input class="custom_check" type="checkbox" name="apple" checked="checked" id="9"
+                                    value="days" /><label for="9">9</label></span> <span class="col-checkb">
+                                        <input class="custom_check" type="checkbox" name="apple" id="10" value="days" /><label
+                                            for="10">10</label></span>
+                        </div>
+                    </div>
+            </li>*@
+                <li>
+                    <div class="ta-col-a">
+                        Table Class</div>
+                    <div class="row-check">
+                        @Html.Action("GetTableClassList", new { isCheckAll = true })
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+}

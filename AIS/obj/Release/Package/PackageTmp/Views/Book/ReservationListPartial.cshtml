@@ -1,0 +1,19 @@
+﻿@model IList<AISModels.Reservation>
+<style type="text/css">
+    .frnt-right-popup {
+        display: block;
+    }
+</style>
+<ul class="reslist">
+    @foreach (var Res in Model)
+    {
+        <li id="resL@(Res.ReservationId)" class="@(Res.Covers)cover" data-cover="@(Res.Covers)" data-time="@(Res.TimeForm.TimeOfDay.Ticks)">
+            @Html.Partial("~/Views/Book/ReservationListItemPartial.cshtml", Res)
+        </li>
+    }
+</ul>
+<script type="text/javascript">
+    $(function () {
+        $(".covStatus .sc").text('@(ViewBag.Covers)');
+    });
+</script>

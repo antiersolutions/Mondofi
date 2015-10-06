@@ -1,0 +1,84 @@
+﻿@using AIS.Extensions;
+<style type="text/css">
+    .popOverlay-body .ta-main .row-check .col-check .custom_check {
+        margin: 8px 0;
+    }
+
+    .popOverlay-foot .t-bottom {
+        background: #ffffff;
+        padding: 16px 0;
+        border: none;
+    }
+</style>
+<div class="ta-main t-inner resOptParent">
+    <p><b>The following tables are about to reset. If you wish to extend any of them, please select the table and length of extension prior to saving. If no action is taken the tables will reset.</b></p>
+    <div class="row">
+        <div class="left-s">
+            <label>
+                Minutes
+            </label>
+            @using (Ajax.BeginForm(
+                    "GetEndingReservation",
+                    "FloorPlan",
+                    new AjaxOptions
+                    {
+                        HttpMethod = "GET",
+                        UpdateTargetId = "mrgtblList",
+                        OnSuccess = "{" +
+                                    "   $('#mrgtblList .custom_check').screwDefaultButtons({" +
+                                    "       image: 'url(/images/checkbox.png)'," +
+                                    "       width: 24," +
+                                    "       height: 24" +
+                                    "   });" +
+                                    "}"
+                    }))
+            {
+                <div class="select-main">
+                    @Html.DropDownList(
+                        "ddlTimeToAdd",
+                        new SelectList(ViewBag.TimeToAddList, "Value", "Text"),
+                        new
+                        {
+                            @onchange = "{" +
+                                //"   var date = $.datepicker.formatDate('DD, d M, y', new Date());" +
+                                        "   var date = $.datepicker.formatDate('DD, d M, y', serverDateTime);" +
+                                //"   $(this).parents('form').find('#EndResDate').val(Floor.currentDate);" +
+                                        "   $(this).parents('form').find('#EndResDate').val(date);" +
+                                        "   $(this).parents('form').find('#EndTimeInMin').val($('#EndResPopUp #TimeInMin').val());" +
+                                        "   $('#UpadteEndRes #MinToAdd').val(this.value);" +
+                                        "   $(this).parents('form').submit();" +
+                                        "}"
+                        })
+                    @Html.Hidden("EndResDate")
+                    @Html.Hidden("EndTimeInMin")
+                </div>
+            }
+        </div>
+    </div>
+    @using (Ajax.BeginForm(
+            "UpdateExtendedReservationTime",
+            "FloorPlan",
+            null,
+            new AjaxOptions
+            {
+                HttpMethod = "POST",
+                OnSuccess = "{" +
+                            "   if (data.Status == 'Success') {" +
+                            "       alert(data.Message);" +
+                            "   }" +
+                            "   else {" +
+                            "       alert(data.Message);" +
+                            "   }" +
+                            "   $('#ddlTimeToAdd').change();" +
+                            "}"
+            },
+            new
+            {
+                @id = "UpadteEndRes"
+            }))
+    {
+        <div id="mrgtblList" class="row-check">
+        </div>
+        @Html.Hidden("MinToAdd", 15)
+    }
+</div>

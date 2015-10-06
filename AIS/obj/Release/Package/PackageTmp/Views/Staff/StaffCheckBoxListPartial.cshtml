@@ -1,0 +1,12 @@
+﻿@model IEnumerable<AIS.Models.CheckListVM>
+
+@foreach (var item in Model)
+{
+    <li>
+        <label for="@item.PropertyName@item.Value">
+            @item.Name
+        </label>
+        <span class="staff-color" style="border-radius: 0; float: left; margin: 13px 0 0 13px; background: @(item.Icon); "></span>
+        <input class="custom_check @item.Group" type="checkbox" title="@item.Name" name="@item.PropertyName" @(Html.Raw(item.IsChecked ? "checked=\"checked\"" : "")) id="@item.PropertyName@item.Value" value="@item.Value" @(Html.Raw(item.IsDisabled ? "disabled=\"disabled\"" : "")) />
+    </li>
+}

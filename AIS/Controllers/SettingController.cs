@@ -23,8 +23,28 @@ namespace AIS.Controllers
         public ActionResult Index()
         {
             var logoSetting = db.tabSettings.Where(s => s.Name.Contains("Logo")).Single();
+            ViewBag.Phone = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single();
+            ViewBag.Address = db.tabSettings.Where(s => s.Name.Contains("Address")).Single();
 
             return View(logoSetting);
+        }
+
+        public ActionResult UpdatePhone(string phone)
+        {
+            var phoneNumber = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single();
+            phoneNumber.Value = phone;
+            db.Entry(phoneNumber).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            return Json("Ok", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UpdateAddress(string address)
+        {
+            var getAddress = db.tabSettings.Where(s => s.Name.Contains("Address")).Single();
+            getAddress.Value = address;
+            db.Entry(getAddress).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            return Json("Ok", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -111,7 +131,7 @@ namespace AIS.Controllers
         {
             cache.RemoveByPattern(string.Format(CacheKeys.SETTING_BY_NAME_COMPANY_PATTERN, User.Identity.GetDatabaseName()));
             //cache.RemoveByPattern(CacheKeys.FOOD_MENUSHIFT_PATTERN);
-            cache.RemoveByPattern(string.Format(CacheKeys.FOOD_MENUSHIFT_COMPANY_PATTERN,User.Identity.GetDatabaseName()));
+            cache.RemoveByPattern(string.Format(CacheKeys.FOOD_MENUSHIFT_COMPANY_PATTERN, User.Identity.GetDatabaseName()));
             // update cache
             db.GetFoodMenuShifts();
             db.GetMenuShiftHours();

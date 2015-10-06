@@ -1,0 +1,239 @@
+﻿@using AIS.Helpers;
+@using AIS.Extensions;
+@model AISModels.Waiting
+@{
+    var customer = Model.Customer;
+    var phnNumbers = customer.PhoneNumbers.ToList();
+}
+@*<a href="javascript:void(0)" class="jt" style="cursor: pointer;">*@
+<p>
+    <span>@(Model.Covers)</span>
+</p>
+<p>
+    <span>
+        <strong>
+            @Model.Customer.FirstName @Model.Customer.LastName
+        </strong>
+        <br />
+        @(Model.Customer.PhoneNumbers.Count > 0 ? Convert.ToInt64(Model.Customer.PhoneNumbers.FirstOrDefault().PhoneNumbers.Replace(" ", string.Empty)).ToString("000'-'000'-'0000") : string.Empty)
+        <br />
+        @Model.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).ToString("hh:mm tt")
+        @if (!string.IsNullOrWhiteSpace(Model.Notes))
+        {
+            <img src="/images/has-note.png" width="20" height="20" alt="" title="A note is there."
+                 style="cursor: pointer; position:relative; top:4px;" />
+        }
+    </span>
+</p>
+<p>
+    @(new HtmlString(
+        @Ajax.ImageActionLink(
+            "/images/cancelled-2.png",
+            " ",
+            "Delete waitlist booking",
+            "DeleteWaiting",
+            "Waiting",
+            new
+            {
+                WaitingId = Model.WaitingId
+            },
+            new AjaxOptions
+            {
+                HttpMethod = "POST",
+                Confirm = "Do you want to delete this waitlist booking?",
+                OnSuccess = "{" +
+                             "   if (data.Status == 'Success') {" +
+                             "       alert('Waitlist updated successfully.');" +
+                             "       HidePopovers();" +
+                             "       $('#waitL" + Model.WaitingId + "').remove();" +
+                             "   }" +
+                             "   else {" +
+                             "       alert(data.Message);" +
+                             "   }" +
+                            "}"
+            },
+            new
+            {
+                @id = "DltWaitForm" + Model.WaitingId
+            })
+        ))
+</p>
+<p>
+    @(new HtmlString(
+        @Ajax.ImageActionLink(
+           "/images/call-ok.png",
+           " ",
+           "Confirm waitlist booking",
+           "GetAddReservtionPartial",
+           "FloorPlan",
+           new AIS.Models.ReservationVM
+           {
+               Covers = Model.Covers,
+               Email = (Model.Customer.Emails.Count() > 0) ? Model.Customer.Emails.First().Email : string.Empty,
+               FirstName = Model.Customer.FirstName,
+               LastName = Model.Customer.LastName,
+               MobileNumber = Model.Customer.PhoneNumbers.First().PhoneNumbers,
+               resDate = Model.WaitingDate,
+               WaitingId = Model.WaitingId,
+               ReservationNote = Model.Notes
+           },
+           new AjaxOptions
+           {
+               HttpMethod = "GET",
+               UpdateTargetId = "floorSideAddRes", //"rightContent",
+               OnBegin = "{  " +
+                         "  HidePopovers();" +
+                         "  $('#rightContent .content_1').mCustomScrollbar('destroy');" +
+                         "}",
+               OnSuccess = "{" +
+                   //"    HideClueTip();" +
+                           "    $('.frnt-right-rowb #addResTabs .content_1').css('height', ($('.manage-section').height() - 232));" +
+                           "    $('#addResTabs').tabs();" +
+                           "    BindScroll('#rightContent', false);" +
+                           "    self.IsDateChanged = false;" +
+                           "    $('#AdResSaveForm').removeData('unobtrusiveValidation');" +
+                           "    $.validator.unobtrusive.parse('#AdResSaveForm');" +
+                           "    AddReservationTimeChange($('#AdResDDL #ddlTime'), false);" +
+                           "    self.selectedDuration = $('#AdResDDL #Duration').val();" +
+                           "    isAddEditResPanelOpen = true;" +
+                           "    StopSlideTimer();" +
+                           "    $('#floorSideAddRes').show();" +
+                           "    $('#floorSideAddWait').hide();" +
+                           "    $('#floorSideTabs').hide();" +
+                           "}"
+           }, new
+           {
+               @id = "ToResForm" + Model.WaitingId
+           })
+        ))
+</p>
+@*</a>*@
+
+<div class="popUpContent" style="display:none;">
+    <div class="frnt-right-popup" id="waitPopUpTTip@(Model.WaitingId)">
+        @using (Ajax.BeginForm(
+        "UpdateWaiting",
+        "Waiting",
+        null,
+        new AjaxOptions
+        {
+            HttpMethod = "POST",
+            OnSuccess = "{" +
+                        "   UpadateWaitingSuccess(data, " + Model.WaitingId + ");" +
+                        "}"
+        },
+        new
+        {
+            @id = "WUpdateForm" + (Model.WaitingId)
+        }))
+        {
+            @Html.Hidden("WaitingId", Model.WaitingId)
+            @Html.Hidden("Covers", Model.Covers)
+            @Html.Hidden("Notes", Model.Notes)
+            @Html.Hidden("GuestNote")
+        }
+        <div class="pop-sec-a">
+            <div class="colA">
+                <img src="/images/icon-pop-name.png" alt="" />
+            </div>
+            <div class="colB">
+                @customer.FirstName @customer.LastName<br />
+                <span>@(phnNumbers.Count > 0 ? Convert.ToInt64(phnNumbers.FirstOrDefault().PhoneNumbers.Replace(" ", string.Empty)).ToString("000'-'000'-'0000") : string.Empty)</span>
+            </div>
+        </div>
+        <div class="pop-sec-b">
+            <span class="sebHd">
+                Guest Notes
+                <img id="guestNoteEdtBtn" src="/images/icon-note.png" width="12" height="12" alt="" onclick="EditGuestNote('#waitPopUpTTip@(Model.WaitingId)')" style="cursor: pointer;" />
+            </span>
+            @{
+                ViewBag.Parent = "#waitPopUpTTip" + Model.WaitingId;
+                ViewBag.Target = "#WUpdateForm" + (Model.WaitingId);
+                {
+                    Html.RenderPartial("~/Views/FloorPlan/GuestNoteUpdatePartial.cshtml", customer);
+                }
+            }
+        </div>
+        @if (customer.SpecialStatus.Count() > 0 || customer.Allergies.Count() > 0)
+        {
+            <div class="addDet" onclick="ExpandDetails(this)">
+                Additional Details
+            </div>
+            <div class="addCont">
+                @if (customer.SpecialStatus.Count() > 0)
+                {
+                    var custStatus = customer.SpecialStatus.ToList();
+
+                    <div class="pop-sec-b">
+                        <span class="sebHd">Special Status</span>
+                        @foreach (var status in custStatus)
+                        {
+                            <a href="javascript:void(0)" class="@(@status.SpecialStatus.Status.ToLower().Contains("vip") ? "btnvip" : "btnhip")">@status.SpecialStatus.Status</a>
+                        }
+                    </div>
+                }
+                @if (customer.Allergies.Count() > 0)
+                {
+                    var custAllergies = customer.Allergies.ToList();
+
+                    <div class="pop-sec-b">
+                        <span class="sebHd">Allergies</span>
+                        @foreach (var allergy in custAllergies)
+                        {
+                            <span class="alerg">@allergy.Allergies.Allergy</span>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        <div class="pop-sec-e">
+            <div class="status staticTime">
+                <span class="sft">Time</span>
+                <select class="custom-select" disabled="">
+                    <option value="">@(Model.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).ToString("hh:mm tt"))</option>
+                </select>
+            </div>
+        </div>
+        <div class="pop-sec-e">
+            <div class="status">
+                <span class="sft">Covers</span>
+                @Html.DropDownListFor(m => m.Covers,
+                new SelectList(ViewBag.CoverList, "Value", "Text"),
+                new
+                {
+                    @class = "custom-select",
+                    @onchange = "{ $('#WUpdateForm" + Model.WaitingId + " #Covers').val(this.value); " +
+                    "var selectedOption = $(this).find(':selected').text();" +
+                    "$(this).next('.holder').text(selectedOption);}"
+                })
+                @Html.ValidationMessageFor(m => m.Covers)
+            </div>
+        </div>
+        <div class="pop-sec-b">
+            <span class="sebHd">
+                Notes
+                <img width="12" height="12" src="/images/icon-note.png" alt="" onclick="EditWaitingNote('#waitPopUpTTip@(Model.WaitingId)')" style="cursor: pointer;" />
+            </span>
+            @{
+                ViewBag.Parent = "#waitPopUpTTip" + Model.WaitingId;
+                ViewBag.Target = "#WUpdateForm" + (Model.WaitingId);
+                {
+                    Html.RenderPartial(
+                        "~/Views/Waiting/WaitingNoteUpdatePartial.cshtml",
+                        new AIS.Models.WaitingVM
+                        {
+                            WaitingId = Model.WaitingId,
+                            Notes = Model.Notes
+                        });
+                }
+            }
+        </div>
+        <div class="pop-sec-btn">
+            <input class="pop-sec-btn-save" type="button" value="Save" onclick="{ $('#WUpdateForm@(Model.WaitingId)').submit();}" />
+            <input class="pop-sec-btn-edit" type="button" value="Save" onclick="{ $('#ToResForm@(Model.WaitingId)').click(); }" />
+            <input class="pop-sec-btn-delete" type="button" value="Save" onclick="$('#DltWaitForm@(Model.WaitingId)').click();" />
+        </div>
+        <div style="clear: both;">
+        </div>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿@model IList<AIS.Models.ReservationListItemVM>
+<ul class="reslist">
+    @foreach (var Res in Model)
+    {
+        <li id="resL@(Res.Reservation.ReservationId)" class="@(Res.Reservation.Covers)cover popUp" data-cover="@(Res.Reservation.Covers)" data-time="@(Res.Reservation.TimeForm.TimeOfDay.TotalMinutes)">
+            @*@Html.Partial("~/Views/FloorPlan/ReservationListItemPartial.cshtml", Res)*@
+            @Html.Raw(Res.HTMLString)
+        </li>
+    }
+</ul>
+<script type="text/javascript">
+    $(function () {
+        @if (ViewBag.Covers is int)
+        {
+            <text>
+        $(".covStatus .sc").text('@(ViewBag.Covers)');
+        </text>
+        }
+    });
+</script>

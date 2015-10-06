@@ -1,0 +1,157 @@
+﻿@{
+    ViewBag.Title = "Restriction Master";
+    Layout = "~/Views/Shared/_LayoutBase.cshtml";
+}
+<style type="text/css">
+    .saveBtn
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #E8867C;
+        border-radius: 5px;
+        color: #373A42;
+        cursor: pointer;
+        float: right;
+        font-family: 'Lato' ,sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        margin-right: 12px;
+        padding: 4px 12px 5px;
+        transition: all 0.3s ease-out 0s;
+    }
+</style>
+<div class="middle-section">
+    <div class="top-filter">
+        <ul>
+            <li><a href="/Setting/Index">Settings</a></li>
+            <li><a class="active" href="/User/Index">Users</a></li>
+            <li><a href="/ShiftHour/Index">Hours</a></li>
+            <li><a href="/Floor/Index">Floorplan</a></li>
+            <li><a href="javascript:void(0)">Master</a>
+                <ul>
+                    <li><a href="/Allergy/Index">Allergies</a></li>
+                    <li><a href="/Restriction/Index">Restriction</a></li>
+                    <li><a href="/SpecialStatus/Index">SpecialStatus</a></li>
+                    <li><a href="/City/Index">City</a></li>
+                    <li><a href="/Designation/Index">Designation</a></li>
+                    <li><a href="/PhoneTypes/Index">PhoneTypes</a></li>
+                </ul>
+            </li>
+            <li><a href="/History/Index">History</a></li>
+            
+        </ul>
+    </div>
+    <div class="for-edit">
+        <a href="javascript:void(0)">
+            <div class="add-people">
+                <span class="tooltip_p">
+                    <div class="arrow-down">
+                    </div>
+                    Add Restriction </span>
+            </div>
+        </a><a href="javascript:void(0)">
+            <div class="edit">
+                <span class="tooltip_e">
+                    <div class="arrow-down">
+                    </div>
+                    Edit </span>
+            </div>
+        </a>
+    </div>
+    <div id="profileView" class="profile">
+    </div>
+</div>
+<div class="manage-section">
+    <div class="m-right-btn">
+    </div>
+    <div class="search-main">
+        <p>
+            Filter</p>
+        <div class="onoffswitch">
+            <input id="onoffswitch1" class="onoffswitch-checkbox" type="checkbox" /><label class="onoffswitch-label"
+                for="onoffswitch1"><div style="" class="onoffswitch-inner" />
+        </div>
+        <div style="" class="onoffswitch-switch">
+        </div>
+        </label></div>
+    <div class="search-bar">
+        <input type="text" name="" id="searchbox" value="" placeholder="Search by Name" />
+        <a href="javascript:void(0)">
+            <img src="../../Images/search-icon.png" alt="" /></a>
+    </div>
+</div>
+<div class="main-right-sec content_1">
+    <div class="section-head" id="gg">
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        document.getElementById("aSettings").className = "active";
+
+        $("#onoffswitch1").click(function () {
+            if ($("#onoffswitch1").is(":checked")) {
+                $("#searchbox").attr("disabled", false);
+            } else {
+                $("#searchbox").attr("disabled", true);
+            }
+        });
+
+        $("#searchbox").keyup(function () {
+            var str = $("#searchbox").val();
+            $.ajax({
+                type: 'Get',
+                url: '/Restriction/SearchList?sTxt=' + str,
+                success: function (myData) {
+                    $("#gg").html(myData);
+                    BindGridLi();
+
+                    $('.settings .middle-section .for-edit .add-people').off('click');
+                    $('.settings .middle-section .for-edit .add-people').click(function () {
+                        $('#profileView').load("/Restriction/Create/", function () {
+                            $("#ModalForm").removeData("validator");
+                            $("#ModalForm").removeData("unobtrusiveValidation");
+                            $.validator.unobtrusive.parse("#ModalForm");
+                        });
+                    });
+                    $(".settings .manage-section ul.people-status li:first").click();
+                }
+            });
+        });
+        $("#searchbox").keyup();
+    });
+    function BindGridLi() {
+        $(".settings .manage-section ul.people-status li").click(function () {
+            var id = $(this).attr('id');
+            $('#profileView').load("/Restriction/Details/" + id, function () {
+                //dharminder singh 10/9/2014
+                $(".settings .manage-section ul.people-status li").removeClass('active');
+                $("#" + id).addClass('active');
+                //end
+             });
+
+            $('.settings .middle-section .for-edit .edit').off('click');
+
+            $('.settings .middle-section .for-edit .edit').click(function () {
+                $('#profileView').load("/Restriction/Edit/" + id, function () {
+                    $("#ModalForm").removeData("validator");
+                    $("#ModalForm").removeData("unobtrusiveValidation");
+                    $.validator.unobtrusive.parse("#ModalForm");
+                });
+            });
+        });
+    }
+
+    function refreshContent() {
+        $("#Restriction").val('');
+        $.ajax({
+            type: 'Get',
+            url: '/Restriction/GetAllRestrictionList',
+            success: function (myData) {
+                $("#gg").html(myData);
+            }
+        })
+    }
+    function cancelClick() {
+        $(".settings .manage-section ul.people-status li:first").click();
+    }
+</script>

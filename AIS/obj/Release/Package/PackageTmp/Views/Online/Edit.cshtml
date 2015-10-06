@@ -1,0 +1,226 @@
+﻿@model AIS.Models.OnlineAvailTables
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutOnline.cshtml";
+    var date = (DateTime)ViewBag.date;
+    AISModels.Reservation Reservation = ViewBag.CurrentReservation;
+    string company = ViewBag.company;
+}
+@section styles{
+    @Styles.Render("~/Content/themes/base/minified/jquery-ui.min.css",
+    "~/Content/themes/base/minified/jquery.ui.datepicker.min.css")
+    <style type="text/css">
+        .Cancel-btn:hover {
+            background: linear-gradient(#3896c2, #3082a7) repeat scroll 0 0 rgba(0, 0, 0, 0);
+            border: medium none;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 15px 0;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .result-secL h5 {
+            text-align: center;
+            font-size: 14px;
+        }
+        .result-sec {
+            font-weight: normal;
+        }
+        .s-date input {
+            cursor: pointer;
+        }
+
+        .custSelect select.form-control {
+            cursor: pointer;
+        }
+    </style>
+}
+
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.8.20.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.validator.addMethod('date', function (value, element) {
+                if (this.optional(element)) {
+                    return true;
+                }
+                var ok = true;
+                try {
+                    $.datepicker.parseDate('dd/MM/yy', value);
+                }
+                catch (err) {
+                    ok = false;
+                }
+                return ok;
+            });
+            $("#date").datepicker();
+            //$('#date').datepicker("option", "dateFormat", 'mm/dd/yy');// live
+            $('#date').datepicker("option", "dateFormat", 'dd/MM/yy');// local
+            $("#date").datepicker("option", "minDate", new Date());
+            $('#date').datepicker('setDate', new Date('@date.Year', '@(date.Month - 1)', '@date.Day'));
+        });
+
+        function UpdateTime(datepicker) {
+            $.ajax({
+                url: '/online/UpdateTime',
+                type: 'GET',
+                data: { date: $(datepicker).val(), company: company },
+                success: function (data) {
+                    if (data) {
+                        var options = '<option value="">-Select Time-</option>';
+                        $.each(data, function (index, item) {
+                            options += '<option value="' + item.Value + '">' + item.Text + '</option>';
+                        });
+
+                        $('select#time').html(options)
+                            .selectpicker('refresh');
+                        $('.bootstrap-select').removeClass('input-validation-error');
+                    }
+                }
+            });
+        }
+    </script>
+}
+
+<div class="row main-hding">
+    <h3>Your Original Reservation Details</h3>
+</div>
+<div class="row reservation">
+    <ul class="col-xs-6 col-sm-4 col-md-4 info pull-left">
+        <li>Date:    <span>    @Reservation.ReservationDate.ToString("ddd, MMM dd")</span></li>
+        <li>Time:    <span>   @Reservation.TimeForm.ToString("h:mm tt")</span></li>
+        <li>Guests:  <span>  @Reservation.Covers Guests</span></li>
+    </ul>
+
+    <ul class="col-xs-6 col-sm-8 col-md-8 Address pull-right">
+        <li><span>Restaurant Address</span></li>
+        <li>1517 Anderson St.</li>
+        <li>Granville Island, Vancouver, BC</li>
+        <li>V6H 3R5</li>
+        <li>Canada</li>
+    </ul>
+
+</div>
+<div class="row result-sec">
+    <div class="result-secL">
+        @if ((bool)ViewBag.IsCurrentReservation)
+        {
+            <h5>To edit your reservation, please update the parameters below to check for additional availability</h5>
+        }
+        else if (Model.ExactMatch != null)
+        {
+            <h5>
+                This time slot is available for booking. Please click on Update (below) to save changes or Cancel if you do not wish to edit your reservation.
+            </h5>
+        }
+        else
+        {
+            <h5>
+                Sorry, No tables are available for your newly requested parameters.<br /> Please either cancel this reservation and call the restaurant at <span style="color:skyblue;">(604) 559-3474</span> for additional information or maintain existing reservation.
+            </h5>
+        }
+
+        @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+        {
+            @Html.Hidden("company", company)
+            <div class="col-sm-12 nopadding s-date">
+                <label for="date">Date@(Html.ValidationMessage("date"))</label>
+                @Html.TextBox("date", (DateTime)ViewBag.date, new
+                    {
+                        data_val_required = "*",
+                        data_val = "true",
+                        onchange = "UpdateTime(this)"
+                    })
+                <span class="cal">
+                    <span class="glyphicon"></span>
+                </span>
+            </div>
+            <div class="col-sm-12 nopadding marginBottom s-date">
+                <label for="covers" class="party-cover">Time@(Html.ValidationMessage("time"))</label>
+                <div class="custSelect iconT">
+                    @Html.DropDownList("time", new SelectList(ViewBag.TimeList, "Value", "Text"), "-Select Time-", new
+                    {
+                        @class = "selectpicker show-tick form-control pick-time",
+                        //style = "display: none;",
+                        data_val_required = "*",
+                        data_val = "true"
+                    })
+                </div>
+            </div>
+            <div class="col-sm-12 nopadding marginBottom s-date">
+                <label for="covers" class="party-cover">Party Size@(Html.ValidationMessage("covers"))</label>
+                <div class="custSelect iconP">
+                    @Html.DropDownList("covers", new SelectList(ViewBag.CoverList, "Value", "Text"), "-Select covers-", new
+                    {
+                        @class = "selectpicker show-tick form-control",
+                        //style = "display: none;",
+                        data_val_required = "*",
+                        data_val = "true"
+                    })
+                </div>
+            </div>
+
+            <button type="submit" class="reserve-btn"> Search for Reservations</button>
+        }
+    </div>
+
+    @*@if (Model != null)
+        {*@
+    @if ((bool)ViewBag.IsCurrentReservation)
+    {
+        @*<div class="row result-sec1">
+                Please change the above parameters to see other availabilities for your reservation.
+            </div>*@
+        <div class="col-md-12 ">
+            <div class="col-md-12" style="padding:0px;">
+                <button type="button" class="Cancel-btn" onclick="window.location.href='/@company/online'"> Cancel</button>
+            </div>
+        </div>
+    }
+    else if (Model.ExactMatch != null)
+    {
+        @*<div class="row result-sec1" style="padding:29px; font-size:18px">
+                This slot is available for booking. Please click on Update to save changes.
+            </div>*@
+
+        <div class="col-md-12 ">
+            <div class="col-md-6" style="padding:0px;">
+                <button type="button" class="Cancel-btn" onclick="window.location.href='/@company/online'"> Cancel</button>
+            </div>
+            <div class="col-md-6" style="padding:0px;">
+                @using (Html.BeginForm("Update", "Online", new AIS.Models.ReservationVM
+                    {
+                        ReservationId = Reservation.ReservationId,
+                        resDate = (DateTime)ViewBag.date,
+                        time = Model.ExactMatch.StartTime.ToString("h:mm tt"),
+                        tableIdd = Model.ExactMatch.AvailableTables.First().FloorTableId.ToString(),
+                        Covers = (int)ViewBag.covers
+                    }, FormMethod.Post))
+                {
+                    @Html.Hidden("company", company)
+                    <button type="submit" class="Cancel-btn">Update</button>
+                }
+            </div>
+
+        </div>
+    }
+    else
+    {
+        var tt = ((string)ViewBag.time).Split('-');
+        var startTime = DateTime.ParseExact(tt[0].Trim(), "ddMMyyyyhhmmtt", System.Globalization.CultureInfo.InvariantCulture).ToString("h:mm tt");
+
+        @*<div class="row result-sec1" style="padding:29px; font-size:18px">
+                Sorry! No tables are available for your newly requested parameters.<br /> Please either cancel this reservation and call the restaurant at <span style="color:skyblue;">(604) 559-3474</span> for additional information or maintain existing reservation.
+            </div>*@
+        <div class="col-md-12 ">
+            <div class="col-md-12" style="padding:0px;">
+                <button type="button" class="Cancel-btn" onclick="window.location.href='/online'"> Cancel</button>
+            </div>
+        </div>
+    }
+
+    @*}*@
+</div>

@@ -1,0 +1,24 @@
+﻿@model AISModels.Cities
+@using (Ajax.BeginForm("Edit", "City", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "refreshContent" }, new { @id = "ModalForm" }))
+{ 
+    @Html.ValidationSummary(true)
+    <div class="for-edit">
+        <h1 id="title">
+            Edit City</h1>
+        <input type="button" name="" value="Cancel" onclick="cancelClick()" id="btnCancel" />
+        <input type="submit" name="" value="Save" class="saveBtn svbtn" />
+    </div>
+    <div class="add-new-main content_1">
+        <div class="add-new-inner">
+            <div class="add-new-sec-1">
+                <label>
+                    City</label>
+                @Html.TextBoxFor(model => model.City)
+                <br />
+                @Html.ValidationMessageFor(model => model.City)
+                @Html.HiddenFor(model => model.CityId)
+                <span id="aerror" style="color: Red"></span>
+            </div>
+        </div>
+    </div>
+}

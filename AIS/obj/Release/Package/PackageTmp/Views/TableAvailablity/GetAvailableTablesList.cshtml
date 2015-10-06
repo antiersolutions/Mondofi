@@ -1,0 +1,11 @@
+﻿@model IEnumerable<AIS.Models.AlphabeticalMapping<AIS.Models.CheckListVM>>
+@foreach (var flooTables in Model)
+{
+    <div class="tab-ava">
+        <div class="row-check">
+            <h1>
+                @flooTables.FirstLetter</h1>
+            @Html.Partial("CheckboxListPartial", flooTables.Items)
+        </div>
+    </div>
+}

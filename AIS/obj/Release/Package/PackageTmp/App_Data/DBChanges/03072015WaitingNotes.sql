@@ -1,0 +1,6 @@
+﻿USE [AISLocal]
+GO
+
+ALTER TABLE [dbo].[Waiting]
+ADD [Notes] NVARCHAR(MAX) NULL
+GO

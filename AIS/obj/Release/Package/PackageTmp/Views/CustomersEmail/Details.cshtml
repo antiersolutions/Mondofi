@@ -1,0 +1,29 @@
+﻿@model AISModels.CustomersEmails
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>CustomersEmails</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Customers.FirstName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Customers.FirstName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Email)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

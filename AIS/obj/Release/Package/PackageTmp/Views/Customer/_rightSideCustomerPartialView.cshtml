@@ -1,0 +1,35 @@
+﻿@model IEnumerable<AIS.Models.AlphabeticalMapping<AISModels.Customers>>
+@foreach (var oitem in Model)
+{
+    <div class="section-head">
+        <p>
+            @oitem.FirstLetter
+        </p>
+    </div>
+
+    foreach (var item in oitem.Items)
+    {
+        <ul class="people-status add-user-page">
+            <li id="@item.CustomerId">
+                <h1>
+                    @item.LastName, @item.FirstName<br />
+                    <span>
+                        @{
+        var stringbuilder = new System.Text.StringBuilder();
+        foreach (var phone in item.PhoneNumbers.ToList())
+        {
+            stringbuilder.AppendFormat("{0},", Convert.ToInt64(phone.PhoneNumbers.Replace(" ", string.Empty)).ToString("000'-'000'-'0000"));
+        }
+        if (stringbuilder.Length > 2)
+        {
+            stringbuilder.Length -= 1;
+        }
+                        }
+                        @Html.Raw(stringbuilder.ToString())
+                    </span>
+                </h1>
+            </li>
+        </ul>
+
+    }
+}

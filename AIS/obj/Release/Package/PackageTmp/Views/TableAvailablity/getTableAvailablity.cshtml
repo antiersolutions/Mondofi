@@ -1,0 +1,82 @@
+﻿@model AIS.Models.TableAvailablity.TimeAvailablityVM
+@{  
+    int i = 1;
+    int j = 1;
+}
+<div class="gmt-time">
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    Lvl
+                </td>
+                <td>
+                    Tbl
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    a
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div style="float: left; width: 780px; height: auto; min-height: 500px; overflow-y: hidden;">
+    <table class="cal-table" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                @foreach (var item in @Model.allTime)
+                {
+                    if (i == 1)
+                    {
+                    @Html.Raw("<td>")
+                    @item.ToString("hh") 
+                        i = 4;
+                    }
+                    else
+                    {
+                        if (i != 1)
+                        {
+                    @Html.Raw(":")                           
+                        }
+                        i--;
+                    @item.ToString("mm")
+                        if (i == 1)
+                        {
+                    @Html.Raw("</td>")                           
+                        }
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                @foreach (var item in @Model.isReserved)
+                {
+                    if (j == 1)
+                    {
+                    @Html.Raw("<td><span style='background: " + (item == true ? "red" : "green") + "'></span>")
+                        j = 4;
+                    }
+                    else
+                    {
+                        if (j != 1)
+                        {
+                    @Html.Raw(":")                           
+                        }
+                        j--;
+                    @Html.Raw("<span style='background: " + (item == true ? "red" : "green") + "'></span>")
+
+                        if (j == 1)
+                        {
+                    @Html.Raw("</td>")                           
+                        }
+                    }
+                }
+            </tr>
+        </tbody>
+    </table>
+</div>

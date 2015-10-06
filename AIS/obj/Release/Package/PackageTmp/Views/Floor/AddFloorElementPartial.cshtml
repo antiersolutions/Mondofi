@@ -1,0 +1,53 @@
+﻿@model AIS.Models.TableDesignVM
+@{
+    Model.HtmlId = "table" + Model.UniqueId;
+}
+@switch (Model.Shape.ToUpper())
+{
+    case "ROUND":
+        {
+            Model.TableName = "T-" + (Model.TempFloorTableId == 0 ? Model.FloorTableId : Model.TempFloorTableId);
+            
+    @Html.Partial("RoundTablePartial", Model)
+            break;
+        }
+
+    case "SQUARE":
+        {
+            Model.TableName = "T-" + (Model.TempFloorTableId == 0 ? Model.FloorTableId : Model.TempFloorTableId);
+            
+    @Html.Partial("SquareTablePartial", Model)
+            break;
+        }
+
+    case "RECTANGLE":
+        {
+            Model.TableName = "T-" + (Model.TempFloorTableId == 0 ? Model.FloorTableId : Model.TempFloorTableId);
+            
+    @Html.Partial("RectangleTablePartial", Model)
+            break;
+        }
+
+    default:
+        {
+            Model.TableName = Model.Shape + "-" + (Model.TempFloorTableId == 0 ? Model.FloorTableId : Model.TempFloorTableId);
+            
+    <div id="table@(Model.UniqueId)" class="table-main table item">
+        <div class="rotate" style="display: none;">
+            <a title="table@(Model.UniqueId)" href="javascript:void(0);" class="rotateAnti">
+            </a><a title="table@(Model.UniqueId)" href="javascript:void(0);" class="dltItem"
+                onclick="DeleteItem(this);">X</a><a title="table@(Model.UniqueId)" href="javascript:void(0);"
+                    class="rotateClock"> </a>
+        </div>
+        <img alt="" src="/images/@(Model.Shape).png" />
+        <input type="hidden" value="@((Model.TempFloorTableId == 0) ? "" : Model.TempFloorTableId.ToString())" name="TempFloorTableId" id="TempFloorTableId" />
+        <input type="hidden" value="@(Model.TableName)" name="tblname" id="tblname" />
+        <input type="hidden" value="@(Model.Shape)" name="tbldesign" id="tbldesign" />
+        <input type="hidden" value="@(Model.Angle)" name="tblangle" id="tblangle" />
+        <input type="hidden" value="@(Model.MinCover)" name="tblmincover" id="tblmincover" />
+        <input type="hidden" value="@(Model.MaxCover)" name="tblmaxcover" id="tblmaxcover"/>
+        <input type="hidden" value="@((Model.FloorTableId == 0) ? "" : Model.FloorTableId.ToString())" name="FloorTableId" id="FloorTableId" />
+    </div>
+            break;
+        }
+}

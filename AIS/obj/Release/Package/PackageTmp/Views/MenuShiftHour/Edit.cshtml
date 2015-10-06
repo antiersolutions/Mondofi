@@ -1,0 +1,241 @@
+﻿@model AISModels.MenuShiftHours
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_LayoutSetting.cshtml";
+}
+<div class="for-edit">
+    <h1>
+        Set Venue and Shift opening & closing time</h1>
+    @*<input type="button" name="" value="Save" id="tbnSave" onclick="Save()">*@
+    <input type="button" name="" value="Edit" id="btnEdit" onclick="Edit()" />
+    <input type="button" name="" value="Update" id="btnUpdate" onclick="Update()"/>
+    <input type="button" name="" value="Cancel" id="btnCancel" onclick="cancel()">
+</div>
+<div class="venue-shift">
+    <ul class="venue-timing">
+        <li>Day</li>
+        <li>Open</li>
+        <li>Close</li>
+    </ul>
+    <div class="venue-shift-inner content_1">
+        @foreach (var item in (List<AISModels.WeekDays>)ViewBag.WeekDays)
+        {
+            <div class="Day">
+                <div class="shift-head">
+               
+                    <ul class="shift-timing">
+                        <li>
+                            <h2>
+                                <input type="hidden" value="@item.DayId" class="DayId"/>@item.DayName</h2>
+                        </li>
+                        <li>
+                            <div class="select-t">
+                                <select onchange="checkDayStartTime(this)" class="dOpen">
+                                    <option value="">10:00 AM</option>
+                                    <option value="">11:00 AM</option>
+                                </select>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="select-t">
+                                <select onchange="CheckDayEndTime(this)" class="dClose">
+                                        <option>10:00 AM</option>
+                                        <option>11:00 AM</option>
+                                        <option>12:00 PM</option>
+                                        <option>1:00 PM</option>
+                                        <option>2:00 PM</option>
+                                        <option>3:00 PM</option>
+                                        <option>4:00 PM</option>
+                                        <option>5:00 PM</option>
+                                        <option>6:00 PM</option>
+                                        <option>7:00 PM</option>
+                                        <option>8:00 PM</option>
+                                        <option>9:00 PM</option>
+                                        <option>10:00 PM</option>
+                                </select>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                @foreach (var shift in (List<AISModels.FoodMenuShift>)ViewBag.FoodMenuShifts)
+                {
+                    <div class="shift-row @shift.MenuShift">
+                        <ul class="shift-timing-name">
+                            <li>
+                                <h3>
+                                    <input type="hidden" value="@shift.FoodMenuShiftId"/>@shift.MenuShift</h3>
+                            </li>
+                            <li>
+                                <div class="select-t shiftOddl">
+                                    @Html.DropDownListFor(Model => Model.OpenAt, new SelectList(new[] { "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "8:00 PM", "9:00 PM", "10:00 PM" }), new { @class = "OpenAt", @onchange = "CheckStartTime(this)" })
+                                </div>
+                            </li>
+                            <li>
+                                <div class="select-t shiftCddl">
+                                    @Html.DropDownListFor(Model => Model.CloseAt, new SelectList(new[] { "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "8:00 PM", "9:00 PM", "10:00 PM" }), new { @class = "CloseAt", @onchange = "CheckEndTime(this)" })
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnUpdate").hide();
+    });
+    function cancel() {
+        window.location.href = "/MenuShiftHour/Create";
+    }
+
+    function checkDayStartTime(e) {
+        var startTime = $(e).parents(".shift-timing").find(".dOpen").val();
+        var EndTime = $(e).parents(".shift-timing").find(".dClose").val();
+
+        if (startTime != "" && EndTime != "") {
+            start = minFromMidnight(startTime);
+            End = minFromMidnight(EndTime);
+
+            if (start > End) {
+                alert("start time must be smaller than or equal to Close time");
+                //$(".OpenAt").val("10:00 AM");
+            }
+
+        }
+
+    }
+
+
+    function CheckDayEndTime(e) {
+
+        var startTime = $(e).parents(".shift-timing").find(".dOpen").val();
+        var EndTime = $(e).parents(".shift-timing").find(".dClose").val();
+
+        if (startTime != "" && EndTime != "") {
+            start = minFromMidnight(startTime);
+            End = minFromMidnight(EndTime);
+
+            if (start > End) {
+                alert("Close time must be Greater than or equal to Start time");
+                //$(".CloseAt").val("10:00 AM");
+            }
+
+        }
+
+    }
+    function Edit() {
+        $.ajax({
+            type: 'Post',
+            url: '/MenuShiftHour/GetShiftRecords',
+            success: function (myData) {
+                //console.log(myData);
+                if (myData.IsSucess) {
+                    
+                    
+                    var obj = myData.shitData;
+                    //debugger;
+                    $('.shift-row').each(function (i) {
+                        $(this).find("#OpenAt option:selected").text(obj[i].OpenAt);
+                        $(this).find("#CloseAt option:selected").text(obj[i].CloseAt);
+                    });
+                    $("#btnEdit").hide();
+                    $("#btnUpdate").show();
+                }
+//                else { alert("failed"); }
+            }
+
+        })
+    }
+
+    function Update() {
+
+        var arr = [];
+        $(".Day").each(function () {
+            obj = {
+                DayId: $(this).find('.DayId').val(),
+                BreakfastOpen: $(this).find(".Breakfast").find(".OpenAt").val(),
+                BreakfastClose: $(this).find(".Breakfast").find(".CloseAt").val(),
+                BrunchOpen: $(this).find(".Brunch").find(".OpenAt").val(),
+                BrunchClose: $(this).find(".Brunch").find(".CloseAt").val(),
+                LunchOpen: $(this).find(".Lunch").find(".OpenAt").val(),
+                LunchClose: $(this).find(".Lunch").find(".CloseAt").val(),
+                DinnerOpen: $(this).find(".Dinner").find(".OpenAt").val(),
+                DinnerClose: $(this).find(".Dinner").find(".CloseAt").val()
+            };
+
+            arr.push(obj);
+        });
+
+        $.ajax({
+            type: 'Post',
+            url: '/MenuShiftHour/Update',
+            data: JSON.stringify(arr),
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function (myData) {
+                if (myData.IsSucess) {
+                    alert("Menushift hours Updated");
+                    //window.location.href = "/MenuShiftHour/Edit";
+                    //$("#btnEdit").show();
+                    //$("#btnSave").hide();
+                    Reset();
+                }
+                else { alert("false"); }
+
+
+
+
+            }
+        })
+
+    }
+
+    function minFromMidnight(tm) {
+        var ampm = tm.substr(-2)
+        var clk = tm.substr(0, 5);
+        var m = parseInt(clk.match(/\d+$/)[0], 10);
+        var h = parseInt(clk.match(/^\d+/)[0], 10);
+        h += (ampm.match(/pm/i)) ? 12 : 0;
+        return h * 60 + m;
+    }
+    function CheckStartTime(e) {
+        
+        var startTime = $(e).parents(".shift-timing-name").find(".OpenAt").val();
+        var EndTime = $(e).parents(".shift-timing-name").find(".CloseAt").val();
+
+        if (startTime != "" && EndTime != "") {
+            start = minFromMidnight(startTime);
+            End = minFromMidnight(EndTime);
+
+            if (start > End) {
+                alert("start time must be smaller than or equal to Close time");
+                //$(".OpenAt").val("10:00 AM");
+            }
+
+        }
+
+    }
+
+    function CheckEndTime(e) {
+        
+        var startTime = $(e).parents(".shift-timing-name").find(".OpenAt").val();
+        var EndTime = $(e).parents(".shift-timing-name").find(".CloseAt").val();
+
+        if (startTime != "" && EndTime != "") {
+            start = minFromMidnight(startTime);
+            End = minFromMidnight(EndTime);
+
+            if (start > End) {
+                alert("Close time must be Greater than or equal to Start time");
+                //$(".CloseAt").val("10:00 AM");
+            }
+
+        }
+        
+    }
+
+
+
+</script>

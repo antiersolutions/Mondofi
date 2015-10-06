@@ -1,0 +1,155 @@
+﻿@model AIS.Models.OnlineAvailTables
+@{
+    ViewBag.Title = "Make a reservation";
+    Layout = "~/Views/Shared/_LayoutOnline.cshtml";
+    var date = (DateTime)ViewBag.date;
+    var company = ViewContext.RouteData.Values["company"].ToString();
+}
+<style>
+    .result-sec1.fail {
+        color: #4b4b4b;
+        font-size: 14px;
+    }
+    /*dharminder*/
+    .s-date input {
+        cursor: pointer;
+    }
+
+    .custSelect select.form-control {
+        cursor: pointer;
+    }
+</style>
+@section scripts{
+    <script type="text/javascript">
+        $.validator.setDefaults({ ignore: '' });
+        $(document).ready(function () {
+            $.validator.addMethod('date', function (value, element) {
+                if (this.optional(element)) {
+                    return true;
+                }
+                var ok = true;
+                try {
+                    $.datepicker.parseDate('dd/MM/yy', value);
+                }
+                catch (err) {
+                    ok = false;
+                }
+                return ok;
+            });
+            $("#date").datepicker();
+            //$('#date').datepicker("option", "dateFormat", 'mm/dd/yy');// live
+            $('#date').datepicker("option", "dateFormat", 'dd/MM/yy');// local
+            $("#date").datepicker("option", "minDate", new Date());
+            $('#date').datepicker('setDate', new Date('@date.Year', '@(date.Month - 1)', '@date.Day'));
+        });
+
+        function UpdateTime(datepicker) {
+            $.ajax({
+                url: '/online/UpdateTime',
+                type: 'GET',
+                data: { date: $(datepicker).val(), company: "@company" },
+                success: function (data) {
+                    if (data) {
+                        var options = '<option value="">-Select Time-</option>';
+                        $.each(data, function (index, item) {
+                            options += '<option value="' + item.Value + '">' + item.Text + '</option>';
+                        });
+
+                        //$('select#time').html(options)
+                        //    .selectpicker('refresh');
+                        //$('.bootstrap-select').removeClass('input-validation-error');
+                    }
+                }
+            });
+        }
+    </script>
+}
+
+<div class="row main-hding">
+    <h3>Make A Reservation</h3>
+    <span style="float:right;">@*<button type="button" class="btn btn-default cancel-btn">Cancel</button>*@</span>
+</div>
+
+@if (IsPost && (Model == null || Model.OtherMatches.Count == 0))
+{
+    <div class="row result-sec1 fail">
+        There are no reservations available with your chosen parameters.<br /> Please modify your search criteria below:
+    </div>
+}
+else if (Model != null && Model.OtherMatches.Count > 0)
+{
+    <div class="row result-sec">
+        <p>Available Reservations on @(((DateTime)ViewBag.date).ToString("ddd, MMM dd"))  for @((int)ViewBag.covers) guests </p>
+        <ul class="res">
+            @foreach (var match in Model.OtherMatches)
+            {
+                <li>
+                    <span>@match.StartTime.ToString("h:mm tt") </span><br />
+                    @Html.ActionLink("Reserve", "Reserve", new
+                    {
+                        date = ((DateTime)ViewBag.date).ToString("dddd, dd MMM, yy"),
+                        time = match.StartTime.ToString("h:mm tt"),
+                        covers = (int)ViewBag.covers,
+                        company=company
+                    }, new { @class = "btn btn-default rsrv-btn" })
+                    @if (match.AvailableTables.Count < 3)
+                    {
+                        <h4 style="padding-top:5px;">
+                            <span style="color:maroon;">Only @match.AvailableTables.Count left!</span>
+                        </h4>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="row main-hding">
+        <h5>Please select a reservation time above or modify your search criteria below:</h5>
+    </div>
+}
+
+<div class="row reservation">
+    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+    {
+        <div class="col-sm-12 nopadding s-date">
+            <label for="date">Date@(Html.ValidationMessage("date"))</label>
+            @Html.TextBox("date", (DateTime)ViewBag.date, new
+            {
+                data_val_required = "*",
+                data_val = "true",
+                onchange = "UpdateTime(this)",
+                @readonly = true
+            })
+            <span class="cal">
+                <span class="glyphicon"></span>
+            </span>
+        </div>
+        <div class="col-sm-12 nopadding marginBottom s-date">
+            <label for="covers" class="party-cover">Time@(Html.ValidationMessage("time"))</label>
+            <div class="custSelect iconT">
+                @Html.DropDownList("time", new SelectList(ViewBag.TimeList, "Value", "Text"), "-Select Time-", new
+                {
+                    @class = "selectpicker show-tick form-control pick-time",
+                    //style = "display: none;",
+                    data_val_required = "*",
+                    data_val = "true"
+                })
+            </div>
+        </div>
+        <div class="col-sm-12 nopadding marginBottom s-date">
+            <label for="covers" class="party-cover">Party Size@(Html.ValidationMessage("covers"))</label>
+            <div class="custSelect iconP">
+                @Html.DropDownList("covers", new SelectList(ViewBag.CoverList, "Value", "Text"), "-Select covers-", new
+                {
+                    @class = "selectpicker show-tick form-control",
+                    //style = "display: none;",
+                    data_val_required = "*",
+                    data_val = "true"
+                })
+            </div>
+        </div>
+
+        <button type="submit" class="reserve-btn"> Search for Reservations</button>
+    }
+</div>
+
+

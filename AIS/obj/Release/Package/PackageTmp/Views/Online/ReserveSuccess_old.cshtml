@@ -1,0 +1,139 @@
+﻿@model AISModels.Reservation
+@{
+    ViewBag.Title = "Reserve";
+    Layout = "~/Views/Shared/_LayoutOnline_old.cshtml";
+}
+<style>
+    .edt-res {
+        float: left;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+        .edt-res a[role=button] {
+            border: 1px solid #25729a;
+            -webkit-box-shadow: #B4B5B5 1px 1px 1px;
+            -moz-box-shadow: #B4B5B5 1px 1px 1px;
+            box-shadow: #B4B5B5 1px 1px 1px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            font-size: 16px;
+            font-family: arial, helvetica, sans-serif;
+            padding: 5px 28px;
+            text-decoration: none;
+            display: inline-block;
+            text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+            /*font-weight: bold;*/
+            color: #FFFFFF;
+            background-color: #3093C7;
+            background-image: -webkit-gradient(linear, left top, left bottom, from(#3093C7), to(#1c5a85));
+            background-image: -webkit-linear-gradient(top, #3093C7, #1c5a85);
+            background-image: -moz-linear-gradient(top, #3093C7, #1c5a85);
+            background-image: -ms-linear-gradient(top, #3093C7, #1c5a85);
+            background-image: -o-linear-gradient(top, #3093C7, #1c5a85);
+            background-image: linear-gradient(to bottom, #3093C7, #1c5a85);
+            filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#3093C7, endColorstr=#1c5a85);
+            margin-left: 10px;
+        }
+
+            .edt-res a[role=button].btn-edt-res {
+            }
+
+            .edt-res a[role=button].btn-cncl-res {
+                background-color: #f62b2b;
+                background-image: linear-gradient(to bottom, #f62b2b, #d20202);
+                border: 1px solid #f62b2b;
+                -webkit-box-shadow: #f62b2b 1px 1px 1px;
+                -moz-box-shadow: #f62b2b 1px 1px 1px;
+                box-shadow: #f62b2b 1px 1px 1px;
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#f62b2b), to(#d20202));
+                background-image: -webkit-linear-gradient(top, #f62b2b, #d20202);
+                background-image: -moz-linear-gradient(top, #f62b2b, #d20202);
+                background-image: -ms-linear-gradient(top, #f62b2b, #d20202);
+                background-image: -o-linear-gradient(top, #f62b2b, #d20202);
+                background-image: linear-gradient(to bottom, #f62b2b, #d20202);
+                filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#f62b2b, endColorstr=#d20202);
+            }
+
+    form {
+        float: left;
+    }
+</style>
+@section scripts{
+    <script>
+        function ConfirmCancel(formObj) {
+            if (confirm("ARE YOU SURE YOU WANT TO CANCEL THIS RESERVATION?")) {
+                $(formObj).parent('form').submit();
+            }
+        }
+    </script>
+}
+<div class="login-inner1">
+    <div class="results" style="width: 600px; color: #444;">
+        <div class="search-match availResult">
+            <h1>Your reservation is booked!</h1>
+            <div class="notice">
+                <div class="res res-head" style="border-bottom:none; border-radius:5px 5px 0 0;">
+                    <div class="head-control">
+                        <img src="~/Images/logo.png" style="padding-left:10px" />
+                    </div>
+                    <div class="head-control" style="float: right;">
+                        <label>Guests</label>
+                        <h2>@Model.Covers Guests</h2>
+                    </div>
+                    <div class="head-control" style="float:right;">
+                        <label>Time</label>
+                        <h2>@Model.TimeForm.ToString("h:mm tt")</h2>
+                    </div>
+                    <div class="head-control" style="float:right;">
+                        <label>Date</label>
+                        <h2>@Model.ReservationDate.ToString("ddd, MMM dd")</h2>
+                    </div>
+                </div>
+                <div class="res res-form" style="border: 1px solid #bbb; line-height:0;">
+                    <img src="http://maps.googleapis.com/maps/api/staticmap?center=The+Vancouver+fish+company+1517+Anderson+St.+Vancouver,+BC&zoom=17&scale=1&size=600x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:red%7Clabel:A%7CThe+Vancouver+fish+company+1517+Anderson+St.+Vancouver,+BC" alt="Google Map of The Vancouver fish company 1517 Anderson St. Vancouver, BC">
+                </div>
+                <div class="res res-foot" style="border: 1px solid #bbb; line-height: 2em;">
+                    <div class=" res-foot-left" style="float: left; width: 47%;">
+                        <div class="address">
+                            <h6>RESTAURANT</h6>
+                            <h2 style="color:skyblue;">The Vancouver Fish Company</h2>
+                            <h5>1517 Anderson St. Vancouver, BC</h5>
+                            <h4>(778)VANFISH (778 826 3434)</h4>
+                        </div>
+                    </div>
+                    <div class="res-foot-right" style="float: right; width: 47%;">
+                        <div class="user-detail">
+                            <div class="pro-pic">
+                                <img src="~/Images/pro-pic.png" height="75" width="75" />
+                            </div>
+                            <div class="desc">
+                                <h6>DINER</h6>
+                                <h2>@Model.Customers.FirstName @(((Model.Customers.LastName.Length > 1) ? Model.Customers.LastName.Remove(1) : Model.Customers.LastName)).</h2>
+                                <h4>Contact Info Hidden</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="edt-res">
+                    @using (Html.BeginForm("Edit", "Online", new
+                        {
+                            id = Model.ReservationId
+                        }, FormMethod.Get))
+                    {
+                        <a href="javascript:void(0)" class="btn-edt-res" role="button" onclick="$(this).parent('form').submit()">Edit</a>
+                    }
+                    @using (Html.BeginForm("Cancel", "Online", new
+                        {
+                            id = Model.ReservationId
+                        }, FormMethod.Post))
+                    {
+                        <a href="javascript:void(0)" class="btn-cncl-res" role="button" onclick="ConfirmCancel(this)">Cancel Reservation</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

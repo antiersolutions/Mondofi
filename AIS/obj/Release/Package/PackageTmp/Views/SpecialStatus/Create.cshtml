@@ -1,0 +1,24 @@
+﻿@model  AISModels.SpecialStatus
+@using (Ajax.BeginForm("Create", "SpecialStatus", null, new AjaxOptions() { HttpMethod = "POST", OnSuccess = "refreshContent" }, new { @id = "ModalForm" }))
+{
+    @Html.ValidationSummary(true)
+    <div class="for-edit">
+        <h1 id="title">
+            Add Status</h1>
+        <input type="button" name="" value="Cancel" onclick="cancelClick()" id="btnCancel" />
+        <input type="submit" value="Save" class="saveBtn svbtn" />
+    </div>
+    <div class="add-new-main content_1">
+        <div class="add-new-inner">
+            <div class="add-new-sec-1">
+                <label>
+                    Status</label>
+                @Html.TextBoxFor(model => model.Status)
+                <br />
+                @Html.ValidationMessageFor(model => model.Status)
+                @Html.ValidationMessageFor(model => model.Status)
+                <span id="Rerror" style="color: Red"></span>
+            </div>
+        </div>
+    </div>
+}

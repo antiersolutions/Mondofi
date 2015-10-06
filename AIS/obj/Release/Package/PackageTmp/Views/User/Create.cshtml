@@ -1,0 +1,530 @@
+﻿@using AIS.Helpers;
+
+@model AIS.Models.UserRegisterViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutBase.cshtml";
+}
+<div class="middle-section">
+    <div class="top-filter">
+        <ul>
+            <li><a href="/Setting/Index">Settings</a></li>
+            <li><a class="active" href="/User/Index">Users</a></li>
+            <li><a href="/ShiftHour/Index">Hours</a></li>
+            <li><a href="/Floor/Index">Floorplan</a></li>
+            <li>
+                <a href="javascript:void(0)">Master</a>
+                <ul>
+                    <li><a href="/Allergy/Index">Allergies</a></li>
+                    <li><a href="/Restriction/Index">Restriction</a></li>
+                    <li><a href="/SpecialStatus/Index">SpecialStatus</a></li>
+                    <li><a href="/City/Index">City</a></li>
+                    <li><a href="/Designation/Index">Designation</a></li>
+                    <li><a href="/PhoneTypes/Index">PhoneTypes</a></li>
+                </ul>
+            </li>
+            <li><a href="/History/Index">History</a></li>
+            
+        </ul>
+    </div>
+    <div class="for-edit HideShow">
+        <a href="/User/Create">
+            <div class="add-people">
+                <span class="tooltip_p">
+                    <div class="arrow-down">
+                    </div>
+                    Add User
+                </span>
+            </div>
+        </a><a href="javascript:void(0)">
+            <div class="delete">
+                <span class="tooltip_d">
+                    <div class="arrow-down">
+                    </div>
+                    Delete
+                </span>
+            </div>
+        </a><a href="javascript:void(0)">
+            <div class="edit">
+                <span class="tooltip_e">
+                    <div class="arrow-down">
+                    </div>
+                    Edit
+                </span>
+            </div>
+        </a>
+    </div>
+    <div id="profileView" class="profile">
+        @using (Html.BeginForm())
+        {
+            <div class="for-edit">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.PhotoPath)
+                <h1>
+                    Add New User
+                </h1>
+                <input type="button" name="" value="Cancel" onclick="javascript:window.location.href = '/User';" />
+                <input type="submit" onclick="return save();" name="" value="Save" class="svbtn" />
+            </div>
+            <div class="add-new-main content_1">
+                <div class="add-new-inner">
+                    <div class="add-new-sec-1">
+                        <label>
+                            First Name
+                        </label>
+                        <div>
+                            @Html.TextBoxFor(m => m.FirstName)
+                            @Html.ValidationMessageFor(m => m.FirstName)
+                        </div>
+                        <label>
+                            Last Name
+                        </label>
+                        <div>
+                            @Html.TextBoxFor(m => m.LastName)
+                            @Html.ValidationMessageFor(m => m.LastName)
+                        </div>
+                        <label>
+                            User PIN
+                        </label>
+                        <div>
+                            <div style="width:70%;">
+                                @Html.TextBox("UserCode", (int)ViewBag.UserCode, new { style = "text-align:center;font-size:24px;", @readonly = true })
+                                @Html.ValidationMessageFor(m => m.UserCode)
+                            </div>
+                            <div style="float: left; margin-left: 20px; padding-top: 4px; width: 25%;">
+                                @(new HtmlString(@Ajax.ImageActionLink(
+                                    "/images/reset.png",
+                                    " ",
+                                    "Re-Generate user pin",
+                                    "GenerateUniqueUserCode",
+                                    "User",
+                                    null,
+                                    new AjaxOptions
+                                    {
+                                        HttpMethod = "POST",
+                                        OnSuccess = "$('#UserCode').val(data);"
+                                    })
+                                ))
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-new-sec-2">
+                        <a href="#upImages" class="inlineUp">
+                            <img class="new-pro-pic" id="imgProfile" height="165" width="165" src="/images/pro-pic.png"
+                                 alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="add-new-inner phnAry">
+                    <div id="phnoDiv">
+                        <div class="row phnrow">
+                            <label>
+                                Phone
+                            </label>
+                            <div class="select-main">
+                                @Html.DropDownList("selectbox", (SelectList)ViewBag.PhoneType, new { @class = "phnType" })
+                            </div>
+                            <input class="phnNo" type="text" name="" value="" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" />
+                            <span id="perro"></span><a href="javascript:void(0)" onclick="newRowPhone(this)">
+                                <img class="add-plus" src="/images/plus-icon.png" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row emailrow">
+                        <label>
+                            Email
+                        </label>
+                        @Html.TextBoxFor(m => m.EmailAddress, new { @class = "ml0" })
+                        @Html.ValidationMessageFor(m => m.EmailAddress)
+                    </div>
+                </div>
+                <div class="add-new-inner">
+                    <div class="add-new-sec-1">
+                        <label>
+                            Password
+                        </label>
+                        @Html.PasswordFor(m => m.Password)
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                    <div class="add-new-sec-1">
+                        <label>
+                            Confirm Password
+                        </label>
+                        @Html.PasswordFor(m => m.ConfirmPassword)
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    </div>
+                </div>
+                <div class="add-new-inner phnAry">
+                    <div class="row">
+                        <label>
+                            Designation
+                        </label>
+                        <div class="select-main">
+                            @Html.DropDownListFor(m => m.DesignationId, (SelectList)ViewBag.Designation, "-Select-", new { @id = "selectbox" })
+                        </div>
+                    </div>
+                </div>
+                <div class="add-new-inner">
+                    <div class="add-new-sec-1" style="width:33%">
+                        <p>
+                            Admin
+                        </p>
+                        <img id="admIcon" class="admin-rating" src="/images/admin-rating.png" alt="">
+                        <div class="uswitch">
+                            <div class="onoffswitch">
+                                <input id="IsAdmin" name="IsAdmin" class="onoffswitch-checkbox" value="true" type="checkbox" />
+                                <label class="onoffswitch-label" for="IsAdmin">
+                                    <div style="" class="onoffswitch-inner adm">
+                                    </div>
+                                    <div style="" class="onoffswitch-switch adm">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-new-sec-1" style="width:33%">
+                        <p>
+                            Availability
+                        </p>
+                        <img id="iconAvail" class="admin-available-icon" src="/images/available-icon.png"
+                             alt="">
+                        <div class="uswitch">
+                            <div class="onoffswitch">
+                                <span class="tooltip_p">
+                                    <div class="arrow-down">
+                                    </div>
+                                    <span>
+                                        User Available for table
+                                        <br />
+                                        assignment in FLOOR tab
+                                    </span>
+                                </span>
+                                <input id="Availability" name="Availability" class="onoffswitch-checkbox" value="true"
+                                       type="checkbox" />
+                                <label class="onoffswitch-label" for="Availability">
+                                    <div style="" class="onoffswitch-inner avail">
+                                    </div>
+                                    <div style="" class="onoffswitch-switch avail">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-new-sec-1" style="width:33%">
+                        <p>
+                            Enable PIN
+                        </p>
+                        <div class="uswitch">
+                            <div class="onoffswitch EnablePIN">
+                                <span class="tooltip_p">
+                                    <div class="arrow-down">
+                                    </div>
+                                    <span>
+                                        Ask User to enter PIN
+                                        <br />
+                                        before any action on floor plan.
+                                    </span>
+                                </span>
+                                <input id="EnablePIN" name="EnablePIN" class="onoffswitch-checkbox" value="true" type="checkbox" />
+                                <label class="onoffswitch-label" for="EnablePIN">
+                                    <div style="" class="onoffswitch-inner">
+                                    </div>
+                                    <div style="" class="onoffswitch-switch">
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="for-edit">
+                    <input type="button" name="" value="Cancel" onclick="javascript:window.location.href = '/User';" />
+                    <input type="submit" onclick="return save();" name="" value="Save" class="svbtn" />
+                </div>
+            </div>
+            @Html.HiddenFor(m => m.PhoneNumbers)
+        }
+    </div>
+</div>
+<div class="manage-section">
+    <div class="m-right-btn">
+    </div>
+    <div class="search-main">
+        <div>
+            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+            {
+                @Html.AntiForgeryToken()
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+            }
+        </div>
+        <p>
+            Filter
+        </p>
+        <div class="onoffswitch">
+            <input id="onoffswitch1" class="onoffswitch-checkbox" type="checkbox"><label class="onoffswitch-label"
+                                                                                         for="onoffswitch1"><div style="" class="onoffswitch-inner" />
+        </div>
+        <div style="" class="onoffswitch-switch">
+        </div>
+    </div>
+    <div class="search-bar">
+        <input type="text" name="" id="searchbox" value="" placeholder="Search by Name or Phone Number" />
+        <a href="javascript:void(0)">
+            <img src="../../Images/search-icon.png" alt="" />
+        </a>
+    </div>
+</div>
+<div class="main-right-sec content_1">
+    <div class="section-head" id="gg">
+    </div>
+</div>
+@section styles
+{
+    <link href="/Content/Colorbox/colorbox.css" rel="stylesheet" type="text/css" />
+    <link href="/Content/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .field-validation-error {
+            color: #e80c4d;
+            font-weight: bold;
+            float: left;
+        }
+
+        .ml0 {
+            margin-left: 0px !important;
+        }
+
+        .new-pro-pic {
+            margin-right: 20px;
+        }
+
+        .settings .middle-section .add-new-main {
+            height: 655px;
+            padding: 15px 22px 15px 33px;
+        }
+
+        .settings .middle-section .profile {
+            height: 694px;
+        }
+
+        #cboxClose {
+            background: url("/Content/Images/controls.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+            background-position: -18px -2px !important;
+            height: 21px;
+            right: 23px;
+            top: 8px;
+        }
+    </style>
+}
+@section scripts{
+    <script src="../../Content/Colorbox/jquery.colorbox.js" type="text/javascript"></script>
+    <script src="../../Content/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            SetMiddleSectionHeight();
+
+            document.getElementById("aSettings").className = "active";
+
+            $(".inlineUp").colorbox({ inline: true, width: "25%", height: "20%" });
+            searchAndUserGrid();
+            chkAvailability();
+            chkAdmin();
+
+            $("#Availability").click(function (e) {
+                chkAvailability();
+            });
+            $("#IsAdmin").click(function (e) {
+                chkAdmin();
+            });
+
+            $(".HideShow").hide();
+        });
+
+        function chkAvailability() {
+            if ($("#Availability").is(":checked")) {
+                $("#Availability").prev('span').addClass('onBtn');
+                $("#iconAvail").attr("src", "/images/available-icon.png");
+            } else {
+                $("#iconAvail").attr("src", "/images/none-icon.png");
+                $("#Availability").prev('span').removeClass('onBtn');
+            }
+        }
+
+        function chkAdmin() {
+            if ($("#IsAdmin").is(":checked")) {
+                $("#admIcon").attr("src", "/images/s-rating-pro.png");
+            } else {
+                $("#admIcon").attr("src", "/images/admin-rating.png");
+            }
+        }
+
+        var specialKeys = new Array();
+        specialKeys.push(8); //Backspace
+        function IsNumeric(e) {
+            debugger;
+            var keyCode = e.which ? e.which : e.keyCode
+            var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
+            return ret;
+        }
+
+        function validNumber(e) {
+            if (e.shiftKey || e.ctrlKey || e.altKey) {
+                e.preventDefault();
+            } else {
+                var key = e.keyCode;
+                if (!((key == 8) || (key == 46) || (key >= 35 && key <= 40) || (key >= 48 && key <= 57) || (key >= 96 && key <= 105))) {
+                    e.preventDefault();
+                }
+            }
+        }
+
+        function newRowPhone(e) {
+            $("#phnoDiv").append('<div class="row phnrow"><label></label><div class="select-main"><select class="phnType" id="selectbox">' + $("#selectbox").html() + '</select></div><input class="phnNo" type="text" value="" name="" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" ><a onclick="newRowPhone(this)" href="javascript:void(0)"><img alt="" src="/images/plus-icon.png" class="add-plus"></a><a href="javascript:void(o)" onclick="removePhoneDiv(this)"><img alt="" src="/images/minus-icon.png" class="minus-icon"></a></div>')
+        }
+
+        function removePhoneDiv(e) {
+            if ($(e).parent().prev().length == 0) {
+                $(e).parent().next().find("label").text("Phone");
+            }
+            $(e).parent().remove();
+        }
+        function save() {
+            var isAdd = false;
+            var pNumbers = [];
+            $('.phnAry').find('.phnrow').each(function () {
+                obj = {
+                    PhoneTypeId: $(this).find('.phnType').val(),
+                    PhoneNumber: $(this).find('.phnNo').val()
+                };
+
+                pNumbers.push(obj);
+            });
+
+            for (var i = 0, l = pNumbers.length; i < l; i++) {
+
+                if (pNumbers[i].PhoneNumber == null || pNumbers[i].PhoneNumber == "" || pNumbers[i].PhoneNumber == undefined) {
+                    alert("Please enter Phone Number.");
+                    return false;
+                }
+            }
+            if (pNumbers[0].PhoneNumber == null || pNumbers[0].PhoneNumber == "" || pNumbers[0].PhoneNumber == undefined) {
+
+                alert("Please enter Phone Number.");
+                return false;
+            }
+            else {
+                $('#PhoneNumbers').val(JSON.stringify(pNumbers));
+
+            }
+
+            $('#PhoneNumbers').val(JSON.stringify(pNumbers));
+        }
+
+        function searchAndUserGrid() {
+            $("#searchbox").keyup(function () {
+                //alert("dsf");
+                var str = $("#searchbox").val();
+                $.ajax({
+                    type: 'Get',
+                    url: '/User/Search',
+                    data: { sTxt: str },
+                    success: function (myData) {
+                        $("#gg").html(myData);
+                        $(".settings .manage-section ul.people-status li").click(function () {
+                            var id = $(this).attr('id');
+                            $('#profileView').load("/User/Details/" + id, function () {
+
+                                //dharminder 10/09/2014
+                                $(".settings .manage-section ul.people-status li").removeClass('active');
+                                $("#" + id).addClass('active');
+                                //end here
+
+                                $(".HideShow").show();
+                            });
+
+                            $('.settings .middle-section .for-edit .edit').off('click');
+                            $('.settings .middle-section .for-edit .delete').off('click');
+
+                            $('.settings .middle-section .for-edit .edit').click(function () {
+                                window.location.href = "/User/Edit/" + id;
+                            });
+                            $('.settings .middle-section .for-edit .delete').click(function () {
+                                if (confirm("Do you want to delete this user?")) {
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '/User/Delete/' + id,
+                                        success: function (myData) {
+                                            if (myData) {
+                                                alert("User deleted successfully.");
+                                                window.location.reload();
+                                            }
+                                            else {
+                                                alert("An error occured while deleting user, Please try again later.");
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    }
+                })
+            });
+            $("#searchbox").keyup();
+        }
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("#FileUpload1").uploadify({
+                'method': 'post',
+                'swf': '../../Content/uploadify/uploadify.swf',
+                'uploader': '../../UploadFile/uploadimage',
+                'onUploadSuccess': function (file, data, response) {
+
+                    if (data != "error") {
+                        if (data == "size") {
+
+                            alert("Upload the image less then 500KB size.")
+                            return false;
+                        }
+                        else if (data == "resolution") {
+
+                            alert("Please use an image that is square.")
+                            return false;
+                        }
+                        else if (data == "extentions") {
+
+
+                            alert("Upload  image only in jpg,png,bmp & gif format.")
+                            return false;
+                        }
+                        else {
+                            $("#a1").text('Change Logo');
+                            $('#cboxClose').click();
+
+                            $("#imgProfile").attr('src', '/Content/UserData/' + data);
+                            $("#PhotoPath").val('/Content/UserData/' + data);
+                        }
+
+                    }
+                    else {
+
+                        alert("Some error occure please try again.")
+                    }
+                }
+            });
+        });
+    </script>
+}
+<div style='display: none'>
+    <div id='upImages'>
+        <div style="padding: 5px;">
+            <div style="padding: 0 0 0 10px; width: auto; line-height: 25px;">
+                <table cellpadding="5" cellspacing="5">
+                    <tr>
+                        <td>
+                            <input type="file" id="FileUpload1" name="FileUpload1" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

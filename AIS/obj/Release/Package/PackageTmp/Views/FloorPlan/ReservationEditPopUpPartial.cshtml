@@ -1,0 +1,269 @@
+﻿@model AISModels.Reservation
+@{
+    var customer = Model.Customers;
+    var phnNumbers = Model.Customers.PhoneNumbers.ToList();
+    var FloorName = "L" + Model.FloorPlan.FLevel.Value + "-" + Model.FloorPlan.FloorName;
+    var ddlTableName = (Model.FloorTableId == 0)
+                    ? Model.MergedFloorTable.TableName + "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0(" + Model.MergedFloorTable.MinCover + "/" + Model.MergedFloorTable.MaxCover + ")"
+                    : Model.FloorTable.TableName + "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0(" + Model.FloorTable.MinCover + "/" + Model.FloorTable.MaxCover + ")";
+}
+<div class="popUpContent" style="display:none;">
+    <div class="frnt-right-popup" id="resPopUpTTip@(Model.ReservationId)">
+        @using (Ajax.BeginForm(
+        "UpdateReservation",
+        "Reservation",
+        null,
+        new AjaxOptions
+        {
+            HttpMethod = "POST",
+            OnSuccess = "{" +
+                        "   UpadateReservationSuccess(data, " + Model.ReservationId + ");" +
+                        "}"
+        },
+        new
+        {
+            @id = "RUpdateForm" + (Model.ReservationId)
+        }))
+        {
+            @Html.Hidden("ReservationId", Model.ReservationId)
+            @Html.Hidden("Covers", Model.Covers)
+            @Html.Hidden("time", new DateTime().Add(Model.TimeForm.TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " + new DateTime().Add(Model.TimeForm.AddMinutes(15).TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " + Model.FoodMenuShiftId)
+            @Html.Hidden("ShiftId", Model.FoodMenuShiftId)
+            @Html.Hidden("tableIdd", Model.FloorTableId)
+            @Html.Hidden("resDate", Model.ReservationDate.ToString("dddd, dd MMM, yy"))
+            @Html.Hidden("Status", Model.StatusId)
+            @Html.Hidden("Duration", Model.Duration)
+            @Html.Hidden("ReservationNote", Model.ReservationNote)
+            @Html.Hidden("GuestNote")
+            @Html.Hidden("MergeTableId", Model.MergedFloorTableId)
+            @Html.Hidden("TablePositionTop", Model.TablePositionTop)
+            @Html.Hidden("TablePositionLeft", Model.TablePositionLeft)
+        }
+        @using (Ajax.BeginForm(
+        "DeleteReservation",
+        "Reservation",
+        null,
+        new AjaxOptions
+        {
+            HttpMethod = "POST",
+            OnSuccess = "{" +
+                        "   HidePopovers();" +
+                        "   DeleteReservationSuccess(data, " + Model.ReservationId + ");" +
+                        "}",
+            Confirm = "Are you sure, you want to delete this reservation?"
+        },
+        new
+        {
+            @id = "RDeleteForm" + (Model.ReservationId)
+        }))
+        {
+            @Html.Hidden("ReservationId", Model.ReservationId)
+        }
+        <div class="pop-sec-a">
+            <div class="colA">
+                <img src="/images/icon-pop-name.png" alt="" />
+            </div>
+            <div class="colB">
+                @customer.FirstName @customer.LastName<br />
+                <span>@(phnNumbers.Count > 0 ? Convert.ToInt64(phnNumbers.FirstOrDefault().PhoneNumbers.Replace(" ", string.Empty)).ToString("000'-'000'-'0000") : string.Empty)</span>
+            </div>
+            @*<div class="colC">
+                <img src="/images/red-s.png" width="15" height="18" /></div>*@
+        </div>
+        <div class="pop-sec-b">
+            <span class="sebHd">
+                Guest Notes
+                <img id="guestNoteEdtBtn" src="/images/icon-note.png" width="12" height="12" alt="" onclick="EditGuestNote('#resPopUpTTip@(Model.ReservationId)')" style="cursor: pointer;" />
+            </span>
+            @{
+                ViewBag.Parent = "#resPopUpTTip" + Model.ReservationId;
+                ViewBag.Target = "#RUpdateForm" + (Model.ReservationId);
+                {
+                    Html.RenderPartial("~/Views/FloorPlan/GuestNoteUpdatePartial.cshtml", customer);
+                }
+            }
+        </div>
+        @if (customer.SpecialStatus.Count() > 0 || customer.Allergies.Count() > 0)
+        {
+            <div class="addDet">
+                Additional Details
+            </div>
+            <div class="addCont">
+                @if (customer.SpecialStatus.Count() > 0)
+                {
+                    var custStatus = customer.SpecialStatus.ToList();
+
+                    <div class="pop-sec-b">
+                        <span class="sebHd">Special Status</span>
+                        @foreach (var status in custStatus)
+                        {
+                            <a href="javascript:void(0)" class="@(@status.SpecialStatus.Status.ToLower().Contains("vip") ? "btnvip" : "btnhip")">@status.SpecialStatus.Status</a>
+                        }
+                    </div>
+                }
+                @if (customer.Allergies.Count() > 0)
+                {
+                    var custAllergies = customer.Allergies.ToList();
+
+                    <div class="pop-sec-b">
+                        <span class="sebHd">Allergies</span>
+                        @foreach (var allergy in custAllergies)
+                        {
+                            <span class="alerg">@allergy.Allergies.Allergy</span>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        <div id="resOptPart@(Model.ReservationId)" class="resEditOption">
+            @*@Html.Action(
+                "UpdateEditReservationPopUpOptions",
+                "FloorPlan",
+                new AIS.Models.ReservationVM
+                {
+                    ReservationId = Model.ReservationId,
+                    resDate = Model.ReservationDate,
+                    Covers = Model.Covers,
+                    Duration = Model.Duration,
+                    Status = Model.StatusId.Value.ToString(),
+                    tableIdd = Model.FloorTableId.ToString(),
+                    time = new DateTime().Add(Model.TimeForm.TimeOfDay).ToString("ddMMyyyyhhmmtt") +
+                           " - " +
+                           new DateTime().Add(Model.TimeForm.AddMinutes(15).TimeOfDay).ToString("ddMMyyyyhhmmtt") +
+                           " - " +
+                           Model.FoodMenuShiftId,
+                    FloorPlanId = Model.FloorPlanId,
+                    ShiftId = Model.FoodMenuShiftId,
+                    MergeTableId = Model.MergedFloorTableId
+                })*@
+            <style type="text/css">
+                .flvl .select-wrapper {
+                    width: 114px !important;
+                }
+
+                    .flvl .select-wrapper .holder {
+                        margin: 0 20px 0 5px !important;
+                    }
+            </style>
+            @using (Ajax.BeginForm(
+            "UpdateEditReservationPopUpOptions",
+            "FloorPlan",
+            null,
+            new AjaxOptions
+            {
+                HttpMethod = "GET",
+                UpdateTargetId = "resOptPart" + (Model.ReservationId),
+                OnSuccess = "{" +
+                            "   $('.popover-content #resOptPart" + (Model.ReservationId) + "').html(data);" +
+                            "   $('#REditForm" + (Model.ReservationId) + "').removeData('unobtrusiveValidation');" +
+                            "   $.validator.unobtrusive.parse('#REditForm" + (Model.ReservationId) + "');" +
+                            "   DesignCustomDropdowns('.popover-content #resOptPart" + (Model.ReservationId) + "');" +
+                            "}"
+            },
+            new
+            {
+                @id = "REditForm" + (Model.ReservationId)
+            }))
+            {
+                @Html.Hidden("ReservationId", Model.ReservationId)
+                @Html.Hidden("Covers", Model.Covers)
+                @Html.Hidden("time", new DateTime().Add(Model.TimeForm.TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " +
+                    new DateTime().Add(Model.TimeForm.AddMinutes(15).TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " + Model.FoodMenuShiftId)
+                @Html.Hidden("ShiftId", Model.FoodMenuShiftId)
+                @Html.Hidden("tableIdd", Model.FloorTableId)
+                @Html.Hidden("resDate", Model.ReservationDate.ToString("dddd, dd MMM, yy"))
+                @Html.Hidden("Status", Model.StatusId)
+                @Html.Hidden("Duration", Model.Duration)
+                @Html.Hidden("FloorPlan", Model.FloorPlanId)
+                @Html.Hidden("MergeTableId", Model.MergedFloorTableId)
+            }
+            <div class="pop-sec-c">
+                <div class="statusa">
+                    <div class="staIcon">
+                        <img src="/images/@(Model.Status == null ? "not-confirmed" : Model.Status.StatusName).png" class="statusImg" width="39" height="39" alt="" />
+                    </div>
+                    <span class="sft">Status</span>
+                    <select class="custom-select">
+                        <option value="" selected="">@(Model.Status == null ? "not-confirmed" : Model.Status.StatusName)</option>
+                    </select>
+                </div>
+                <div class="status" style="margin-left: 2px; border-bottom: 3px solid #a1d17a;">
+                    <span class="sft">Covers</span>
+                    <select class="custom-select">
+                        <option value="" selected="">@Model.Covers Cover</option>
+                    </select>
+                </div>
+            </div>
+            <div class="pop-sec-d">
+                <div class="status">
+                    <span class="sft">Date</span>
+                    <select class="custom-select">
+                        <option value="">@(Model.ReservationDate.ToString("dd ddd, MMM yyyy"))</option>
+                    </select>
+                </div>
+            </div>
+            <div class="pop-sec-e">
+                <div class="status">
+                    <span class="sft">Time</span>
+                    <select class="custom-select">
+                        <option value="" selected="">@Model.TimeForm.ToString("hh:mm tt")</option>
+                    </select>
+                </div>
+            </div>
+            <div class="pop-sec-e">
+                <div class="status">
+                    <span class="sft">Duration</span>
+                    <select class="custom-select">
+                        <option value="" selected="">@Model.Duration</option>
+                    </select>
+                </div>
+            </div>
+            <div class="pop-sec-e">
+                <div class="status flvl">
+                    <span class="sft" style="width: 36px;">Level</span>
+                    <select class="custom-select" style="width:114px;">
+                        <option value="" selected="">@FloorName</option>
+                    </select>
+                </div>
+            </div>
+            <div class="pop-sec-e">
+                <div class="status">
+                    <span class="sft">Table</span>
+                    <select class="custom-select">
+                        <option value="" selected="">@ddlTableName</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="pop-sec-b">
+            <span class="sebHd">
+                Reservation Notes
+                <img width="12" height="12" src="/images/icon-note.png" alt="" onclick="EditReservationNote('#resPopUpTTip@(Model.ReservationId)')" style="cursor: pointer;" />
+            </span>
+            @{
+                ViewBag.Parent = "#resPopUpTTip" + Model.ReservationId;
+                ViewBag.Target = "#RUpdateForm" + (Model.ReservationId);
+                {
+                    Html.RenderPartial(
+                        "~/Views/FloorPlan/ReservationNoteUpdatePartial.cshtml",
+                        new AIS.Models.ReservationVM
+                        {
+                            ReservationId = Model.ReservationId,
+                            ReservationNote = Model.ReservationNote
+                        });
+                }
+            }
+        </div>
+        @*<div class="pop-sec-btn">
+                <input type="button" value="Save" onclick="{CopyReservationFormValues('REditForm@(Model.ReservationId)', 'RUpdateForm@(Model.ReservationId)'); $('#RUpdateForm@(Model.ReservationId)').submit();}" />
+                <input type="button" value="Delete this Reservation" onclick="$('#RDeleteForm@(Model.ReservationId)').submit();" />
+            </div>*@
+        <div class="pop-sec-btn">
+            <input class="pop-sec-btn-save" type="button" value="Save" onclick="{CopyReservationFormValues('REditForm@(Model.ReservationId)', 'RUpdateForm@(Model.ReservationId)'); $('#RUpdateForm@(Model.ReservationId)').submit();}" />
+            <input class="pop-sec-btn-edit" type="button" value="Save" onclick="EditReservationButtonEvent(@(Model.ReservationId));" />
+            <input class="pop-sec-btn-delete" type="button" value="Save" onclick="$('#RDeleteForm@(Model.ReservationId)').submit();" />
+        </div>
+        <div style="clear: both;">
+        </div>
+    </div>
+</div>

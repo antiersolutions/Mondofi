@@ -97,6 +97,7 @@
                 }
             });
             $("#datepicker").datepicker({
+             
                 onClose: getDayList
             });
             setTodayDate();
@@ -126,6 +127,7 @@
         }
 
         function setTodayDate() {
+            
             var actualDate = new Date();
             newDate = new Date(actualDate.getFullYear(), actualDate.getMonth(), actualDate.getDate());
 

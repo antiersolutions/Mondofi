@@ -61,14 +61,15 @@
     <div id="profileView" class="profile">
     </div>
 </div>
-<div class="manage-section">
+<div class="manage-section" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="m-right-btn">
     </div>
     <div class="search-main"><p>Filter</p><div class="onoffswitch"><input id="onoffswitch1" class="onoffswitch-checkbox" type="checkbox" /><label class="onoffswitch-label" for="onoffswitch1"><div style="" class="onoffswitch-inner" /></div><div style="" class="onoffswitch-switch"></div></label></div>
     <div class="search-bar">
         <input type="text" name="" id="searchbox" value="" placeholder="Search by Name" />
         <a href="javascript:void(0)">
-            <img src="../../Images/search-icon.png" alt="" /></a>
+            <img src="../../Images/search-icon.png" alt="" />
+        </a>
     </div>
 </div>
 <div class="main-right-sec content_1">

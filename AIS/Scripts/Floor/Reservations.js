@@ -62,7 +62,7 @@ function CopyReservationFormValues(sourceFormId, targetFormId) {
 }
 
 function UpdateAddReservationFormValues() {
-    //debugger;
+    // 
     var $SourceForm = null;
     if ($('#floorSideAddRes').css('display') != 'none' && $('#AdResAddiUpdateForm').length > 0) {
         $SourceForm = $('#AdResAddiUpdateForm');
@@ -152,7 +152,7 @@ function CancelReservationNoteChanges(parent) {
 /*Guest notes update functions*/
 
 function EditGuestNote(parent) {
-    // debugger;
+    //  
     $(parent).find('#guestNote').hide();
     $(parent).find('#guestNoteEdt').show();
     $(parent).find('#guestNoteEdt textarea').val($(parent).find('#guestNote pre').text()).focus();

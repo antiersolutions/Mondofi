@@ -67,10 +67,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:42:32</publishTime>
     </File>
     <File Include="bin/AIS.dll">
-      <publishTime>10/01/2015 17:55:59</publishTime>
+      <publishTime>12/19/2015 10:53:43</publishTime>
     </File>
     <File Include="bin/AISModels.dll">
-      <publishTime>10/01/2015 17:55:57</publishTime>
+      <publishTime>12/19/2015 10:53:40</publishTime>
     </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>09/08/2015 15:37:36</publishTime>
@@ -943,7 +943,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2015 16:19:57</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/css/style.css">
-      <publishTime>10/01/2015 17:27:03</publishTime>
+      <publishTime>10/29/2015 15:19:50</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/fonts/glyphicons-halflings-regular.eot">
       <publishTime>09/25/2015 14:37:43</publishTime>
@@ -976,7 +976,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2015 16:21:21</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/images/bg_black.jpg">
-      <publishTime>09/29/2015 16:21:21</publishTime>
+      <publishTime>10/29/2015 14:46:44</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/images/captcha.png">
       <publishTime>09/29/2015 16:21:22</publishTime>
@@ -1006,31 +1006,49 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2015 16:21:23</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/images/make-everyguest-regular.png">
-      <publishTime>09/29/2015 16:21:23</publishTime>
+      <publishTime>10/27/2015 11:20:28</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/images/online-easy.png">
-      <publishTime>09/29/2015 16:21:23</publishTime>
+      <publishTime>10/27/2015 11:11:50</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/images/premium-arrow.png">
       <publishTime>09/29/2015 16:21:23</publishTime>
     </File>
+    <File Include="Content/MondofiThemeNew/images/premiumgrey-arrow.png">
+      <publishTime>10/22/2015 13:00:41</publishTime>
+    </File>
     <File Include="Content/MondofiThemeNew/images/seamless_img.jpg">
       <publishTime>09/29/2015 16:21:23</publishTime>
     </File>
+    <File Include="Content/MondofiThemeNew/images/seamless_img.png">
+      <publishTime>10/27/2015 11:33:08</publishTime>
+    </File>
     <File Include="Content/MondofiThemeNew/images/slide-1.jpg">
-      <publishTime>09/29/2015 16:21:23</publishTime>
+      <publishTime>10/27/2015 11:13:22</publishTime>
+    </File>
+    <File Include="Content/MondofiThemeNew/images/slide-2.jpg">
+      <publishTime>10/27/2015 11:29:50</publishTime>
+    </File>
+    <File Include="Content/MondofiThemeNew/images/slide-3.jpg">
+      <publishTime>10/27/2015 11:32:06</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/images/slider-arrow.png">
-      <publishTime>09/29/2015 16:21:23</publishTime>
+      <publishTime>10/27/2015 14:51:40</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/images/streamline-your-wait.jpg">
       <publishTime>09/29/2015 16:21:23</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/images/streamline-your-wait.png">
-      <publishTime>09/29/2015 16:21:23</publishTime>
+      <publishTime>12/03/2015 11:09:36</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/images/tag.png">
       <publishTime>09/29/2015 16:21:23</publishTime>
+    </File>
+    <File Include="Content/MondofiThemeNew/images/text sample.jpg">
+      <publishTime>10/27/2015 11:29:46</publishTime>
+    </File>
+    <File Include="Content/MondofiThemeNew/images/text sample2.jpg">
+      <publishTime>10/27/2015 11:31:58</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/js/bootstrap.js">
       <publishTime>09/29/2015 16:19:10</publishTime>
@@ -1048,7 +1066,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/29/2015 16:19:10</publishTime>
     </File>
     <File Include="Content/MondofiThemeNew/js/scrolling-nav.js">
-      <publishTime>09/29/2015 16:19:10</publishTime>
+      <publishTime>10/23/2015 12:15:00</publishTime>
     </File>
     <File Include="Content/Online/css/bootstrap-select.css">
       <publishTime>09/08/2015 15:42:32</publishTime>
@@ -1060,7 +1078,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:42:32</publishTime>
     </File>
     <File Include="Content/Online/css/style.css">
-      <publishTime>09/08/2015 15:42:32</publishTime>
+      <publishTime>11/04/2015 12:04:39</publishTime>
     </File>
     <File Include="Content/Online/css/style20150519.css">
       <publishTime>09/08/2015 15:42:32</publishTime>
@@ -1368,6 +1386,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="css/Bootstrap-tooltip.css">
       <publishTime>09/08/2015 15:42:33</publishTime>
     </File>
+    <File Include="css/CKHelp.css">
+      <publishTime>10/19/2015 18:33:19</publishTime>
+    </File>
     <File Include="css/CustomPopUp.css">
       <publishTime>09/08/2015 15:42:33</publishTime>
     </File>
@@ -1395,6 +1416,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="css/Online/Online.css">
       <publishTime>09/08/2015 15:42:33</publishTime>
     </File>
+    <File Include="css/PNotify/Notifyalert.css">
+      <publishTime>11/05/2015 12:53:00</publishTime>
+    </File>
     <File Include="css/PNotify/pnotify.custom.css">
       <publishTime>09/08/2015 15:42:33</publishTime>
     </File>
@@ -1405,7 +1429,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:42:33</publishTime>
     </File>
     <File Include="css/style.css">
-      <publishTime>09/08/2015 15:42:33</publishTime>
+      <publishTime>12/17/2015 11:27:30</publishTime>
     </File>
     <File Include="css/style.mobile.css">
       <publishTime>09/08/2015 15:42:33</publishTime>
@@ -1417,13 +1441,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:42:33</publishTime>
     </File>
     <File Include="EmailTemplates/ForgotPassword.html">
-      <publishTime>09/08/2015 15:42:33</publishTime>
+      <publishTime>10/05/2015 14:40:34</publishTime>
     </File>
     <File Include="EmailTemplates/OnlineBookingSuccess.html">
       <publishTime>09/08/2015 15:42:33</publishTime>
     </File>
     <File Include="EmailTemplates/Password.html">
-      <publishTime>09/08/2015 15:42:33</publishTime>
+      <publishTime>10/27/2015 17:01:56</publishTime>
     </File>
     <File Include="favicon.ico">
       <publishTime>09/29/2015 17:03:16</publishTime>
@@ -1526,6 +1550,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Images/bullet.png">
       <publishTime>09/08/2015 15:42:28</publishTime>
+    </File>
+    <File Include="Images/c-note.png">
+      <publishTime>11/06/2015 21:10:04</publishTime>
     </File>
     <File Include="Images/c-pic.png">
       <publishTime>09/08/2015 15:42:28</publishTime>
@@ -1679,6 +1706,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Images/floor-list-arrow.png">
       <publishTime>09/08/2015 15:42:28</publishTime>
+    </File>
+    <File Include="Images/floor-list-arrowDown.png">
+      <publishTime>12/18/2015 10:41:07</publishTime>
     </File>
     <File Include="Images/floor-tab-arrow.png">
       <publishTime>09/08/2015 15:42:28</publishTime>
@@ -2146,13 +2176,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:42:28</publishTime>
     </File>
     <File Include="js/jquery.cluetip.js">
-      <publishTime>09/08/2015 15:42:28</publishTime>
+      <publishTime>12/15/2015 12:13:12</publishTime>
     </File>
     <File Include="js/jquery.ddslick.min.js">
       <publishTime>09/08/2015 15:42:28</publishTime>
     </File>
     <File Include="js/jquery.hoverIntent.js">
-      <publishTime>09/08/2015 15:42:28</publishTime>
+      <publishTime>11/18/2015 12:39:36</publishTime>
     </File>
     <File Include="js/jquery.js">
       <publishTime>09/08/2015 15:42:28</publishTime>
@@ -2185,7 +2215,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:42:28</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>09/08/2015 17:55:59</publishTime>
+      <publishTime>10/14/2015 11:36:44</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>09/08/2015 15:37:35</publishTime>
@@ -2194,7 +2224,1051 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:37:35</publishTime>
     </File>
     <File Include="Scripts/Calendar/Calendar.js">
-      <publishTime>09/08/2015 15:42:30</publishTime>
+      <publishTime>12/15/2015 12:13:12</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/adapters/jquery.js">
+      <publishTime>10/14/2015 11:36:44</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/ckeditor.js">
+      <publishTime>10/14/2015 11:36:44</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/CKHelp.css">
+      <publishTime>10/19/2015 19:16:22</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/config.js">
+      <publishTime>11/06/2015 18:58:57</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/contents.css">
+      <publishTime>10/20/2015 15:36:37</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/images/spacer.gif">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/af.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ar.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/bg.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/bn.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/bs.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ca.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/cs.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/cy.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/da.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/de.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/el.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/en-au.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/en-ca.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/en-gb.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/en.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/eo.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/es.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/et.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/eu.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/fa.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/fi.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/fo.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/fr-ca.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/fr.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/gl.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/gu.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/he.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/hi.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/hr.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/hu.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/id.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/is.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/it.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ja.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ka.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/km.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ko.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ku.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/lt.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/lv.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/mk.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/mn.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ms.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/nb.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/nl.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/no.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/pl.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/pt-br.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/pt.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ro.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ru.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/sk.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/sl.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/sr-latn.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/sr.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/sv.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/th.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/tr.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/ug.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/uk.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/vi.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/zh-cn.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/zh.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/_languages.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/lang/_translationstatus.txt">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/dialogs/a11yhelp.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/cs.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/cy.js">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/da.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/de.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/el.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/en.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/eo.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/fa.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/fi.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/fr.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/gu.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/he.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/it.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/ku.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/mk.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/nb.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/nl.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/no.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/pt-br.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/ro.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/sk.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/tr.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/ug.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/vi.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/zh-cn.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/a11yhelp/lang/_translationstatus.txt">
+      <publishTime>10/14/2015 11:36:43</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/about/dialogs/about.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/about/dialogs/logo_ckeditor.png">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/adobeair/plugin.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/ajax/plugin.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/autogrow/plugin.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/bbcode/plugin.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/clipboard/dialogs/paste.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/colordialog/dialogs/colordialog.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/bg.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/cs.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/cy.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/da.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/de.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/el.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/en.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/eo.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/et.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/fa.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/fi.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/fr.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/gu.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/he.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/hr.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/it.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/ku.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/nb.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/nl.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/no.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/pl.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/pt-br.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/sk.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/tr.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/ug.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/uk.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/vi.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/zh-cn.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/lang/_translationstatus.txt">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/devtools/plugin.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/dialog/dialogDefinition.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/div/dialogs/div.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/docprops/dialogs/docprops.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/docprops/plugin.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/find/dialogs/find.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/flash/dialogs/flash.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/flash/images/placeholder.png">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/forms/dialogs/button.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/forms/dialogs/checkbox.js">
+      <publishTime>10/14/2015 11:36:42</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/forms/dialogs/form.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/forms/dialogs/hiddenfield.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/forms/dialogs/radio.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/forms/dialogs/select.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/forms/dialogs/textarea.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/forms/dialogs/textfield.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/forms/images/hiddenfield.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/iframe/dialogs/iframe.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/iframe/images/placeholder.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/iframedialog/plugin.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/image/dialogs/image.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/link/dialogs/anchor.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/link/dialogs/link.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/link/images/anchor.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/liststyle/dialogs/liststyle.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/pagebreak/images/pagebreak.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/pastefromword/filter/default.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/pastetext/dialogs/pastetext.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/dialogs/placeholder.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/bg.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/cs.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/cy.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/da.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/de.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/el.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/en.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/eo.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/et.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/fa.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/fi.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/fr.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/he.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/hr.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/it.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/ku.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/nb.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/nl.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/no.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/pl.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/pt-br.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/sk.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/tr.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/ug.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/uk.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/vi.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/zh-cn.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/lang/_translationstatus.txt">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/placeholder.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/placeholder/plugin.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/preview/preview.html">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/scayt/dialogs/options.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/scayt/dialogs/toolbar.css">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_address.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_blockquote.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_div.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_h1.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_h2.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_h3.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_h4.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_h5.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_h6.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_p.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/showblocks/images/block_pre.png">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/dialogs/smiley.js">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/angel_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/angry_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/broken_heart.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/confused_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/cry_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/devil_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/embaressed_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/envelope.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/heart.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/kiss.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/lightbulb.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/omg_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/regular_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/sad_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/shades_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/teeth_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/thumbs_down.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/thumbs_up.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/tounge_smile.gif">
+      <publishTime>10/14/2015 11:36:41</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/whatchutalkingabout_smile.gif">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/smiley/images/wink_smile.gif">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/dialogs/specialchar.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/cs.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/cy.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/de.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/el.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/en.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/eo.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/et.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/fa.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/fi.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/fr.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/he.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/hr.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/it.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/ku.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/nb.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/nl.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/no.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/pt-br.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/tr.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/ug.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/zh-cn.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/specialchar/lang/_translationstatus.txt">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/styles/styles/default.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/stylesheetparser/plugin.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/table/dialogs/table.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/tableresize/plugin.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/tabletools/dialogs/tableCell.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/templates/dialogs/templates.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/templates/templates/default.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/templates/templates/images/template1.gif">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/templates/templates/images/template2.gif">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/templates/templates/images/template3.gif">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/dialogs/uicolor.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/bg.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/cs.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/cy.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/da.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/de.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/el.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/en.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/eo.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/et.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/fa.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/fi.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/fr.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/he.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/hr.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/it.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/ku.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/mk.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/nb.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/nl.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/no.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/pl.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/pt-br.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/sk.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/tr.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/ug.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/uk.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/vi.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/zh-cn.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/lang/_translationstatus.txt">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/plugin.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/uicolor.gif">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/yui/assets/hue_bg.png">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/yui/assets/hue_thumb.png">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/yui/assets/picker_mask.png">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/yui/assets/picker_thumb.png">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/yui/assets/yui.css">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/uicolor/yui/yui.js">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/wsc/dialogs/ciframe.html">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/wsc/dialogs/tmpFrameset.html">
+      <publishTime>10/14/2015 11:36:40</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/wsc/dialogs/wsc.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/wsc/dialogs/wsc.js">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/plugins/xml/plugin.js">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/dialog.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/editor.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/icons.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/icons_rtl.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/images/dialog_sides.gif">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/images/dialog_sides.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/images/dialog_sides_rtl.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/images/mini.gif">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/images/noimage.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/images/sprites.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/images/sprites_ie6.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/images/toolbar_start.gif">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/skin.js">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/kama/templates.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/dialog.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/editor.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/icons.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/icons_rtl.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/images/dialog_sides.gif">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/images/dialog_sides.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/images/dialog_sides_rtl.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/images/mini.gif">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/images/noimage.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/images/sprites.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/images/sprites_ie6.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/skin.js">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/office2003/templates.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/dialog.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/editor.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/icons.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/icons_rtl.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/images/dialog_sides.gif">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/images/dialog_sides.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/images/dialog_sides_rtl.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/images/mini.gif">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/images/noimage.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/images/sprites.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/images/sprites_ie6.png">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/images/toolbar_start.gif">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/skin.js">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/skins/v2/templates.css">
+      <publishTime>10/14/2015 11:36:39</publishTime>
+    </File>
+    <File Include="Scripts/ckeditor/themes/default/theme.js">
+      <publishTime>10/14/2015 11:36:39</publishTime>
     </File>
     <File Include="Scripts/Common/AuthorizeAjax.js">
       <publishTime>09/08/2015 15:42:30</publishTime>
@@ -2212,22 +3286,22 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:42:30</publishTime>
     </File>
     <File Include="Scripts/Floor/FloorManager.js">
-      <publishTime>09/08/2015 15:42:30</publishTime>
+      <publishTime>12/15/2015 17:46:23</publishTime>
     </File>
     <File Include="Scripts/Floor/OldFloorManager.js">
-      <publishTime>09/08/2015 15:42:30</publishTime>
+      <publishTime>10/07/2015 11:22:05</publishTime>
     </File>
     <File Include="Scripts/Floor/Reservations.js">
-      <publishTime>09/08/2015 15:42:30</publishTime>
+      <publishTime>10/07/2015 11:22:06</publishTime>
     </File>
     <File Include="Scripts/FloorPlan/FloorPlan.js">
-      <publishTime>09/08/2015 15:42:30</publishTime>
+      <publishTime>11/21/2015 12:45:31</publishTime>
     </File>
     <File Include="Scripts/FloorPlan/FloorPlan.QuickTableChange.js">
-      <publishTime>09/08/2015 15:42:30</publishTime>
+      <publishTime>10/07/2015 11:22:06</publishTime>
     </File>
     <File Include="Scripts/FloorPlan/FloorPlanScripts.js">
-      <publishTime>09/08/2015 15:42:30</publishTime>
+      <publishTime>12/15/2015 12:13:12</publishTime>
     </File>
     <File Include="Scripts/FloorPlan/Hubs/FloorPlanHub.js">
       <publishTime>09/08/2015 15:42:30</publishTime>
@@ -2299,7 +3373,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:42:32</publishTime>
     </File>
     <File Include="Scripts/MergeTable/MergeTable.js">
-      <publishTime>09/08/2015 15:42:32</publishTime>
+      <publishTime>10/07/2015 11:22:06</publishTime>
     </File>
     <File Include="Scripts/modernizr-2.5.3.js">
       <publishTime>09/08/2015 15:42:32</publishTime>
@@ -2361,6 +3435,15 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Scripts/Staff/Staff.js">
       <publishTime>09/08/2015 15:42:32</publishTime>
     </File>
+    <File Include="Scripts/SwipeJs/sortTable.js">
+      <publishTime>12/01/2015 12:55:52</publishTime>
+    </File>
+    <File Include="Scripts/SwipeJs/SwipeL.js">
+      <publishTime>10/08/2015 17:51:15</publishTime>
+    </File>
+    <File Include="Scripts/SwipeJs/SwipeR.js">
+      <publishTime>12/08/2015 15:41:05</publishTime>
+    </File>
     <File Include="Scripts/TableAvailability/TACommon.js">
       <publishTime>09/08/2015 15:42:32</publishTime>
     </File>
@@ -2386,25 +3469,31 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/14/2015 13:21:35</publishTime>
     </File>
     <File Include="Views/Account/ForgotPassword.cshtml">
-      <publishTime>10/01/2015 10:47:43</publishTime>
+      <publishTime>10/28/2015 17:57:07</publishTime>
     </File>
     <File Include="Views/Account/ForgotPasswordConfirmation.cshtml">
       <publishTime>09/08/2015 15:35:49</publishTime>
     </File>
     <File Include="Views/Account/Login.cshtml">
-      <publishTime>10/01/2015 10:47:56</publishTime>
+      <publishTime>10/26/2015 11:11:05</publishTime>
     </File>
     <File Include="Views/Account/Login.Mobile.cshtml">
-      <publishTime>09/08/2015 17:52:37</publishTime>
+      <publishTime>10/26/2015 11:09:36</publishTime>
+    </File>
+    <File Include="Views/Account/Login1.Mobile.cshtml">
+      <publishTime>10/26/2015 11:09:41</publishTime>
     </File>
     <File Include="Views/Account/Manage.cshtml">
       <publishTime>09/08/2015 17:52:37</publishTime>
+    </File>
+    <File Include="Views/Account/NotRegister.cshtml">
+      <publishTime>10/28/2015 11:08:35</publishTime>
     </File>
     <File Include="Views/Account/oldLogin.cshtml">
       <publishTime>09/08/2015 17:52:37</publishTime>
     </File>
     <File Include="Views/Account/Register.cshtml">
-      <publishTime>10/01/2015 13:22:46</publishTime>
+      <publishTime>12/18/2015 17:05:33</publishTime>
     </File>
     <File Include="Views/Account/ResetPassword.cshtml">
       <publishTime>09/14/2015 17:26:45</publishTime>
@@ -2416,7 +3505,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:35:49</publishTime>
     </File>
     <File Include="Views/Account/ThankYouRegister.cshtml">
-      <publishTime>10/01/2015 13:27:03</publishTime>
+      <publishTime>10/23/2015 19:12:45</publishTime>
     </File>
     <File Include="Views/Account/ThyankYouRegister.cshtml">
       <publishTime>10/01/2015 10:12:37</publishTime>
@@ -2452,7 +3541,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Allergy/Index.cshtml">
-      <publishTime>09/23/2015 12:08:40</publishTime>
+      <publishTime>10/08/2015 17:21:56</publishTime>
     </File>
     <File Include="Views/Allergy/_rightAllergyPartialView.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
@@ -2476,22 +3565,22 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Calendar/Days.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>10/07/2015 11:38:18</publishTime>
     </File>
     <File Include="Views/Calendar/MonthList.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>11/24/2015 11:43:14</publishTime>
     </File>
     <File Include="Views/Calendar/Months.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/02/2015 10:57:21</publishTime>
     </File>
     <File Include="Views/Calendar/ShiftNotes.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Calendar/WeekList.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>11/24/2015 11:49:09</publishTime>
     </File>
     <File Include="Views/Calendar/Weeks.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/02/2015 11:05:29</publishTime>
     </File>
     <File Include="Views/City/Create.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
@@ -2506,13 +3595,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/City/Index.cshtml">
-      <publishTime>10/01/2015 15:00:24</publishTime>
+      <publishTime>10/08/2015 17:07:40</publishTime>
     </File>
     <File Include="Views/City/_rightlCityPartialView.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Customer/Create.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>10/08/2015 17:07:50</publishTime>
     </File>
     <File Include="Views/Customer/Delete.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
@@ -2521,10 +3610,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Customer/Edit.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>10/08/2015 17:08:01</publishTime>
     </File>
     <File Include="Views/Customer/Index.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>10/08/2015 17:08:13</publishTime>
     </File>
     <File Include="Views/Customer/_rightSideCustomerPartialView.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
@@ -2617,7 +3706,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Designation/Index.cshtml">
-      <publishTime>10/01/2015 15:00:31</publishTime>
+      <publishTime>10/13/2015 13:26:30</publishTime>
     </File>
     <File Include="Views/Designation/_rightDesignationPartialView.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
@@ -2626,31 +3715,31 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Floor/Edit.cshtml">
-      <publishTime>09/17/2015 17:21:07</publishTime>
+      <publishTime>12/16/2015 18:14:56</publishTime>
     </File>
     <File Include="Views/Floor/FloorPlan.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>10/12/2015 15:47:39</publishTime>
     </File>
     <File Include="Views/Floor/GetFloorItemTemplate.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Floor/Index.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/18/2015 11:38:11</publishTime>
     </File>
     <File Include="Views/Floor/NewFloorPlan.cshtml">
-      <publishTime>10/01/2015 15:26:41</publishTime>
+      <publishTime>10/08/2015 17:08:44</publishTime>
     </File>
     <File Include="Views/Floor/RectangleTablePartial.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Floor/RectangleTableTemplate.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/14/2015 17:11:37</publishTime>
     </File>
     <File Include="Views/Floor/ReservationAdd.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Floor/ReservationEdit.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>10/08/2015 17:08:54</publishTime>
     </File>
     <File Include="Views/Floor/ReservationEditPopupOptionsPartial.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
@@ -2662,7 +3751,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Floor/ReservationListPartial.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>11/06/2015 21:32:34</publishTime>
     </File>
     <File Include="Views/Floor/ReservationPopupPartial.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
@@ -2671,19 +3760,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Floor/RoundTableTemplate.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/14/2015 17:11:48</publishTime>
     </File>
     <File Include="Views/Floor/SquareTablePartial.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/Floor/SquareTableTemplate.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/14/2015 17:12:02</publishTime>
     </File>
     <File Include="Views/Floor/TableDetailEditPartial.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/15/2015 17:38:18</publishTime>
     </File>
     <File Include="Views/Floor/_CurrentFloorPlanPartial.cshtml">
-      <publishTime>10/01/2015 15:26:41</publishTime>
+      <publishTime>12/18/2015 11:43:08</publishTime>
     </File>
     <File Include="Views/Floor/_EmptyFloorPlansPartial.cshtml">
       <publishTime>10/01/2015 15:00:50</publishTime>
@@ -2713,13 +3802,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/11/2015 14:52:20</publishTime>
     </File>
     <File Include="Views/FloorPlan/FloorPlan.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>10/13/2015 15:01:53</publishTime>
     </File>
     <File Include="Views/FloorPlan/FloorRightAddReservationPartial.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/01/2015 12:38:20</publishTime>
     </File>
     <File Include="Views/FloorPlan/FloorRightReservationTabsPartial.cshtml">
-      <publishTime>09/11/2015 14:49:38</publishTime>
+      <publishTime>10/07/2015 11:22:07</publishTime>
     </File>
     <File Include="Views/FloorPlan/FloorRightSectionPartial.cshtml">
       <publishTime>09/11/2015 14:50:12</publishTime>
@@ -2728,7 +3817,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/FloorPlan/ReservationEditPopupOptionsPartial.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/01/2015 12:17:49</publishTime>
     </File>
     <File Include="Views/FloorPlan/ReservationEditPopupOptionsStaticPartial.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
@@ -2737,7 +3826,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/FloorPlan/ReservationListItemPartial.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>11/23/2015 10:55:07</publishTime>
     </File>
     <File Include="Views/FloorPlan/ReservationListPartial.cshtml">
       <publishTime>09/08/2015 17:52:12</publishTime>
@@ -2779,10 +3868,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:12</publishTime>
     </File>
     <File Include="Views/History/HistoryList.cshtml">
-      <publishTime>09/11/2015 14:51:04</publishTime>
+      <publishTime>12/02/2015 20:00:39</publishTime>
     </File>
     <File Include="Views/History/Index.cshtml">
-      <publishTime>09/08/2015 17:52:12</publishTime>
+      <publishTime>12/17/2015 14:32:32</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -2821,7 +3910,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/MenuShiftHour/Edit.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>10/07/2015 11:22:08</publishTime>
     </File>
     <File Include="Views/MenuShiftHour/Index.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -2833,43 +3922,49 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/Mondofi/Index.cshtml">
-      <publishTime>09/30/2015 14:40:59</publishTime>
+      <publishTime>11/03/2015 10:21:23</publishTime>
     </File>
     <File Include="Views/Mondofi/Index2.cshtml">
       <publishTime>09/17/2015 12:56:05</publishTime>
     </File>
+    <File Include="Views/Mondofi/Index21.cshtml">
+      <publishTime>09/17/2015 12:56:05</publishTime>
+    </File>
     <File Include="Views/Mondofi/Price.cshtml">
-      <publishTime>09/30/2015 13:01:56</publishTime>
+      <publishTime>10/28/2015 16:21:09</publishTime>
     </File>
     <File Include="Views/Mondofi/_SignInModal.cshtml">
       <publishTime>09/22/2015 10:34:39</publishTime>
     </File>
     <File Include="Views/Online/Cancel.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>10/27/2015 20:40:01</publishTime>
     </File>
     <File Include="Views/Online/Cancel_old.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/Online/Edit.cshtml">
-      <publishTime>09/15/2015 16:43:31</publishTime>
+      <publishTime>11/17/2015 19:34:04</publishTime>
     </File>
     <File Include="Views/Online/Edit_old.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/Online/Index.cshtml">
-      <publishTime>10/01/2015 15:39:28</publishTime>
+      <publishTime>11/17/2015 19:07:52</publishTime>
     </File>
     <File Include="Views/Online/Index_old.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
+    <File Include="Views/Online/NotExists.cshtml">
+      <publishTime>10/16/2015 17:58:20</publishTime>
+    </File>
     <File Include="Views/Online/Reserve.cshtml">
-      <publishTime>09/15/2015 17:10:40</publishTime>
+      <publishTime>10/28/2015 16:45:49</publishTime>
     </File>
     <File Include="Views/Online/ReserveFail.cshtml">
       <publishTime>09/15/2015 16:28:46</publishTime>
     </File>
     <File Include="Views/Online/ReserveSuccess.cshtml">
-      <publishTime>09/15/2015 16:21:33</publishTime>
+      <publishTime>11/17/2015 16:41:42</publishTime>
     </File>
     <File Include="Views/Online/ReserveSuccess_old.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -2890,13 +3985,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/PhoneTypes/Index.cshtml">
-      <publishTime>10/01/2015 15:01:09</publishTime>
+      <publishTime>10/08/2015 17:09:06</publishTime>
     </File>
     <File Include="Views/PhoneTypes/_rightPhoneTypePartialView.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/Reservation/ReservationEdit.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>10/08/2015 17:09:17</publishTime>
     </File>
     <File Include="Views/Reservation/ReservationListItemPartial.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -2914,22 +4009,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/Restriction/Index.cshtml">
-      <publishTime>10/01/2015 15:01:26</publishTime>
+      <publishTime>10/08/2015 17:09:24</publishTime>
     </File>
     <File Include="Views/Restriction/_rightRestrictionPartialView.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/Section/Assign.cshtml">
-      <publishTime>10/01/2015 15:01:35</publishTime>
+      <publishTime>10/08/2015 17:09:33</publishTime>
     </File>
     <File Include="Views/Section/Index.cshtml">
-      <publishTime>10/01/2015 15:01:43</publishTime>
+      <publishTime>12/02/2015 18:28:15</publishTime>
+    </File>
+    <File Include="Views/Setting/Index - Copy.cshtml">
+      <publishTime>10/28/2015 13:26:45</publishTime>
     </File>
     <File Include="Views/Setting/Index.cshtml">
-      <publishTime>10/01/2015 15:01:54</publishTime>
+      <publishTime>12/18/2015 17:23:14</publishTime>
+    </File>
+    <File Include="Views/Shared/EditorTemplates/Html.cshtml">
+      <publishTime>10/14/2015 11:36:38</publishTime>
     </File>
     <File Include="Views/Shared/Error.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>10/28/2015 11:06:53</publishTime>
     </File>
     <File Include="Views/Shared/Lockout.cshtml">
       <publishTime>09/08/2015 15:35:49</publishTime>
@@ -2938,13 +4039,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>10/13/2015 13:16:45</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutAddGuests.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>10/08/2015 17:09:43</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutBase.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>12/01/2015 13:24:56</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutLogin.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -2953,25 +4054,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutMobile.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>10/07/2015 11:22:08</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutMondofi.cshtml">
-      <publishTime>09/16/2015 17:34:51</publishTime>
+      <publishTime>10/23/2015 19:02:53</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutMondofiFooter.cshtml">
-      <publishTime>10/01/2015 15:22:36</publishTime>
+      <publishTime>10/30/2015 17:59:47</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutMondofiHeader.cshtml">
-      <publishTime>10/01/2015 15:21:57</publishTime>
+      <publishTime>10/30/2015 18:04:23</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutMondofiHeaderReplace.cshtml">
-      <publishTime>09/30/2015 12:50:17</publishTime>
+      <publishTime>10/28/2015 11:53:31</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutMondofiNew.cshtml">
-      <publishTime>09/30/2015 12:28:04</publishTime>
+      <publishTime>11/05/2015 16:52:26</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutOnline.cshtml">
-      <publishTime>09/23/2015 15:15:12</publishTime>
+      <publishTime>10/20/2015 11:39:42</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutOnline_old.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -2980,7 +4081,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>10/01/2015 15:02:07</publishTime>
     </File>
     <File Include="Views/Shared/_LeftMenuPartial.cshtml">
-      <publishTime>09/23/2015 16:33:19</publishTime>
+      <publishTime>11/23/2015 10:18:16</publishTime>
     </File>
     <File Include="Views/Shared/_LoginPartial.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -3001,7 +4102,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/SpecialStatus/Index.cshtml">
-      <publishTime>10/01/2015 15:02:31</publishTime>
+      <publishTime>10/08/2015 17:09:56</publishTime>
     </File>
     <File Include="Views/SpecialStatus/_rightSpecialStatusPartialView.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -3025,7 +4126,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/TableAvailablity/Edit.cshtml">
-      <publishTime>10/01/2015 15:02:40</publishTime>
+      <publishTime>12/17/2015 12:29:16</publishTime>
     </File>
     <File Include="Views/TableAvailablity/FilterPartial.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -3034,34 +4135,34 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/TableAvailablity/getTableAvailablity.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>11/27/2015 14:59:36</publishTime>
     </File>
     <File Include="Views/TableAvailablity/getTableAvailablityNew.cshtml">
-      <publishTime>09/08/2015 17:52:16</publishTime>
+      <publishTime>12/14/2015 17:19:41</publishTime>
     </File>
     <File Include="Views/TableAvailablity/Index.cshtml">
-      <publishTime>10/01/2015 15:02:47</publishTime>
+      <publishTime>12/08/2015 17:50:41</publishTime>
     </File>
     <File Include="Views/TableAvailablity/TimeRangePartial.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
     </File>
     <File Include="Views/User/Create.cshtml">
-      <publishTime>10/01/2015 15:02:56</publishTime>
+      <publishTime>11/13/2015 10:17:17</publishTime>
     </File>
     <File Include="Views/User/Delete.cshtml">
       <publishTime>09/09/2015 19:05:52</publishTime>
     </File>
     <File Include="Views/User/Details.cshtml">
-      <publishTime>09/18/2015 16:37:12</publishTime>
+      <publishTime>11/13/2015 17:01:03</publishTime>
     </File>
     <File Include="Views/User/Edit.cshtml">
-      <publishTime>10/01/2015 15:03:05</publishTime>
+      <publishTime>11/07/2015 16:35:59</publishTime>
     </File>
     <File Include="Views/User/Index.cshtml">
-      <publishTime>10/01/2015 15:03:14</publishTime>
+      <publishTime>11/07/2015 16:32:21</publishTime>
     </File>
     <File Include="Views/User/RightSideBarPartial.cshtml">
-      <publishTime>09/18/2015 13:25:36</publishTime>
+      <publishTime>11/05/2015 14:54:38</publishTime>
     </File>
     <File Include="Views/UserPhone/Create.cshtml">
       <publishTime>09/08/2015 17:52:16</publishTime>
@@ -3115,7 +4216,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/08/2015 15:35:41</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>10/01/2015 17:56:59</publishTime>
+      <publishTime>12/19/2015 10:53:57</publishTime>
     </File>
   </ItemGroup>
 </Project>

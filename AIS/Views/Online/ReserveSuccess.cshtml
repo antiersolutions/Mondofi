@@ -1,9 +1,27 @@
 ﻿@model AISModels.Reservation
+@using AIS.Models
 @{
     ViewBag.Title = "Reserve";
     Layout = "~/Views/Shared/_LayoutOnline.cshtml";
-    string company = ViewBag.company;
+    var company = string.Empty;
+    try
+    {
+        company = ViewBag.company;
+    }
+    catch (Exception)
+    {
+        company = string.Empty;
+
+    }
     
+    int count = 1;
+    UsersContext db = new UsersContext(company);
+    var Address = db.tabSettings.Where(s => s.Name.Contains("Address")).Single().Value;
+   var PhoneSetting = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single().Value;
+   string[] values = Address.Split(',');
+   string laststring = Address.Split(',').Last();
+    int stringcount = values.Count();
+
 }
 @section styles{
     <style type="text/css">
@@ -40,6 +58,67 @@
             }
         }
     </script>
+
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=false"></script>
+
+    <script>
+        var contentString = '<div id="content">' +
+   '<div id="siteNotice">' +
+   '</div>' +
+
+   '<div id="bodyContent">' +
+   '<p><b>' +"@Address"+'</b>,</p>' +
+
+   '</div>' +
+   '</div>';
+
+        var newOne = "@Address"
+        var newLatLog;
+        geocoder = new google.maps.Geocoder();
+        console.log(newOne);
+
+        geocoder.geocode({ 'address': newOne }, function (results, status) {
+
+
+            var latlong = results[0].geometry.location;
+            newLatLog = new google.maps.LatLng(latlong.lat(), latlong.lng())
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            var aa = {
+                zoom: 16,
+                center: newLatLog
+            };
+            var newmap = new google.maps.Map(document.getElementById('map'), aa);
+
+            marker = new google.maps.Marker({
+                map: newmap,
+                draggable: true,
+                animation: google.maps.Animation.DROP,
+                position: latlong
+            });
+            //google.maps.event.addListener(marker, 'click', toggleBounce);
+            google.maps.event.addListener(marker, 'click', function () {
+
+                toggleBounce();
+                infowindow.open(newmap, marker);
+            });
+
+
+
+
+        });
+        //}
+
+        function toggleBounce() {
+
+            if (marker.getAnimation() != null) {
+                marker.setAnimation(null);
+            } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        }
+    </script>
 }
 
 <div class="row welcome-txt">
@@ -57,28 +136,47 @@
 
     <ul class="col-xs-6 col-sm-8 col-md-8 Address pull-right">
         <li><span>Restaurant Address</span></li>
-        <li>1517 Anderson St.</li>
-        <li>Granville Island, Vancouver, BC</li>
-        <li>V6H 3R5</li>
-        <li>Canada</li>
+        @foreach (var item in values)
+        {
+            if (stringcount - 1 == count)
+            {
+                <li>@item,@laststring</li>
+            }
+            else if (stringcount > count)
+            {
+
+                <li>@item,</li>
+            }
+
+
+            count++;
+        }
+        <li><span>Call us at</span></li>
+        <li>@PhoneSetting</li>
+        @*<li>1517 Anderson St.</li>
+            <li>Granville Island, Vancouver, BC</li>
+            <li>V6H 3R5</li>
+            <li>Canada</li>*@
     </ul>
 
 </div>
+
 <div class="row result-sec">
-    <div class="result-secL Flexible-container">
+    <div class="result-secL Flexible-container" id="map">
         @*<img class="img-responsive" src="http://maps.googleapis.com/maps/api/staticmap?center=The+Vancouver+fish+company+1517+Anderson+St.+Vancouver,+BC&zoom=17&scale=1&size=600x300&maptype=roadmap&format=png&visual_refresh=true&markers=size:mid%7Ccolor:red%7Clabel:A%7CThe+Vancouver+fish+company+1517+Anderson+St.+Vancouver,+BC" alt="Google Map of The Vancouver fish company 1517 Anderson St. Vancouver, BC" />*@
-        <iframe class="img-responsive" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2603.3046117541994!2d-123.1349445!3d49.270625!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0000000000000000%3A0xd232cce689b2789f!2sThe+Vancouver+Fish+Company!5e0!3m2!1sen!2sca!4v1430114659034" width="740" height="370" frameborder="0" style="border:0"></iframe>
+        @*<iframe class="img-responsive" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d2603.3046117541994!2d-123.1349445!3d49.270625!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0000000000000000%3A0xd232cce689b2789f!2sThe+Vancouver+Fish+Company!5e0!3m2!1sen!2sca!4v1430114659034" width="740" height="370" frameborder="0" style="border:0"></iframe>*@
+        @*<div id="map"></div>*@
     </div>
     <div class="col-md-12 map-btns">
         <div class="col-md-4" style="padding:0px;">
             @*<form method="get" action="/Online/Edit/@Model.ReservationId" novalidate="novalidate">
 
-                <button type="submit" class="ER-btn">Edit Reservation</button>
-            </form>*@
+                    <button type="submit" class="ER-btn">Edit Reservation</button>
+                </form>*@
             @using (Html.BeginForm("Edit", "Online", new
                         {
                             id = Model.ReservationId,
-                            
+
                         }, FormMethod.Get))
             {
                 @Html.Hidden("company", company)

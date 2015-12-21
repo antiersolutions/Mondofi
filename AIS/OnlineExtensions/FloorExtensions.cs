@@ -832,7 +832,7 @@ namespace AIS.OnlineExtensions
 
             foreach (var item in floorItems)
             {
-                item.TableDesign = cache.Get<string>(string.Format(CacheKeys.FLOOR_PLAN_TABLE_DESIGN,controller.User.Identity.GetDatabaseName(), item.FloorTableId), () =>
+                item.TableDesign = cache.Get<string>(string.Format(CacheKeys.FLOOR_PLAN_TABLE_DESIGN, controller.User.Identity.GetDatabaseName(), item.FloorTableId), () =>
                 {
                     return controller.RenderPartialViewToString("~/Views/Floor/GetFloorItemTemplate.cshtml", item);
                 });
@@ -1238,6 +1238,75 @@ namespace AIS.OnlineExtensions
                 return false;
             }
         }
+        public static bool CheckAvailStatusOnline18122015(this IList<TableAvailability> availList, DateTime date, DateTime startTime, DateTime endTime, FloorTable table, int checkStatusId)
+        {
+            var tblAvailList = availList.Where(ta => ta.TableAvailabilityFloorTables.Any(taf => taf.FloorTableId == table.FloorTableId)).ToList();
+
+            if (table.TableName == "T-34" || table.TableName == "T-42")
+            {
+                var a = table;
+            }
+
+            bool isAvailable = true;
+            var startTm = startTime;
+            var endTm = endTime;
+
+            tblAvailList = tblAvailList.Where(ta => ta.CheckAvailOnline(date, startTime, endTime)).OrderByDescending(ta => ta.CreatedOn).ToList();
+
+            while ((startTm < endTm) && isAvailable)
+            {
+                tblAvailList = tblAvailList.Where(ta => ta.CheckAvailOnline(date, startTm, startTm.AddMinutes(15))).OrderByDescending(ta => ta.CreatedOn).ToList();
+
+                if (tblAvailList.Any())
+                {
+                    var availablity = tblAvailList.FirstOrDefault();
+                    isAvailable = checkStatusId == availablity.AvailablityStatusId;
+                }
+                else
+                {
+                    isAvailable = false;
+                }
+
+                startTm = startTm.AddMinutes(15);
+            }
+
+            return isAvailable;
+        }
+        
+        public static bool CheckAvailStatusOnline(this IList<TableAvailability> availList, DateTime date, DateTime startTime, DateTime endTime, FloorTable table, int checkStatusId)
+        {
+            var tblAvailList = availList.Where(ta => ta.TableAvailabilityFloorTables.Any(taf => taf.FloorTableId == table.FloorTableId)).ToList();
+
+            if (table.TableName == "T-34" || table.TableName == "T-42")
+            {
+                var a = table;
+            }
+
+            bool isAvailable = true;
+            var startTm = startTime;
+            var endTm = endTime;
+
+            tblAvailList = tblAvailList.Where(ta => ta.CheckAvailOnline(date, startTime, endTime)).OrderByDescending(ta => ta.CreatedOn).ToList();
+
+            while ((startTm < endTm) && isAvailable)
+            {
+                tblAvailList = tblAvailList.Where(ta => ta.CheckAvailOnline(date, startTm, endTime.AddMinutes(15))).OrderByDescending(ta => ta.CreatedOn).ToList();
+
+                if (tblAvailList.Any())
+                {
+                    var availablity = tblAvailList.FirstOrDefault();
+                    isAvailable = checkStatusId == availablity.AvailablityStatusId;
+                }
+                else
+                {
+                    isAvailable = false;
+                }
+
+                startTm = startTm.AddMinutes(15);
+            }
+
+            return isAvailable;
+        }
 
         public static bool CheckAvail(this TableAvailability ta, DateTime date, DateTime startTime, DateTime endTime)
         {
@@ -1253,9 +1322,25 @@ namespace AIS.OnlineExtensions
                 return false;
         }
 
+        public static bool CheckAvailOnline(this TableAvailability ta, DateTime date, DateTime startTime, DateTime endTime)
+        {
+            var TAStartTime = date.Add(DateTime.ParseExact(ta.StartTime.Trim(), "h:mm tt", CultureInfo.InvariantCulture).TimeOfDay);
+            var TAEndTime = date.Add(DateTime.ParseExact(ta.EndTime.Trim(), "h:mm tt", CultureInfo.InvariantCulture).TimeOfDay);
+
+            //if ((TAStartTime <= startTime && TAEndTime >= endTime))
+            if (((TAStartTime <= startTime && TAEndTime >= endTime)
+                || (TAStartTime >= startTime && TAEndTime <= endTime)
+                || (TAStartTime < startTime && TAEndTime > startTime)
+                || (TAStartTime < endTime && TAEndTime > endTime)))
+                return true;
+            else
+                return false;
+        }
+
         public static bool IsTableBlocked(this IList<FloorTableBlock> blockList, long tableId, DateTime startTime, DateTime endTime)
         {
-            return blockList.Any(b => b.FloorTableId == tableId && ((b.BlockFrom <= startTime && b.BlockTo >= endTime)
+            return blockList.Any(b => b.FloorTableId == tableId
+                && ((b.BlockFrom <= startTime && b.BlockTo >= endTime)
                || (b.BlockFrom >= startTime && b.BlockTo <= endTime)
                || (b.BlockFrom < startTime && b.BlockTo > startTime)
                || (b.BlockFrom < endTime && b.BlockTo > endTime)));

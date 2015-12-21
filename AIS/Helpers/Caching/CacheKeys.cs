@@ -59,7 +59,10 @@ namespace AIS.Helpers.Caching
         /// {4}: FloorPlanId
         /// </summary>
         public static string FLOOR_TABLES_SCREEN = "AIS.Floor.Tables.{0}.{1}.{2}.{3}.{4}";
-        public static string FLOOR_TABLES_ONLY = "AIS.Floor.Tables.OnlyTables";
+        /// <summary>
+        /// {0}: DataBase Name
+        /// </summary>
+        public static string FLOOR_TABLES_ONLY = "AIS.Floor.Tables.OnlyTables.{0}";
         /// <summary>
         /// {0}: DataBase Name
         /// {1}: FloorPlanId
@@ -82,6 +85,11 @@ namespace AIS.Helpers.Caching
         /// </summary>
         public static string FLOOR_TABLES_BLOCK_BY_DATE = "AIS.Floor.Tables.{0}.{1}";
 
+        /// <summary>
+        /// [0}: DataBase Name
+        /// </summary>
+        public static string FLOOR_TABLES_SCREEN_PATTREN_TableAvailability = "AIS.Floor.Tables.{0}";
+        
         #endregion
 
         #region Staff keys

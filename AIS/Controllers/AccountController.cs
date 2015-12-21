@@ -75,13 +75,13 @@ namespace AIS.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public ActionResult Login(LoginViewModel model, string returnUrl)
         {
 
             if (ModelState.IsValid)
             {
-                var user = UserManager.FindByName(model.Email);
-                if (user == null)
+                var user = db.Users.Where(c => c.Email == model.Email && c.IsDelete == false).FirstOrDefault();
+                if (user == null || user.IsDelete == true)
                 {
                     ModelState.AddModelError("", "Invalid login attempt..");
                     if (Request.IsAjaxRequest())
@@ -101,43 +101,14 @@ namespace AIS.Controllers
                 }
                 string databasename = user.RestaurantName;
                 databasename = databasename.Replace(" ", "");
-                UsersContext db = new UsersContext(databasename);
+                UsersContext _db = new UsersContext(databasename);
 
 
                 using (var companyUserManger = ApplicationUserManager.Create(databasename))
                 using (var companySignInManager = ApplicationSignInManager.Create(databasename))
                 {
-                    var getUser = db.Users.Where(c => c.RestaurantName == user.RestaurantName).ToList();
-                    if (getUser.Count() == 0)
-                    {
-                        var getresult = companyUserManger.Create(new UserProfile
-                        {
-                            Email = user.Email,
-                            FirstName = user.FirstName,
-                            LastName = user.LastName,
-                            UserName = user.Email,
-                            UserCode = 1234,
-                            PhotoPath = user.PhotoPath,
-                            Availability = user.Availability,
-                            DesignationId = user.DesignationId,
-                            RestaurantName = databasename,
-                            TermAndCondition = true,
-                            Approved = false,
-                            EmailConfirmed = true
-
-                        }, model.Password);
-                        if (getresult.Succeeded)
-                        {
-
-                            var getUseradd = db.Users.Where(c => c.Email == model.Email).FirstOrDefault();
-                            companyUserManger.AddToRole(getUseradd.Id, "SuperAdmin");
-
-                        }
-
-                    }
-
                     var companyUser = companyUserManger.FindByName(model.Email);
-                    if (companyUser == null)
+                    if (companyUser == null || companyUser.IsDelete == true)
                     {
                         ModelState.AddModelError("", "Invalid login attempt.");
                         if (Request.IsAjaxRequest())
@@ -148,7 +119,7 @@ namespace AIS.Controllers
                     }
 
                     //Add this to check if the email was confirmed.
-                    if (!await companyUserManger.IsEmailConfirmedAsync(companyUser.Id))
+                    if (!companyUserManger.IsEmailConfirmed(companyUser.Id))
                     {
                         ModelState.AddModelError("", "You need to confirm your email.");
                         if (Request.IsAjaxRequest())
@@ -158,7 +129,10 @@ namespace AIS.Controllers
                         return View(model);
                     }
 
-                    var result = await companySignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                    var result = companySignInManager.PasswordSignIn(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                      
+                    var roles = companyUserManger.GetRoles(companyUser.Id);
+                      
                     switch (result)
                     {
                         case SignInStatus.Success:
@@ -166,7 +140,23 @@ namespace AIS.Controllers
                             {
                                 return Json("Success", JsonRequestBehavior.AllowGet);
                             }
-                            return RedirectToAction("FloorPlan", "FloorPlan");
+                            if (Request.Browser.IsMobileDevice)
+                            {
+                                return RedirectToAction("Index", "Book");
+                            }
+                            if (roles.Contains("SuperAdmin"))
+                            {
+                                return RedirectToAction("Index", "Setting");
+                            }
+                            if (roles.Contains("Admin"))
+                            {
+                                return RedirectToAction("Index", "Setting");
+                            }
+                            else
+                            {
+                                return RedirectToAction("FloorPlan", "FloorPlan");
+                            }
+
                         case SignInStatus.LockedOut:
                             return View("Lockout");
                         case SignInStatus.RequiresVerification:
@@ -266,23 +256,22 @@ namespace AIS.Controllers
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
 
-
             if (model.TermAndCondition == false)
             {
-                ViewBag.Countries = new SelectList(db.tabCountry.ToList(), "CountryId", "CountryName");
+                //ViewBag.Countries = new SelectList(db.tabCountry.ToList(), "CountryId", "CountryName");
                 ModelState.AddModelError("", "Select Terms & Conditions.");
                 return View(model);
             }
 
             if (ModelState.IsValid)
             {
-                var user = new UserProfile { UserName = model.UserName, Email = model.UserName };
+              
                 var userget = UserManager.FindByName(model.UserName);
                 if (userget != null)
                 {
                     if (userget.UserName == model.UserName)
                     {
-                        ViewBag.Countries = new SelectList(db.tabCountry.ToList(), "CountryId", "CountryName");
+                        //ViewBag.Countries = new SelectList(db.tabCountry.ToList(), "CountryId", "CountryName");
                         ModelState.AddModelError("", "Email already exists.");
                         return View(model);
                     }
@@ -294,7 +283,7 @@ namespace AIS.Controllers
 
                     if (RestaurantName.RestaurantName.Trim() == RestaurantName.RestaurantName.Trim())
                     {
-                        ViewBag.Countries = new SelectList(db.tabCountry.ToList(), "CountryId", "CountryName");
+                        //ViewBag.Countries = new SelectList(db.tabCountry.ToList(), "CountryId", "CountryName");
                         ModelState.AddModelError("", "Venue Name already exists.");
                         return View(model);
                     }
@@ -318,8 +307,10 @@ namespace AIS.Controllers
                     Notes = model.Notes,
                     AddressId = address.AddressId,
                     RestaurantName = model.RestaurantName,
+                    VenueName = model.VenueName,
                     TermAndCondition = model.TermAndCondition,
-                    Approved = false
+                    Approved = false,
+                    IsDelete=false
 
                 }, model.Password);
                 if (result.Succeeded)
@@ -371,7 +362,7 @@ namespace AIS.Controllers
                 }
                 AddErrors(result);
             }
-            ViewBag.Countries = new SelectList(db.tabCountry.ToList(), "CountryId", "CountryName");
+            //ViewBag.Countries = new SelectList(db.tabCountry.ToList(), "CountryId", "CountryName");
             // If we got this far, something failed, redisplay form
             return View(model);
         }
@@ -473,7 +464,7 @@ namespace AIS.Controllers
             var getuser = companyUserManger.FindByName(user.Email);
             var resetToken = companyUserManger.GeneratePasswordResetToken(getuser.Id);
 
-            string sitepath = "http://www.mondofi.com/Account/ResetPassword?email=" + model.UserName + "&code=" + resetToken;
+            string sitepath = "https://www.mondofi.com/Account/ResetPassword?email=" + model.UserName + "&code=" + resetToken;
 
             template = template.Replace("{verifyUrl}", sitepath);
 
@@ -496,20 +487,58 @@ namespace AIS.Controllers
         public async Task<ActionResult> IsEmailExist(string UserName)
         {
             SAASContext SAASdb = new SAASContext();
-            var user = SAASdb.Users.Where(c => c.UserName == UserName).FirstOrDefault();
+            var user = db.Users.Where(c => c.UserName == UserName && c.IsDelete == false).FirstOrDefault();
+            if (user == null)
+            {
+
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            //var isuser = Membership.GetUser(UserName);
+            //return Json(isuser == null ? false : true, JsonRequestBehavior.AllowGet);
+
+            return Json(false, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> IsEmailExistForgot(string UserName)
+        {
+            SAASContext SAASdb = new SAASContext();
+            var user = db.Users.Where(c => c.UserName == UserName && c.IsDelete == false).FirstOrDefault();
             if (user == null)
             {
 
                 return Json(user == null ? false : true, JsonRequestBehavior.AllowGet);
             }
-            //var isuser = Membership.GetUser(UserName);
-            //return Json(isuser == null ? false : true, JsonRequestBehavior.AllowGet);
-
+            if (user.IsDelete == true)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
             var companyUserManger = ApplicationUserManager.Create(user.RestaurantName);
 
-            var getuser = companyUserManger.FindByNameAsync(UserName);
+            var getuser = companyUserManger.FindByEmail(UserName);
+            if (getuser.IsDelete == true)
+            {
+                return Json(false, JsonRequestBehavior.AllowGet);
+            }
 
             return Json(getuser == null ? false : true, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
+        [AllowAnonymous]
+        public async Task<ActionResult> IsVenueExist(string RestaurantName)
+        {
+            SAASContext SAASdb = new SAASContext();
+            var user = db.Users.Where(c => c.RestaurantName == RestaurantName).FirstOrDefault();
+            if (user == null)
+            {
+
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            return Json(false, JsonRequestBehavior.AllowGet);
 
         }
 

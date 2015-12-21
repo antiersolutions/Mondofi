@@ -92,6 +92,7 @@
 
 			// else e.type == "onmouseover"
 			if (e.type == "mouseover") {
+			   
 				// set "previous" X and Y position based on initial entry point
 				pX = ev.pageX; pY = ev.pageY;
 				// update "current" X and Y position based on mousemove
@@ -101,13 +102,15 @@
 
 			// else e.type == "onmouseout"
 			} else {
+			    
 				// unbind expensive mousemove event
 				$(ob).unbind("mousemove.cluetip",track);
 				// if hoverIntent state is true, then call the mouseOut function after the specified delay
-				if (ob.hoverIntent_s == 1) { ob.hoverIntent_t = setTimeout( function(){delay(ev,ob);} , cfg.timeout );}
+				if (ob.hoverIntent_s == 1) { ob.hoverIntent_t = setTimeout(function () { delay(ev, ob); }, cfg.timeout); }
+				
 			}
 		};
-
+		
 		// bind the function to the two event listeners
 		return this.bind('mouseover.cluetip', handleHover).bind('mouseout.cluetip', handleHover);
 	};

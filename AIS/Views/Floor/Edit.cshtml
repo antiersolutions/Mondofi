@@ -311,7 +311,7 @@
                 step: 0.01,
                 value: 1,
                 slide: function (e, ui) {
-                    //  debugger;
+                    //   
                     $('#floor-back').css('opacity', ui.value);
                     //$('#floor-back').css('background', 'rgba(transparent,transparent,transparent,' + ui.value + ')');
                     $slideMe.text(parseInt((ui.value) * 100) + '%');
@@ -342,7 +342,7 @@
             }).find(".ui-slider-handle")
             .append($slideMe1)
             .hover(function () {
-                //debugger;
+                // 
                 var value = parseInt(($('#slider').slider("option", "value")) * 100);
                 $slideMe1.text(value + '%');
                 $slideMe1.show();
@@ -528,7 +528,7 @@
         </div>
     </div>
 </div>
-<div class="manage-section add-table-floor">
+<div class="manage-section add-table-floor" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="m-right-btn">
     </div>
     <ul class="t-main-link">

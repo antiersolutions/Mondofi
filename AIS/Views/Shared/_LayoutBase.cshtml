@@ -13,10 +13,14 @@
 <head>
     <title>@ViewBag.Title</title>
     <meta name="viewport" content="width=1024, user-scalable=no" />
+
+    <script src="~/Scripts/SwipeJs/SwipeR.js"></script>
     <link href='//fonts.googleapis.com/css?family=Lato:400,700,400italic,300italic,900,700italic,900italic'
           rel='stylesheet' type='text/css' />
     @Styles.Render("~/AIS/css")
     @Styles.Render("~/AIS/alertifyCSS")
+        @Styles.Render("~/css/PNotify/pnotify.custom.min.css")
+        <link href="~/css/PNotify/Notifyalert.css" rel="stylesheet" />
     @RenderSection("styles", false)
     <style type="text/css">
         .settings .menu-bar .manager-info span.d-time-timezone {
@@ -83,6 +87,18 @@
             color: #fff !important;
         }
     </style>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-38431172-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
     @Scripts.Render("~/bundles/jquery", "~/bundles/modernizr")
     <!--[if lt IE 9]>
     <script src="js/html5shiv.js"></script>
@@ -105,6 +121,7 @@
     </div>
     @RenderSection("foot", false)
     @Scripts.Render("~/bundles/jqueryval", "~/js/jquery.mCustomScrollbar.concat.min.js", "~/AIS/alertifyJS")
+    @Scripts.Render("~/Scripts/PNotify/pnotify.custom.min.js")
     <script type="text/javascript">
         (function ($) {
             $(window).load(function () {
@@ -159,7 +176,7 @@
                         $(parent + " .content_1").mCustomScrollbar();
                         $(parent + " .content_1").mCustomScrollbar({ updateOnContentResize: true });
                     } catch (e) {
-                        //debugger;
+                        //
                     }
                 }, 500);
             })(jQuery);
@@ -274,7 +291,7 @@
             $('.m-right-btn').click(function () {
                 $('.manage-section').toggleClass('manage-section-toggle');
                 $('.m-right-btn').toggleClass('m-right-btn-toggle');
-                //debugger;
+                //
 
                 SetMiddleWidthOnSideButtonClick();
             });
@@ -289,7 +306,7 @@
         });
 
         //        function ManageWidthofMiddleSection(winWidth, winHeight) {
-        //            //debugger;
+        //            //
         //            var middleWithPercentage = ((winWidth - (285 + 154)) / winWidth) * 100; // left bar width 154px and right bar width 285px
         //            $('.middle-section').css('width', middleWithPercentage + '%');
         //        }
@@ -299,7 +316,7 @@
             var rightBarOpen = 285;
             var leftBarClose = 23;
             var rightBarClose = 25;
-            //debugger;
+            //
             if ($('.m-right-btn').length == 0) {
                 rightBarOpen = 0;
                 rightBarClose = 0;
@@ -363,6 +380,40 @@
         (function ($) {
             $(".content_1").mCustomScrollbar({ updateOnContentResize: true });
         })(jQuery);
+    </script>
+    <script type="text/javascript">
+
+
+        var _alert;
+
+        $(function () {
+            consume_alert();
+        });
+
+        function consume_alert() {
+            if (_alert) return;
+            _alert = window.alert;
+            window.alert = function (message, options) {
+                var defaultOptions = {
+                    title: false,
+                    text: message,
+                    addclass: 'custom',
+                    styling: 'fontawesome',
+                    nonblock: {
+                        nonblock: true,
+                        nonblock_opacity: .2
+                    },
+                    delay: 8000
+                };
+
+                if (arguments.length > 1)
+                    $.extend(defaultOptions, options);
+
+                new PNotify(defaultOptions);
+            };
+        }
+
+
     </script>
     @RenderSection("scripts", false)
     @Scripts.Render("~/Scripts/jquery-cookie-plugin.js",

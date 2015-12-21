@@ -36,23 +36,23 @@
                     Add User
                 </span>
             </div>
-        </a><a href="javascript:void(0)">
-            <div class="delete">
-                <span class="tooltip_d">
-                    <div class="arrow-down">
-                    </div>
-                    Delete
-                </span>
+        </a><a href="javascript:void(0)" class="hideadmin">
+    <div class="delete">
+        <span class="tooltip_d">
+            <div class="arrow-down">
             </div>
-        </a><a href="javascript:void(0)">
-            <div class="edit">
-                <span class="tooltip_e">
-                    <div class="arrow-down">
-                    </div>
-                    Edit
-                </span>
+            Delete
+        </span>
+    </div>
+</a><a href="javascript:void(0)" class="hideadmin">
+    <div class="edit">
+        <span class="tooltip_e">
+            <div class="arrow-down">
             </div>
-        </a>
+            Edit
+        </span>
+    </div>
+</a>
     </div>
     <div id="profileView" class="profile">
         @using (Html.BeginForm())
@@ -161,7 +161,7 @@
                                 <div class="select-main">
                                     @Html.DropDownList("selectbox", new SelectList(ViewBag.PhoneType, "PhoneTypeId", "PhoneType"), new { @class = "phnType" })
                                 </div>
-                                <input class="phnNo" type="text" name="" value="" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" />
+                                <input class="phnNo" type="text"  name="" value="" onkeypress="return IsNumeric(event);" ondrop="return false;" onpaste="return false;" />
                                 <a href="javascript:void(o)" onclick="newRowPhone(this)">
                                     <img class="add-plus" src="/images/plus-icon.png" alt="" />
                                 </a>
@@ -173,7 +173,7 @@
                             Email
                         </label>
                         @Html.HiddenFor(m => m.InitialEmail)
-                        @Html.TextBoxFor(m => m.EmailAddress, new { @class = "ml0" })
+                        @Html.TextBoxFor(m => m.EmailAddress, new { @class = "ml0", @disabled = "disabled" })
                         @Html.ValidationMessageFor(m => m.EmailAddress)
                     </div>
 
@@ -198,7 +198,7 @@
                             </div>
                         </div>
                         <div class="emailrow HideShow" id="pass">
-                            @Html.PasswordFor(m => m.Password)
+                            @Html.PasswordFor(m => m.Password, new {@class="buttonClick" })
                             @Html.ValidationMessageFor(m => m.Password)
                         </div>
                     </div>
@@ -298,7 +298,7 @@
         }
     </div>
 </div>
-<div class="manage-section">
+<div class="manage-section" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="m-right-btn">
     </div>
     <div class="search-main">
@@ -381,7 +381,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            //debugger;
+            // 
             SetMiddleSectionHeight();
 
             document.getElementById("aSettings").className = "active";
@@ -433,14 +433,14 @@
         var specialKeys = new Array();
         specialKeys.push(8); //Backspace
         function IsNumeric(e) {
-            debugger;
+             
             var keyCode = e.which ? e.which : e.keyCode
             var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
             return ret;
         }
 
         function validNumber(e) {
-            // debugger;
+            //  
             if (e.shiftKey || e.ctrlKey || e.altKey) {
                 e.preventDefault();
             } else {
@@ -544,6 +544,52 @@
             $("#searchbox").keyup();
         }
     </script>
+
+
+<script type="text/javascript">
+    $(function () {
+        $(".buttonClick").blur(function () {
+            //alert("ok");
+            $(".buttonClick").each(function () {
+
+                var validated = true;
+                if (this.value.length < 7)
+                    validated = false;
+                //if (!/\d/.test(this.value))
+                //    validated = false;
+                if (!/[a-z]/.test(this.value))
+                    validated = false;
+                if (!/[A-Z]/.test(this.value))
+                    validated = false;
+                if (!/[0-9]/.test(this.value))
+                    validated = false;
+                $("#passwordcheck").html(validated ? "<i class='halflings-icon ok green'></i>" :
+
+                    alert("Must be at least 7 characters and contain at least one capital letter, one number and one lowercase letter."),
+
+                $("#Password").empty()
+                     );
+            });
+        });
+    });
+
+
+
+
+    //$("#Password").tooltip({
+    //    html: true,
+    //    placement: 'top',
+    //    //trigger:'click',
+    //    template: '<div class="tooltip blackToltop" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+
+
+    //})
+</script>
+
+
+
+
+
     <script type="text/javascript">
         $(function () {
             $("#FileUpload1").uploadify({
@@ -600,3 +646,19 @@
         margin-left: 0px !important;
     }
 </style>
+<script>
+
+    $(document).ready(function () {
+
+        var test = $("#checkuser").val();
+        if (test == "True") {
+            $(".hideadmin").show();
+        }
+        else {
+
+            $(".hideadmin").hide();
+        }
+
+
+    });
+</script>

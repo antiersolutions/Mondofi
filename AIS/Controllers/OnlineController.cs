@@ -17,6 +17,7 @@ using AIS.Helpers.Email;
 using System.Net.Mail;
 using System.Data.SqlClient;
 using System.Data;
+using System.Data.Common;
 
 namespace AIS.Controllers
 {
@@ -108,10 +109,25 @@ namespace AIS.Controllers
 
         public ActionResult Index()
         {
+            var isExist = testDatabaseExists(CompanyName);
+            var time = context.tabSettings.Where(s => s.Name.Contains("SetTime")).Single().Value;
+            int timeSet = Convert.ToInt32(time);
+            if (isExist == false)
+            {
+                return RedirectToAction("NotExists");
+            }
             //var users = context.Users.ToList();
+            var date = DateTime.UtcNow.ToDefaultTimeZone(CompanyName);
+            date = date.AddMinutes(15 - (date.TimeOfDay.Minutes % 15)).AddSeconds(-1 * date.TimeOfDay.Seconds).AddMinutes(timeSet);
+            this.BindTimeList(date.Date);
+            ViewBag.date = date;
+            return View();
+        }
 
-            BindTimeList(DateTime.UtcNow.Date);
-            ViewBag.date = DateTime.UtcNow.Date;
+
+        public ActionResult NotExists()
+        {
+
             return View();
         }
 
@@ -131,18 +147,31 @@ namespace AIS.Controllers
         public ActionResult UpdateTime(DateTime date)
         {
             #region Get time list
+            var time = context.tabSettings.Where(s => s.Name.Contains("SetTime")).Single().Value;
+            int timeSet = Convert.ToInt32(time);
             var clientTime = DateTime.UtcNow.ToDefaultTimeZone(CompanyName); //.ToClientTime();
-            clientTime = clientTime.AddMinutes(15 - (clientTime.TimeOfDay.Minutes % 15)).AddSeconds(-1 * clientTime.TimeOfDay.Seconds).AddHours(2);
+            clientTime = clientTime.AddMinutes(15 - (clientTime.TimeOfDay.Minutes % 15)).AddSeconds(-1 * clientTime.TimeOfDay.Seconds).AddMinutes(timeSet);
 
-            var day = date.DayOfWeek.ToString().Trim();
-            var dId = context.GetWeekDays().Single(p => p.DayName.Contains(day)).DayId;
+            //var day = date.DayOfWeek.ToString().Trim();
+            //var dId = context.GetWeekDays().Single(p => p.DayName.Contains(day)).DayId;
 
-            var ttime = context.GetMenuShiftHours().Where(p => p.DayId == dId).AsEnumerable();
-            var minOpenAt = ttime.Where(p => p.OpenAt != null).Min(p => Convert.ToDateTime(p.OpenAt));
-            var maxCloseAt = ttime.Where(p => p.CloseAt != null).Max(p => Convert.ToDateTime(p.CloseAt).AddDays(Convert.ToInt32(p.IsNext)));
+            //var ttime = context.GetMenuShiftHours().Where(p => p.DayId == dId).AsEnumerable();
+            //var minOpenAt = ttime.Where(p => p.OpenAt != null).Min(p => Convert.ToDateTime(p.OpenAt));
+            //var maxCloseAt = ttime.Where(p => p.CloseAt != null).Max(p => Convert.ToDateTime(p.CloseAt).AddDays(Convert.ToInt32(p.IsNext)));
 
-            var openTime = Convert.ToDateTime(minOpenAt);
-            var closeTime = Convert.ToDateTime(maxCloseAt);
+            int dId;
+            DateTime openTime;
+            DateTime closeTime;
+
+            GetOpenAndCloseTime(date, out dId, out openTime, out closeTime);
+
+            // close must be 90 min less than origional close time.
+            closeTime = date.Add(closeTime.TimeOfDay).AddDays((closeTime.Day - openTime.Day)).AddMinutes(-1 * defaultDuration);
+
+            openTime = date.AddTicks(openTime.TimeOfDay.Ticks);
+
+            //var openTime = Convert.ToDateTime(minOpenAt);
+            //var closeTime = Convert.ToDateTime(maxCloseAt);
 
             if (date == clientTime.Date && openTime <= clientTime)
             {
@@ -158,7 +187,7 @@ namespace AIS.Controllers
 
             var aa = context.GetMenuShiftHours().AsEnumerable().Where(p => p.DayId == dId);
 
-            while (openTime < closeTime)
+            while (openTime <= closeTime)
             {
                 var startTime = openTime;
                 openTime = openTime.AddMinutes(15);
@@ -191,88 +220,111 @@ namespace AIS.Controllers
         [HttpGet]
         public ActionResult Reserve(DateTime date, string time, int covers)
         {
-            //if (Request.UrlReferrer.LocalPath.ToLower().Contains("fail"))
-            //    return RedirectToAction("Index");
-
-            var startTime = date.Add(DateTime.ParseExact(time.Trim(), "h:mm tt", CultureInfo.InvariantCulture).TimeOfDay);
-            var endTime = startTime.AddMinutes(defaultDuration);
-
-            var array = new string[] { "Sofa", "Chair", "SofaTable", "Wall", "SolidWall", "GlassWall", "BarTable", "Fence", "Pillar" };
-            var tableDB = context.tabFloorTables.Where(p => p.IsDeleted == false).ToList()
-                .Where(p => !array.Contains(p.TableName.Split('-')[0])
-                 && p.MaxCover >= covers).ToList();
-
-            var day = date.DayOfWeek.ToString();
-
-            var dId = context.GetWeekDays().Single(p => p.DayName.Contains(day)).DayId;
-            var availList = context.tabTableAvailabilities
-                .Include("TableAvailabilityFloorTables")
-                .Include("TableAvailabilityWeekDays")
-                .Where(ta => ta.StartDate <= date && date <= ta.EndDate
-                && ta.TableAvailabilityWeekDays.Any(taw => taw.DayId == dId)).ToList();
-
-            ViewBag.BlockId = Guid.Empty;
-
-            var exactMatchedDBTables = tableDB.Where(t => availList.CheckAvailStatus(date, startTime, endTime, t, 1)
-                && !AnyReservation(t.FloorTableId, startTime, endTime)).ToList();
-
-            if (exactMatchedDBTables.Count == 0)
-                return View();
-
-            var firstAvailTable = exactMatchedDBTables.First();
-
-            int tShiftId = 0;
-
-            var openTM = new DateTime();
-            var closeTM = new DateTime();
-
-            var aa = context.GetMenuShiftHours().AsEnumerable().Where(p => p.DayId == dId);
-            var timeShift = aa.Where(s => (DateTime.TryParse(s.OpenAt, out openTM) && DateTime.TryParse(s.CloseAt, out closeTM)) &&
-                startTime.Date.Add(openTM.TimeOfDay) <= startTime &&
-                startTime.Date.Add(closeTM.TimeOfDay).AddDays(s.IsNext.Value) >= startTime).FirstOrDefault();
-
-            if (timeShift != null)
+            try
             {
-                tShiftId = timeShift.FoodMenuShiftId;
+                var isExist = testDatabaseExists(CompanyName);
+                if (isExist == false)
+                {
+                    return RedirectToAction("NotExists");
+                }
+                //if (Request.UrlReferrer.LocalPath.ToLower().Contains("fail"))
+                //    return RedirectToAction("Index");
+
+                var startTime = date.Add(DateTime.ParseExact(time.Trim(), "h:mm tt", CultureInfo.InvariantCulture).TimeOfDay);
+                var endTime = startTime.AddMinutes(defaultDuration);
+
+                var array = new string[] { "Sofa", "Chair", "SofaTable", "Wall", "SolidWall", "GlassWall", "BarTable", "Fence", "Pillar" };
+                var tableDB = context.tabFloorTables.Where(p => p.IsDeleted == false).ToList()
+                    .Where(p => !array.Contains(p.TableName.Split('-')[0])
+                     && p.MaxCover >= covers).ToList();
+
+                var day = date.DayOfWeek.ToString();
+
+                var dId = context.GetWeekDays().Single(p => p.DayName.Contains(day)).DayId;
+                var availList = context.tabTableAvailabilities
+                    .Include("TableAvailabilityFloorTables")
+                    .Include("TableAvailabilityWeekDays")
+                    .Where(ta => ta.StartDate <= date && date <= ta.EndDate
+                    && ta.TableAvailabilityWeekDays.Any(taw => taw.DayId == dId)).ToList();
+
+                ViewBag.BlockId = Guid.Empty;
+
+                var exactMatchedDBTables = tableDB.Where(t => availList.CheckAvailStatus(date, startTime, endTime, t, 1)
+                    && !AnyReservation(t.FloorTableId, startTime, endTime)).ToList();
+
+                if (exactMatchedDBTables.Count == 0)
+                    return View();
+
+                var firstAvailTable = exactMatchedDBTables.First();
+
+                int tShiftId = 0;
+
+                var openTM = new DateTime();
+                var closeTM = new DateTime();
+
+                var aa = context.GetMenuShiftHours().AsEnumerable().Where(p => p.DayId == dId);
+                var timeShift = aa.Where(s => (DateTime.TryParse(s.OpenAt, out openTM) && DateTime.TryParse(s.CloseAt, out closeTM)) &&
+                    startTime.Date.Add(openTM.TimeOfDay) <= startTime &&
+                    startTime.Date.Add(closeTM.TimeOfDay).AddDays(s.IsNext.Value) >= startTime).FirstOrDefault();
+
+                if (timeShift != null)
+                {
+                    tShiftId = timeShift.FoodMenuShiftId;
+                }
+
+                var model = new ReservationVM
+                {
+                    resDate = date,
+                    time = time,
+                    Covers = covers,
+                    tableIdd = firstAvailTable.FloorTableId.ToString(),
+                    TablePositionLeft = firstAvailTable.TLeft,
+                    TablePositionTop = firstAvailTable.TTop,
+                    ShiftId = tShiftId,
+                    //Duration = "15MIN"
+                    Duration = "0MIN".AddMinutesToDuration(defaultDuration)
+                };
+
+                var blockTime = new FloorTableBlock
+                {
+                    FloorTableBlockId = Guid.NewGuid(),
+                    BlockDate = date,
+                    BlockFrom = startTime,
+                    BlockTo = endTime,
+                    FloorTableId = firstAvailTable.FloorTableId
+                };
+
+                context.tabFloorTableBlocks.Add(blockTime);
+                context.SaveChanges();
+
+                ViewBag.BlockId = blockTime.FloorTableBlockId;
+
+                this.ClearReservationCache(context.Database.Connection.Database);
+
+                return View(model);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ReserveFail", new { id = 2, company = context.Database.Connection.Database });
+            }
+            finally
+            {
+                this.ClearReservationCache(context.Database.Connection.Database);
             }
 
-            var model = new ReservationVM
-            {
-                resDate = date,
-                time = time,
-                Covers = covers,
-                tableIdd = firstAvailTable.FloorTableId.ToString(),
-                TablePositionLeft = firstAvailTable.TLeft,
-                TablePositionTop = firstAvailTable.TTop,
-                ShiftId = tShiftId,
-                //Duration = "15MIN"
-                Duration = "0MIN".AddMinutesToDuration(defaultDuration)
-            };
 
-            var blockTime = new FloorTableBlock
-            {
-                FloorTableBlockId = Guid.NewGuid(),
-                BlockDate = date,
-                BlockFrom = startTime,
-                BlockTo = endTime,
-                FloorTableId = firstAvailTable.FloorTableId
-            };
-
-            context.tabFloorTableBlocks.Add(blockTime);
-            context.SaveChanges();
-
-            ViewBag.BlockId = blockTime.FloorTableBlockId;
-
-            this.ClearReservationCache(context.Database.Connection.Database);
-
-            return View(model);
         }
 
         [HttpPost]
         public ActionResult Reserve(ReservationVM model)
         {
             Reservation reservation = null;
-                     
+            var isExist = testDatabaseExists(CompanyName);
+            if (isExist == false)
+            {
+                return RedirectToAction("NotExists");
+            }
+
             try
             {
                 var onlineUserName = context.Users.Where(c => c.Roles.Any(ur => ur.RoleId == context.Roles.Where(r => r.Name == "Online").FirstOrDefault().Id)).Single().UserName;
@@ -463,13 +515,13 @@ namespace AIS.Controllers
 
                 context.SaveChanges();
 
-                _wfmService.SendCustomerBookingSuccess(this.Url, reservation,context);
+                _wfmService.SendCustomerBookingSuccess(this.Url, reservation, context);
 
                 return Redirect(this.Url.EncodedUrl("ReserveSuccess", "Online", new { id = reservation.ReservationId, company = context.Database.Connection.Database }));
             }
             catch (SmtpException)
             {
-                return Redirect(this.Url.EncodedUrl("ReserveSuccess", "Online", new { id = reservation.ReservationId ,company=context.Database.Connection.Database}));
+                return Redirect(this.Url.EncodedUrl("ReserveSuccess", "Online", new { id = reservation.ReservationId, company = context.Database.Connection.Database }));
             }
             catch (Exception)
             {
@@ -483,84 +535,38 @@ namespace AIS.Controllers
 
         public ActionResult Edit(long id, string company)
         {
-            var clientTime = DateTime.UtcNow.ToDefaultTimeZone(company); //.ToClientTime();
-            ViewBag.company = company;
-            //UsersContext _context = new UsersContext(company);
-            var reservation = context.tabReservations.SingleOrDefault(r => !r.IsDeleted && r.ReservationId == id);
 
-            if (reservation == null || reservation.StatusId == ReservationStatus.Cancelled)
+            try
             {
-                return RedirectToAction("ReserveFail", new { id = 4, company = context.Database.Connection.Database });
-            }
+                var clientTime = DateTime.UtcNow.ToDefaultTimeZone(company); //.ToClientTime();
+                ViewBag.company = company;
+                var times = context.tabSettings.Where(s => s.Name.Contains("SetTime")).Single().Value;
+                int timeSet = Convert.ToInt32(times);
+                //UsersContext _context = new UsersContext(company);
+                var reservation = context.tabReservations.SingleOrDefault(r => !r.IsDeleted && r.ReservationId == id);
 
-            if (!IsOnlineUser(reservation.UserId))
-            {
-                return RedirectToAction("ReserveFail", new { id = 6, company = context.Database.Connection.Database });
-            }
+                if (reservation == null || reservation.StatusId == ReservationStatus.Cancelled)
+                {
+                    return RedirectToAction("ReserveFail", new { id = 4, company = context.Database.Connection.Database });
+                }
 
-            if (reservation.ReservationDate < clientTime.Date || clientTime > reservation.TimeForm.AddHours(-2))
-            {
-                return RedirectToAction("ReserveFail", new { id = 5, company = context.Database.Connection.Database });
-            }
+                if (!IsOnlineUser(reservation.UserId))
+                {
+                    return RedirectToAction("ReserveFail", new { id = 6, company = context.Database.Connection.Database });
+                }
 
-            this.BindTimeList(reservation.ReservationDate);
-            var time = new DateTime().Add(reservation.TimeForm.TimeOfDay).ToString("ddMMyyyyhhmmtt") +
-                " - " +
-                new DateTime().Add(reservation.TimeForm.AddMinutes(15).TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " + reservation.FoodMenuShiftId;
+                if (reservation.ReservationDate < clientTime.Date || clientTime > reservation.TimeForm.AddMinutes(-timeSet))
+                {
+                    return RedirectToAction("ReserveFail", new { id = 5, company = context.Database.Connection.Database });
+                }
 
-            //var availableReservations = this.GetMatchedAvailabilities(reservation.ReservationDate, time, reservation.Covers);
-            var availableReservations = this.GetMatchedAvailabilities20150519(reservation.ReservationDate, time, reservation.Covers, reservation);
-            availableReservations.ExactMatch = availableReservations.ExactMatch ?? new TimeSlotAvailabilities
-            {
-                StartTime = reservation.TimeForm,
-                EndTime = reservation.TimeForm.AddMinutes(reservation.Duration.GetMinutesFromDuration())
-            };
+                this.BindTimeList(reservation.ReservationDate);
+                var time = new DateTime().Add(reservation.TimeForm.TimeOfDay).ToString("ddMMyyyyhhmmtt") +
+                    " - " +
+                    new DateTime().Add(reservation.TimeForm.AddMinutes(15).TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " + reservation.FoodMenuShiftId;
 
-            availableReservations.ExactMatch.AvailableTables.Add(reservation.FloorTable);
-
-            var username = (reservation.Customers.FirstName + " " + ((reservation.Customers.LastName.Length > 1) ? reservation.Customers.LastName.Remove(1) : reservation.Customers.LastName));
-            ViewBag.UserName = username;
-            ViewBag.IsCurrentReservation = true;
-            ViewBag.CurrentReservation = reservation;
-            ViewBag.date = reservation.ReservationDate;
-            ViewBag.time = time;
-            ViewBag.covers = reservation.Covers;
-
-            return View(availableReservations);
-        }
-
-        [HttpPost]
-        public ActionResult Edit(long id, DateTime date, string time, int covers)
-        {
-            ViewBag.company = CompanyName;
-            var clientTime = DateTime.UtcNow.ToDefaultTimeZone(CompanyName); //.ToClientTime();
-            bool IsCurrentReservation = false;
-            var reservation = context.tabReservations.SingleOrDefault(r => !r.IsDeleted && r.ReservationId == id);
-
-            if (reservation == null || reservation.StatusId == ReservationStatus.Cancelled)
-            {
-                return RedirectToAction("ReserveFail", new { id = 4, company = context.Database.Connection.Database });
-            }
-
-            if (!IsOnlineUser(reservation.UserId))
-            {
-                return RedirectToAction("ReserveFail", new { id = 6, company = context.Database.Connection.Database });
-            }
-
-            if (reservation.ReservationDate < clientTime.Date || clientTime > reservation.TimeForm.AddHours(-2))
-            {
-                return RedirectToAction("ReserveFail", new { id = 5, company = context.Database.Connection.Database });
-            }
-
-            this.BindTimeList(date);
-            var resTime = new DateTime().Add(reservation.TimeForm.TimeOfDay).ToString("ddMMyyyyhhmmtt") +
-               " - " +
-               new DateTime().Add(reservation.TimeForm.AddMinutes(15).TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " + reservation.FoodMenuShiftId;
-            //var availableReservations = this.GetMatchedAvailabilities(date, time, covers);
-            var availableReservations = this.GetMatchedAvailabilities20150519(date, time, covers, reservation);
-
-            if (date == reservation.ReservationDate && time == resTime && covers == reservation.Covers)
-            {
+                //var availableReservations = this.GetMatchedAvailabilities(reservation.ReservationDate, time, reservation.Covers);
+                var availableReservations = this.GetMatchedAvailabilities20150519(reservation.ReservationDate, time, reservation.Covers, reservation);
                 availableReservations.ExactMatch = availableReservations.ExactMatch ?? new TimeSlotAvailabilities
                 {
                     StartTime = reservation.TimeForm,
@@ -568,32 +574,110 @@ namespace AIS.Controllers
                 };
 
                 availableReservations.ExactMatch.AvailableTables.Add(reservation.FloorTable);
-                IsCurrentReservation = true;
+
+                var username = (reservation.Customers.FirstName + " " + ((reservation.Customers.LastName.Length > 1) ? reservation.Customers.LastName.Remove(1) : reservation.Customers.LastName));
+                ViewBag.UserName = username;
+                ViewBag.IsCurrentReservation = true;
+                ViewBag.CurrentReservation = reservation;
+                ViewBag.date = reservation.ReservationDate;
+                ViewBag.time = time;
+                ViewBag.covers = reservation.Covers;
+
+                return View(availableReservations);
+            }
+            catch (Exception)
+            {
+
+                return RedirectToAction("ReserveFail", new { id = 2, company = context.Database.Connection.Database });
             }
 
-            var username = (reservation.Customers.FirstName + " " + ((reservation.Customers.LastName.Length > 1) ? reservation.Customers.LastName.Remove(1) : reservation.Customers.LastName));
-            ViewBag.UserName = username;
-            ViewBag.IsCurrentReservation = IsCurrentReservation;
-            ViewBag.CurrentReservation = reservation;
-            ViewBag.date = date;
-            ViewBag.time = time;
-            ViewBag.covers = covers;
+        }
 
-            return View(availableReservations);
+        [HttpPost]
+        public ActionResult Edit(long id, DateTime date, string time, int covers)
+        {
+            var isExist = testDatabaseExists(CompanyName);
+            if (isExist == false)
+            {
+                return RedirectToAction("NotExists");
+            }
+            try
+            {
+                ViewBag.company = CompanyName;
+                var clientTime = DateTime.UtcNow.ToDefaultTimeZone(CompanyName); //.ToClientTime();
+                bool IsCurrentReservation = false;
+                var reservation = context.tabReservations.SingleOrDefault(r => !r.IsDeleted && r.ReservationId == id);
+
+                if (reservation == null || reservation.StatusId == ReservationStatus.Cancelled)
+                {
+                    return RedirectToAction("ReserveFail", new { id = 4, company = context.Database.Connection.Database });
+                }
+
+                if (!IsOnlineUser(reservation.UserId))
+                {
+                    return RedirectToAction("ReserveFail", new { id = 6, company = context.Database.Connection.Database });
+                }
+
+                if (reservation.ReservationDate < clientTime.Date || clientTime > reservation.TimeForm.AddMinutes(-2))
+                {
+                    return RedirectToAction("ReserveFail", new { id = 5, company = context.Database.Connection.Database });
+                }
+
+                this.BindTimeList(date);
+                var resTime = new DateTime().Add(reservation.TimeForm.TimeOfDay).ToString("ddMMyyyyhhmmtt") +
+                   " - " +
+                   new DateTime().Add(reservation.TimeForm.AddMinutes(15).TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " + reservation.FoodMenuShiftId;
+                //var availableReservations = this.GetMatchedAvailabilities(date, time, covers);
+                var availableReservations = this.GetMatchedAvailabilities20150519(date, time, covers, reservation);
+
+                if (date == reservation.ReservationDate && time == resTime && covers == reservation.Covers)
+                {
+                    availableReservations.ExactMatch = availableReservations.ExactMatch ?? new TimeSlotAvailabilities
+                    {
+                        StartTime = reservation.TimeForm,
+                        EndTime = reservation.TimeForm.AddMinutes(reservation.Duration.GetMinutesFromDuration())
+                    };
+
+                    availableReservations.ExactMatch.AvailableTables.Add(reservation.FloorTable);
+                    IsCurrentReservation = true;
+                }
+
+                var username = (reservation.Customers.FirstName + " " + ((reservation.Customers.LastName.Length > 1) ? reservation.Customers.LastName.Remove(1) : reservation.Customers.LastName));
+                ViewBag.UserName = username;
+                ViewBag.IsCurrentReservation = IsCurrentReservation;
+                ViewBag.CurrentReservation = reservation;
+                ViewBag.date = date;
+                ViewBag.time = time;
+                ViewBag.covers = covers;
+
+                return View(availableReservations);
+            }
+            catch (Exception)
+            {
+
+                return RedirectToAction("ReserveFail", new { id = 2, company = context.Database.Connection.Database });
+            }
+
         }
 
         [HttpPost]
         public ActionResult Update(ReservationVM model)
         {
+            var isExist = testDatabaseExists(CompanyName);
+            if (isExist == false)
+            {
+                return RedirectToAction("NotExists");
+            }
             var resDb = context.tabReservations.SingleOrDefault(r => !r.IsDeleted && r.ReservationId == model.ReservationId);
-
+            var times = context.tabSettings.Where(s => s.Name.Contains("SetTime")).Single().Value;
+            int timeSet = Convert.ToInt32(times);
             try
             {
                 var clientTime = DateTime.UtcNow.ToDefaultTimeZone(CompanyName); //.ToClientTime();
 
                 if (resDb == null || resDb.StatusId == ReservationStatus.Cancelled)
                 {
-                    return RedirectToAction("ReserveFail", new { id = 4 , company = context.Database.Connection.Database});
+                    return RedirectToAction("ReserveFail", new { id = 4, company = context.Database.Connection.Database });
                 }
 
                 if (!IsOnlineUser(resDb.UserId))
@@ -601,7 +685,7 @@ namespace AIS.Controllers
                     return RedirectToAction("ReserveFail", new { id = 6, company = context.Database.Connection.Database });
                 }
 
-                if (resDb.ReservationDate < clientTime.Date || clientTime > resDb.TimeForm.AddHours(-2))
+                if (resDb.ReservationDate < clientTime.Date || clientTime > resDb.TimeForm.AddMinutes(-timeSet))
                 {
                     return RedirectToAction("ReserveFail", new { id = 5, company = context.Database.Connection.Database });
                 }
@@ -656,7 +740,7 @@ namespace AIS.Controllers
                 context.LogEditReservation(resDb, onlineUser, null);
                 context.SaveChanges();
 
-                _wfmService.SendCustomerBookingSuccess(this.Url, resDb,context);
+                _wfmService.SendCustomerBookingSuccess(this.Url, resDb, context);
 
                 return Redirect(this.Url.EncodedUrl("ReserveSuccess", "Online", new { id = resDb.ReservationId, company = context.Database.Connection.Database }));
             }
@@ -677,33 +761,48 @@ namespace AIS.Controllers
         [HttpPost]
         public ActionResult Cancel(long id)
         {
-            var clientTime = DateTime.UtcNow.ToDefaultTimeZone(CompanyName); //.ToClientTime();
-            var reservation = context.tabReservations.SingleOrDefault(r => !r.IsDeleted && r.ReservationId == id);
 
-            if (reservation == null || reservation.StatusId == ReservationStatus.Cancelled)
+            var isExist = testDatabaseExists(CompanyName);
+            if (isExist == false)
             {
-                return RedirectToAction("ReserveFail", new { id = 4, company = context.Database.Connection.Database });
+                return RedirectToAction("NotExists");
+            }
+            try
+            {
+                var clientTime = DateTime.UtcNow.ToDefaultTimeZone(CompanyName); //.ToClientTime();
+                var reservation = context.tabReservations.SingleOrDefault(r => !r.IsDeleted && r.ReservationId == id);
+
+                if (reservation == null || reservation.StatusId == ReservationStatus.Cancelled)
+                {
+                    return RedirectToAction("ReserveFail", new { id = 4, company = context.Database.Connection.Database });
+                }
+
+                if (!IsOnlineUser(reservation.UserId))
+                {
+                    return RedirectToAction("ReserveFail", new { id = 6, company = context.Database.Connection.Database });
+                }
+
+                if (reservation.ReservationDate < clientTime.Date || clientTime > reservation.TimeForm)
+                {
+                    return RedirectToAction("ReserveFail", new { id = 5, company = context.Database.Connection.Database });
+                }
+
+                var onlineUserName = context.Users.Where(c => c.Roles.Any(ur => ur.RoleId == context.Roles.Where(r => r.Name == "Online").FirstOrDefault().Id)).Single().UserName;
+                var onlineUser = context.Users.Where(u => u.UserName.Contains(onlineUserName)).First();
+                reservation.StatusId = ReservationStatus.Cancelled;
+
+                context.Entry(reservation).State = System.Data.Entity.EntityState.Modified;
+                context.LogEditReservation(reservation, onlineUser, null);
+                context.SaveChanges();
+                _cache.Clear();
+                return View(reservation);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("ReserveFail", new { id = 2, company = context.Database.Connection.Database });
             }
 
-            if (!IsOnlineUser(reservation.UserId))
-            {
-                return RedirectToAction("ReserveFail", new { id = 6, company = context.Database.Connection.Database });
-            }
 
-            if (reservation.ReservationDate < clientTime.Date || clientTime > reservation.TimeForm)
-            {
-                return RedirectToAction("ReserveFail", new { id = 5, company = context.Database.Connection.Database });
-            }
-
-            var onlineUserName = context.Users.Where(c => c.Roles.Any(ur => ur.RoleId == context.Roles.Where(r => r.Name == "Online").FirstOrDefault().Id)).Single().UserName;
-            var onlineUser = context.Users.Where(u => u.UserName.Contains(onlineUserName)).First();
-            reservation.StatusId = ReservationStatus.Cancelled;
-
-            context.Entry(reservation).State = System.Data.Entity.EntityState.Modified;
-            context.LogEditReservation(reservation, onlineUser, null);
-            context.SaveChanges();
-
-            return View(reservation);
         }
 
         public ActionResult ReserveFail(FailureType id, string company)
@@ -739,15 +838,18 @@ namespace AIS.Controllers
         }
 
         [EncryptedActionParameter]
-        public ActionResult ReserveSuccess(long id,string company)
+        public ActionResult ReserveSuccess(long id, string company)
         {
+
             var clientTime = DateTime.UtcNow.ToDefaultTimeZone(company); //.ToClientTime();
             UsersContext _context = new UsersContext(company);
+            var time = _context.tabSettings.Where(s => s.Name.Contains("SetTime")).Single().Value;
+            int timeSet = Convert.ToInt32(time);
             var reservation = _context.tabReservations.SingleOrDefault(r => !r.IsDeleted && r.ReservationId == id);
 
             if (reservation == null || reservation.StatusId == ReservationStatus.Cancelled)
             {
-                return RedirectToAction("ReserveFail", new { id = 4, company = context.Database.Connection.Database });
+                return RedirectToAction("ReserveFail", new { id = 4, company = company });
             }
 
             if (!IsOnlineUser15062015(reservation.UserId, _context))
@@ -755,7 +857,7 @@ namespace AIS.Controllers
                 return RedirectToAction("ReserveFail", new { id = 6, company = context.Database.Connection.Database });
             }
 
-            if (reservation.ReservationDate < clientTime.Date || clientTime > reservation.TimeForm.AddHours(-2))
+            if (reservation.ReservationDate < clientTime.Date || clientTime > reservation.TimeForm.AddMinutes(-timeSet))
             {
                 return RedirectToAction("ReserveFail", new { id = 5, company = context.Database.Connection.Database });
             }
@@ -804,8 +906,11 @@ namespace AIS.Controllers
 
         private void BindTimeList(DateTime date)
         {
+            var time = context.tabSettings.Where(s => s.Name.Contains("SetTime")).Single().Value;
+            int timeSet = Convert.ToInt32(time);
+
             var clientTime = DateTime.UtcNow.ToDefaultTimeZone(CompanyName);   //.ToClientTime();
-            clientTime = clientTime.AddMinutes(15 - (clientTime.TimeOfDay.Minutes % 15)).AddSeconds(-1 * clientTime.TimeOfDay.Seconds).AddHours(2);
+            clientTime = clientTime.AddMinutes(15 - (clientTime.TimeOfDay.Minutes % 15)).AddSeconds(-1 * clientTime.TimeOfDay.Seconds).AddMinutes(timeSet);
 
             int dId;
             DateTime openTime;
@@ -814,8 +919,9 @@ namespace AIS.Controllers
             GetOpenAndCloseTime(date, out dId, out openTime, out closeTime);
 
             // close must be 90 min less than origional close time.
-            closeTime = closeTime.AddMinutes(-1 * defaultDuration);
+            closeTime = date.Add(closeTime.TimeOfDay).AddDays((closeTime.Day - openTime.Day)).AddMinutes(-1 * defaultDuration);
 
+            openTime = date.AddTicks(openTime.TimeOfDay.Ticks);
 
             if (date == clientTime.Date && openTime <= clientTime)
             {
@@ -1028,6 +1134,8 @@ namespace AIS.Controllers
             int dId;
             DateTime openTime;
             DateTime closeTime;
+            var timeS = context.tabSettings.Where(s => s.Name.Contains("SetTime")).Single().Value;
+            int timeSet = Convert.ToInt32(timeS);
             var model = new OnlineAvailTables();
 
             var tt = time.Split('-');
@@ -1048,24 +1156,25 @@ namespace AIS.Controllers
                 && ta.TableAvailabilityWeekDays.Any(taw => taw.DayId == dId)).ToList();
 
             var clientTime = DateTime.UtcNow.ToDefaultTimeZone(CompanyName); //.ToClientTime();
-            clientTime = clientTime.AddMinutes(15 - (clientTime.TimeOfDay.Minutes % 15)).AddHours(2);
+            clientTime = clientTime.AddMinutes(15 - (clientTime.TimeOfDay.Minutes % 15)).AddMinutes(timeSet);
 
-            var dayStartTime = (date == clientTime.Date) ? date.AddHours(clientTime.TimeOfDay.Hours).AddMinutes(clientTime.TimeOfDay.Minutes) : date;
+            var dayStartTime = (date == clientTime.Date) ? date.AddHours(clientTime.TimeOfDay.Hours).AddMinutes(clientTime.TimeOfDay.Minutes) : date.AddTicks(openTime.TimeOfDay.Ticks);
             //var dayEndTime = date.AddDays(1).AddMinutes(-15);
 
-            var otherStartTime = startTime.AddMinutes(-30);
-            otherStartTime = otherStartTime >= dayStartTime ? otherStartTime : dayStartTime;
+            //var otherStartTime = startTime.AddMinutes(-30);
+            //otherStartTime = otherStartTime >= dayStartTime ? otherStartTime : dayStartTime;
+            var otherStartTime = dayStartTime;
 
-            var otherEndTime = startTime.AddMinutes(+30);
+            //var otherEndTime = startTime.AddMinutes(+30);
 
-            if (otherEndTime > date.Add(closeTime.TimeOfDay).AddDays((closeTime.Day - openTime.Day)).AddMinutes(-1 * defaultDuration))
-                otherEndTime = date.Add(closeTime.TimeOfDay).AddDays((closeTime.Day - openTime.Day)).AddMinutes(-1 * defaultDuration);
+            //if (otherEndTime > date.Add(closeTime.TimeOfDay).AddDays((closeTime.Day - openTime.Day)).AddMinutes(-1 * defaultDuration))
+            var otherEndTime = date.Add(closeTime.TimeOfDay).AddDays((closeTime.Day - openTime.Day)).AddMinutes(-1 * defaultDuration);
 
             while (otherStartTime <= otherEndTime)
             {
                 var slotEndTime = otherStartTime.AddMinutes(defaultDuration);
 
-                var otherAvailabilities = tableDB.Where(t => availList.CheckAvailStatus(date, otherStartTime, slotEndTime, t, 1)
+                var otherAvailabilities = tableDB.Where(t => availList.CheckAvailStatusOnline18122015(date, otherStartTime, slotEndTime, t, 1)
                    && !AnyReservation(t.FloorTableId, otherStartTime, slotEndTime, reservation)).OrderBy(t => t.MinCover).ThenBy(t => t.MaxCover).ToList();
 
                 // testing
@@ -1098,8 +1207,278 @@ namespace AIS.Controllers
                 otherStartTime = otherStartTime.AddMinutes(15);
             }
 
+            var otherAvailSlots = new List<TimeSlotAvailabilities>();
+            int prevToTake = 0;
+            int nextToTake = 0;
+
+            var previousSlots = model.OtherMatches.Where(avs => avs.StartTime < startTime).OrderByDescending(avs => avs.StartTime).ToList();
+            var nextSlots = model.OtherMatches.Where(avs => avs.StartTime > startTime).OrderBy(avs => avs.StartTime).ToList();
+
+            if (previousSlots.Count > 0)
+                prevToTake = (previousSlots.Count > 2) ? 2 : previousSlots.Count;
+
+            if (nextSlots.Count > 0)
+                nextToTake = (nextSlots.Count > (4 - prevToTake)) ? (4 - prevToTake) : nextSlots.Count;
+
+            if (model.ExactMatch == null)
+            {
+                if (nextSlots.Count > 0)
+                    nextToTake = (nextSlots.Count > (5 - prevToTake)) ? (5 - prevToTake) : nextSlots.Count;
+
+                if (previousSlots.Count > 0)
+                    prevToTake = (previousSlots.Count > (5 - nextToTake)) ? (5 - nextToTake) : previousSlots.Count;
+            }
+
+            otherAvailSlots.AddRange(previousSlots.Take(prevToTake));
+            if (model.ExactMatch != null)
+                otherAvailSlots.Add(model.ExactMatch);
+            otherAvailSlots.AddRange(nextSlots.Take(nextToTake));
+            model.OtherMatches = otherAvailSlots.OrderBy(oa => oa.StartTime).ToList();
+
             return model;
         }
+
+
+
+        //private OnlineAvailTables GetMatchedAvailabilities20150519(DateTime date, string time, int covers, Reservation reservation = null)
+        //{
+        //    int dId;
+        //    DateTime openTime;
+        //    DateTime closeTime;
+        //    var timeS = context.tabSettings.Where(s => s.Name.Contains("SetTime")).Single().Value;
+        //    int timeSet = Convert.ToInt32(timeS);
+        //    var model = new OnlineAvailTables();
+        //    var modelp = new OnlineAvailTables();
+        //    var modeln = new OnlineAvailTables();
+
+        //    var tt = time.Split('-');
+        //    var startTime = date.Add(DateTime.ParseExact(tt[0].Trim(), "ddMMyyyyhhmmtt", CultureInfo.InvariantCulture).TimeOfDay);
+        //    var endTime = startTime.AddMinutes(defaultDuration);
+
+        //    var array = new string[] { "Sofa", "Chair", "SofaTable", "Wall", "SolidWall", "GlassWall", "BarTable", "Fence", "Pillar" };
+        //    var tableDB = context.tabFloorTables.Where(p => p.IsDeleted == false).ToList()
+        //        .Where(p => !array.Contains(p.TableName.Split('-')[0])
+        //         && p.MaxCover >= covers && covers >= p.MinCover).ToList();
+
+        //    GetOpenAndCloseTime(date, out dId, out openTime, out closeTime);
+
+        //    var availList = context.tabTableAvailabilities
+        //        .Include("TableAvailabilityFloorTables")
+        //        .Include("TableAvailabilityWeekDays")
+        //        .Where(ta => ta.StartDate <= date && date <= ta.EndDate
+        //        && ta.TableAvailabilityWeekDays.Any(taw => taw.DayId == dId)).ToList();
+
+        //    var clientTime = DateTime.UtcNow.ToDefaultTimeZone(CompanyName); //.ToClientTime();
+        //    clientTime = clientTime.AddMinutes(15 - (clientTime.TimeOfDay.Minutes % 15)).AddMinutes(timeSet);
+
+        //    var dayStartTime = (date == clientTime.Date) ? date.AddHours(clientTime.TimeOfDay.Hours).AddMinutes(clientTime.TimeOfDay.Minutes) : date;
+        //    //var dayEndTime = date.AddDays(1).AddMinutes(-15);
+        //    ///change logic by dharminder 10-12-2015
+        //    ///           
+
+        //    //var clientStartTimeZone = DateTime.UtcNow.ToDefaultTimeZone(CompanyName); //.ToClientTime();
+        //    //clientStartTimeZone = clientStartTimeZone.AddMinutes(15 - (clientStartTimeZone.TimeOfDay.Minutes % 15));
+        //    //TimeSpan duration = startTime.Subtract(clientStartTimeZone);
+
+        //    closeTime = closeTime.AddMinutes(-1);
+        //    closeTime = closeTime.AddMinutes(15 - (closeTime.TimeOfDay.Minutes % 15));
+        //    TimeSpan durationEndTime = closeTime.Subtract(startTime);
+
+        //    var otherStartTime = startTime.AddMinutes(-timeSet);
+        //    //otherStartTime = otherStartTime >= dayStartTime ? otherStartTime : dayStartTime;
+
+        //    var otherEndTime = startTime.AddMinutes(+durationEndTime.TotalMinutes);
+
+        //    if (otherEndTime > date.Add(closeTime.TimeOfDay).AddDays((closeTime.Day - openTime.Day)).AddMinutes(-1 * defaultDuration))
+        //        otherEndTime = date.Add(closeTime.TimeOfDay).AddDays((closeTime.Day - openTime.Day)).AddMinutes(-1 * defaultDuration);
+
+        //    while (otherStartTime <= otherEndTime)
+        //    {
+        //        var slotEndTime = otherStartTime.AddMinutes(defaultDuration);
+
+        //        var otherAvailabilities = tableDB.Where(t => availList.CheckAvailStatus(date, otherStartTime, slotEndTime, t, 1)
+        //           && !AnyReservation(t.FloorTableId, otherStartTime, slotEndTime, reservation)).OrderBy(t => t.MinCover).ThenBy(t => t.MaxCover).ToList();
+
+        //        // testing
+        //        //var testResult = otherAvailabilities.Select(t => new { Min = t.MinCover, Max = t.MaxCover }).ToList();
+        //        if (startTime >= otherStartTime)
+        //        {
+        //            if (otherAvailabilities.Count > 0)
+        //            {
+        //                modelp.OtherMatches.Add(new TimeSlotAvailabilities
+        //                {
+        //                    StartTime = otherStartTime,
+        //                    EndTime = slotEndTime,
+        //                    AvailableTables = otherAvailabilities
+        //                });
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (otherAvailabilities.Count > 0)
+        //            {
+        //                modeln.OtherMatches.Add(new TimeSlotAvailabilities
+        //                {
+        //                    StartTime = otherStartTime,
+        //                    EndTime = slotEndTime,
+        //                    AvailableTables = otherAvailabilities
+        //                });
+        //            }
+        //        }
+
+        //        //if (startTime == otherStartTime && endTime == slotEndTime)
+        //        //{
+        //        //    if (otherAvailabilities.Count > 0)
+        //        //    {
+        //        //        model.ExactMatch = new TimeSlotAvailabilities
+        //        //        {
+        //        //            StartTime = startTime,
+        //        //            EndTime = endTime,
+        //        //            AvailableTables = otherAvailabilities
+        //        //        };
+        //        //    }
+        //        //}
+
+        //        //if (otherAvailabilities.Count > 0)
+        //        //{
+        //        //    model.OtherMatches.Add(new TimeSlotAvailabilities
+        //        //    {
+        //        //        StartTime = otherStartTime,
+        //        //        EndTime = slotEndTime,
+        //        //        AvailableTables = otherAvailabilities
+        //        //    });
+        //        //}
+
+        //        otherStartTime = otherStartTime.AddMinutes(15);
+        //    }
+
+        //    var modelPrev = modelp.OtherMatches.OrderByDescending(c => c.StartTime);
+        //    var modelNext = modeln.OtherMatches.OrderBy(c => c.StartTime);
+
+
+        //    IEnumerable<TimeSlotAvailabilities> pre = null;
+        //    if (modelNext.Count() >= 2)
+        //    {
+
+        //        if (modelPrev.Count() >= 2)
+        //        {
+        //            pre = modelPrev.Take(2).OrderBy(c => c.StartTime);
+        //            foreach (var item in pre)
+        //            {
+        //                model.OtherMatches.Add(new TimeSlotAvailabilities
+        //                {
+        //                    StartTime = item.StartTime,
+        //                    EndTime = item.EndTime,
+        //                    AvailableTables = item.AvailableTables
+        //                });
+        //            }
+        //        }
+        //    }
+        //    IEnumerable<TimeSlotAvailabilities> next = null;
+
+
+        //    if (modelPrev.Count() <= 1 && modeln.OtherMatches.Count >= 5)
+        //    {
+
+        //        switch (modelPrev.Count())
+        //        {
+        //            case 0:
+        //                next = null;
+        //                break; /* optional */
+        //            case 1:
+        //                next = modelNext.Take(1);
+        //                break; /* optional */
+        //            case 2:
+        //                next = modelNext.Take(2);
+        //                break; /* optional */
+        //            case 3:
+        //                next = modelNext.Take(3);
+        //                break; /* optional */
+        //            case 4:
+        //                next = modelNext.Take(4);
+        //                break; /* optional */
+        //            case 5:
+        //                next = modelNext.Take(5);
+        //                break; /* optional */
+
+        //            default:
+        //                next = modelNext.Take(4);
+        //                break;
+
+        //        }
+        //    }
+        //    else
+        //    {
+        //        next = modelNext.Take(3);
+        //    }
+
+        //    if (modelNext.Count() <= 2)
+        //    {
+        //        if (modelPrev.Count() >= 5)
+        //        {
+
+
+        //            //IEnumerable<TimeSlotAvailabilities> preAgain = pre;
+
+
+        //            switch (modelNext.Count())
+        //            {
+        //                case 0:
+        //                    pre = modelPrev.Take(5).OrderBy(c => c.StartTime);
+        //                    break; /* optional */
+        //                case 1:
+        //                    pre = modelPrev.Take(4).OrderBy(c => c.StartTime);
+        //                    break; /* optional */
+        //                case 2:
+        //                    pre = modelPrev.Take(3).OrderBy(c => c.StartTime);
+        //                    break; /* optional */
+        //                case 3:
+        //                    pre = modelPrev.Take(2).OrderBy(c => c.StartTime);
+        //                    break; /* optional */
+        //                case 4:
+        //                    pre = modelPrev.Take(1).OrderBy(c => c.StartTime);
+        //                    break; /* optional */
+        //                default:
+        //                    pre = modelPrev.Take(5).OrderBy(c => c.StartTime);
+        //                    break;
+
+        //            }
+
+        //            foreach (var item in pre)
+        //            {
+        //                model.OtherMatches.Add(new TimeSlotAvailabilities
+        //                {
+        //                    StartTime = item.StartTime,
+        //                    EndTime = item.EndTime,
+        //                    AvailableTables = item.AvailableTables
+        //                });
+        //            }
+
+        //        }
+        //    }
+        //    //var pre = modelp.OtherMatches.Take(2);
+        //    //foreach (var item in pre)
+        //    //{
+        //    //    model.OtherMatches.Add(new TimeSlotAvailabilities
+        //    //    {
+        //    //        StartTime = item.StartTime,
+        //    //        EndTime = item.EndTime,
+        //    //        AvailableTables = item.AvailableTables
+        //    //    });
+        //    //}
+        //    foreach (var item in next)
+        //    {
+        //        model.OtherMatches.Add(new TimeSlotAvailabilities
+        //        {
+        //            StartTime = item.StartTime,
+        //            EndTime = item.EndTime,
+        //            AvailableTables = item.AvailableTables
+        //        });
+        //    }
+
+
+        //    return model;
+        //}
 
         private bool AnyReservation(long tableId, DateTime startTime, DateTime endTime, Reservation reservation = null)
         {
@@ -1119,6 +1498,57 @@ namespace AIS.Controllers
         }
 
         #endregion
+
+
+        public Boolean testDatabaseExists(string database)
+        {
+
+
+#if DEBUG
+            String connString = ("Data Source=85.25.20.10,21433;Initial Catalog=" + database + ";User ID=sa;Password=L!ghtyear5003");
+#else
+            String connString = ("Data Source=85.25.20.10,21433;Initial Catalog=" + database + ";User ID=sa;Password=L!ghtyear5003");
+            //String connString = ("Data Source=(local);Initial Catalog=" + database + ";User ID=su1;Password=MWC2E9agfzRA");
+#endif
+
+            String cmdText = ("select * from master.dbo.sysdatabases where name=\'" + (database + "\'"));
+            Boolean bRet;
+
+            System.Data.SqlClient.SqlConnection sqlConnection = new System.Data.SqlClient.SqlConnection(connString);
+            System.Data.SqlClient.SqlCommand sqlCmd = new System.Data.SqlClient.SqlCommand(cmdText, sqlConnection);
+
+            try
+            {
+                sqlConnection.Open();
+                System.Data.SqlClient.SqlDataReader reader = sqlCmd.ExecuteReader();
+                bRet = reader.HasRows;
+                sqlConnection.Close();
+            }
+            catch (Exception e)
+            {
+                bRet = false;
+                sqlConnection.Close();
+
+                return false;
+
+            } //End Try Catch Block
+
+
+            if (bRet == true)
+            {
+
+                return true;
+            }
+            else
+            {
+
+                return false;
+            } //END OF IF
+
+
+        }
+
+
 
         public enum FailureType
         {

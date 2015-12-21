@@ -43,7 +43,7 @@ function EnableQuickTableUpdateMode(e, resId, totalMin) {
         type: 'GET',
         data: { resId: resId },
         success: function (data) {
-            //debugger;
+            // 
             if (data.availTables !== null) {
                 QuickTableChangeService = new QuickTableChange(resId, data.currentTableId, data.currentTableName);
                 QuickTableChangeService.AvailableTablesForUpdate = data.availTables;
@@ -128,7 +128,7 @@ function UpdateReservationTable(tableId, top, left) {
         type: 'POST',
         data: { resId: resId, tableId: tableId, top: top, left: left },
         success: function (data) {
-            //debugger;
+            // 
             if (data.Status == 'Success') {
                 $('#InfoTop > span').text(data.Message);
                 RefreshFloorTime();

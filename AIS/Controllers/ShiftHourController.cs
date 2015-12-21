@@ -8,6 +8,7 @@ using AISModels;
 using System.Globalization;
 using System.Threading;
 using AIS.Helpers.Caching;
+using Microsoft.AspNet.Identity;
 
 namespace AIS.Controllers
 {
@@ -22,96 +23,108 @@ namespace AIS.Controllers
 
         public ActionResult Index()
         {
-            var MenuShifts = db.tabMenuShiftHours;
-            var days = db.tabWeekDays;
+            var companyUserManger = ApplicationUserManager.Create(db.Database.Connection.Database);
+            var roles = companyUserManger.GetRoles(User.Identity.GetUserId<long>());
 
-            if (MenuShifts.Count() != 28)
+            if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))
             {
-                db.Database.ExecuteSqlCommand(@"truncate table MenuShiftHours");
-            }
+                var MenuShifts = db.tabMenuShiftHours;
+                var days = db.tabWeekDays;
 
-            if (MenuShifts.Count() == 0)
-            {
-                foreach (var day in days)
+                if (MenuShifts.Count() != 28)
                 {
-                    var breakfast = new MenuShiftHours
-                    {
-                        DayId = day.DayId,
-                        FoodMenuShiftId = 1,
-                        OpenAt = "10:00 AM",
-                        CloseAt = "10:00 AM"
-                    };
-
-                    db.tabMenuShiftHours.Add(breakfast);
-
-                    var brunch = new MenuShiftHours
-                    {
-                        DayId = day.DayId,
-                        FoodMenuShiftId = 2,
-                        OpenAt = "10:00 AM",
-                        CloseAt = "10:00 AM"
-                    };
-
-                    db.tabMenuShiftHours.Add(brunch);
-
-                    var lunch = new MenuShiftHours
-                    {
-                        DayId = day.DayId,
-                        FoodMenuShiftId = 3,
-                        OpenAt = "10:00 AM",
-                        CloseAt = "10:00 AM"
-                    };
-
-                    db.tabMenuShiftHours.Add(lunch);
-
-                    var dinner = new MenuShiftHours
-                    {
-                        DayId = day.DayId,
-                        FoodMenuShiftId = 4,
-                        OpenAt = "10:00 AM",
-                        CloseAt = "10:00 AM"
-                    };
-
-                    db.tabMenuShiftHours.Add(dinner);
+                    db.Database.ExecuteSqlCommand(@"truncate table MenuShiftHours");
                 }
 
-                db.SaveChanges();
+                if (MenuShifts.Count() == 0)
+                {
+                    foreach (var day in days)
+                    {
+                        var breakfast = new MenuShiftHours
+                        {
+                            DayId = day.DayId,
+                            FoodMenuShiftId = 1,
+                            OpenAt = "10:00 AM",
+                            CloseAt = "10:00 AM"
+                        };
 
-                UpdateShiftHoursCache();
+                        db.tabMenuShiftHours.Add(breakfast);
+
+                        var brunch = new MenuShiftHours
+                        {
+                            DayId = day.DayId,
+                            FoodMenuShiftId = 2,
+                            OpenAt = "10:00 AM",
+                            CloseAt = "10:00 AM"
+                        };
+
+                        db.tabMenuShiftHours.Add(brunch);
+
+                        var lunch = new MenuShiftHours
+                        {
+                            DayId = day.DayId,
+                            FoodMenuShiftId = 3,
+                            OpenAt = "10:00 AM",
+                            CloseAt = "10:00 AM"
+                        };
+
+                        db.tabMenuShiftHours.Add(lunch);
+
+                        var dinner = new MenuShiftHours
+                        {
+                            DayId = day.DayId,
+                            FoodMenuShiftId = 4,
+                            OpenAt = "10:00 AM",
+                            CloseAt = "10:00 AM"
+                        };
+
+                        db.tabMenuShiftHours.Add(dinner);
+                    }
+
+                    db.SaveChanges();
+
+                    UpdateShiftHoursCache();
+                }
+
+                //var startTime = DateTime.Parse("3:45:00");
+                //var str = new List<string>();
+                //var endTime = startTime.AddHours(23).AddMinutes(45);
+
+                //while (startTime <= endTime)
+                //{
+                //    var dt = startTime.AddMinutes(15);
+                //    str.Add(dt.ToString("h:mm tt"));
+                //    startTime = startTime.AddMinutes(15);
+                //}
+
+
+                var newstartTime = DateTime.Parse("3:45:00");
+                var newendTime = newstartTime.AddHours(23).AddMinutes(45);
+
+                var obj = new List<TimeIntervalVM>();
+                while (newstartTime <= newendTime)
+                {
+                    var tI = new TimeIntervalVM();
+                    var dt = newstartTime.AddMinutes(15);
+
+                    tI.text = dt.ToString("h:mm tt");
+                    tI.timeVal = dt.ToString("dd/MM/yyyy hh:mm tt").Replace("-", "/");
+
+                    obj.Add(tI);
+
+                    newstartTime = newstartTime.AddMinutes(15);
+                }
+
+                ViewBag.Time = obj;
+
+                return View(MenuShifts);
             }
-
-            //var startTime = DateTime.Parse("3:45:00");
-            //var str = new List<string>();
-            //var endTime = startTime.AddHours(23).AddMinutes(45);
-
-            //while (startTime <= endTime)
-            //{
-            //    var dt = startTime.AddMinutes(15);
-            //    str.Add(dt.ToString("h:mm tt"));
-            //    startTime = startTime.AddMinutes(15);
-            //}
-
-
-            var newstartTime = DateTime.Parse("3:45:00");
-            var newendTime = newstartTime.AddHours(23).AddMinutes(45);
-
-            var obj = new List<TimeIntervalVM>();
-            while (newstartTime <= newendTime)
+            else
             {
-                var tI = new TimeIntervalVM();
-                var dt = newstartTime.AddMinutes(15);
-
-                tI.text = dt.ToString("h:mm tt");
-                tI.timeVal = dt.ToString("dd/MM/yyyy hh:mm tt").Replace("-", "/");
-
-                obj.Add(tI);
-
-                newstartTime = newstartTime.AddMinutes(15);
+                return RedirectToAction("FloorPlan", "FloorPlan");
             }
 
-            ViewBag.Time = obj;
 
-            return View(MenuShifts);
         }
 
         [HttpPost]
@@ -179,6 +192,8 @@ namespace AIS.Controllers
 
                 db.SaveChanges();
 
+                cache.Remove(string.Format(CacheKeys.FOOD_MENUSHIFT_SHIFTHOURS, User.Identity.GetDatabaseName()));
+
                 UpdateShiftHoursCache();
 
                 isSucess = true;
@@ -198,10 +213,10 @@ namespace AIS.Controllers
         {
             cache.RemoveByPattern(string.Format(CacheKeys.SETTING_BY_NAME_COMPANY_PATTERN, User.Identity.GetDatabaseName()));
             //cache.RemoveByPattern(CacheKeys.FOOD_MENUSHIFT_PATTERN);
-            cache.RemoveByPattern(string.Format(CacheKeys.FOOD_MENUSHIFT_COMPANY_PATTERN,User.Identity.GetDatabaseName()));
+            cache.RemoveByPattern(string.Format(CacheKeys.FOOD_MENUSHIFT_COMPANY_PATTERN, User.Identity.GetDatabaseName()));
             // update cache
             db.GetFoodMenuShifts();
-            db.GetMenuShiftHours();
+            //db.GetMenuShiftHours();
         }
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)

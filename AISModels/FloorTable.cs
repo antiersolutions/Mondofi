@@ -57,6 +57,8 @@ namespace AISModels
 
         public DateTime? DeletedOn { get; set; }
 
+        public int  SeatingPriority { get; set; }
+
         public virtual FloorTableServer FloorTableServer { get; set; }
 
         public virtual ICollection<Reservation> Reservations { get; set; }

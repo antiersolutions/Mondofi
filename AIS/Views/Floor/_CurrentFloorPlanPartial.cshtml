@@ -2,6 +2,35 @@
 @{
     var array = new string[] { "Sofa", "Chair", "SofaTable", "Wall", "SolidWall", "GlassWall", "BarTable", "Fence", "Pillar" };
 }
+<style>
+    .settings .floor-section .floor-plan-main .rooftop-info ul li .rooftop-info-inner ul li {
+        width: 25%;
+    }
+
+    .settings .floor-section .floor-plan-main table.floorPlan-edit tbody tr td:nth-child(8) {
+        width: 7%;
+    }
+
+    .settings .floor-section .floor-plan-main table.floorPlan-edit tbody .rooftop-toggle {
+        background: rgba(0, 0, 0, 0) url("../images/floor-list-arrow.png") no-repeat scroll 7px 50%;
+        border-bottom: 1px solid #d6d6d6;
+        float: left;
+        width: 100%;
+    }
+     .settings .floor-section .floor-plan-main table.floorPlan-edit tbody .rooftop-toggleDown {
+        background: rgba(0, 0, 0, 0) url("../images/floor-list-arrowDown.png") no-repeat scroll 7px 50%;
+        border-bottom: 1px solid #d6d6d6;
+        float: left;
+        width: 100%;
+    }
+
+    .settings .floor-section .floor-plan-main table.floorPlan-edit tbody .notoggle {
+        width: 100%;
+        float: left;
+        border-bottom: 1px solid #D6D6D6;
+        background: initial;
+    }
+</style>
 <div class="middle-section floor-section">
     <div class="top-filter">
         <ul>
@@ -10,12 +39,13 @@
             <li><a href="/ShiftHour/Index">Hours</a></li>
             <li><a class="active" href="/Floor/index">Floorplan</a></li>
             <li><a href="/TableAvailablity/Index">Table Availability</a></li>
-            
+
         </ul>
     </div>
     <div class="for-edit">
         <h1>
-            Floorplans</h1>
+            Floorplans
+        </h1>
         <input class="c-new-f-plan" type="button" name="" value="Create New Floorplan" onclick="javascript:window.location='/Floor/NewFloorPlan'" />
         <input class="floor-save" type="button" value="Save" name="" onclick="updateFloorTableAndLevel()" />
     </div>
@@ -23,19 +53,22 @@
         <table class="floorPlan-edit">
             <thead>
                 <tr>
-                    <td>
+                    <td data-key="id" data-column="0" data-order="asc">
                         Name
                     </td>
-                    <td>
+                    <td data-key="Level" data-column="1" data-order="asc">
                         Level
                     </td>
-                    <td>
+                    <td data-key="Tables" data-column="2" data-order="asc">
                         # Tables
                     </td>
-                    <td>
+                    <td data-key="TableName" data-column="3" data-order="asc">
                         Table Name
                     </td>
-                    <td>
+                    <td data-key="Priority" data-column="4" data-order="asc">
+                        Priority
+                    </td>
+                    <td data-key="Section" data-column="5" data-order="asc">
                         Section
                     </td>
                     <td>
@@ -53,18 +86,143 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr class="rooftop-toggle">
-                        <td>
+                    <tr class="rooftop-toggle toggleTr">
+                        <td style="width:10%">
                             <h2>
-                                @item.FloorName</h2>
+                                @item.FloorName
+                            </h2>
                         </td>
-                        <td>
+                        <td style="width:8%">
                             <div class="select-t" id="@item.FloorPlanId">
                                 @Html.DropDownList("level", new SelectList(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, @item.FLevel), new { @class = "slevel", onchange = "showtable(this)" })
                             </div>
                         </td>
+                        <td style="width:7%">
+                            @item.FloorTables.AsEnumerable().Where(p => !array.Contains(p.TableName.Split('-')[0]) && p.IsDeleted == false).Count()
+                        </td>
+                        <td style="width:8%">
+                            --
+                        </td>
+                        <td style="width:7%">
+                            --
+                        </td>
+                        <td style="width:5%">
+                            --
+                        </td>
+                        <td style="width:27%">
+                            --
+                        </td>
+                        <td class="show-name" style="width:7%;">
+                            @(Convert.ToDateTime(item.UpdatedOn).ToString("dd MMM yyyy"))
+                            <span class="tooltip_time-p">
+                                <div class="arrow-down">
+                                </div>
+                                @item.EditerProfile.FirstName @item.EditerProfile.LastName<br />
+                                <span>@(Convert.ToDateTime(item.UpdatedOn).ToString("hh:mm tt"))</span>
+                            </span>
+                        </td>
+                        <td></td>
                         <td>
-                            @item.FloorTables.AsEnumerable().Where(p => !array.Contains(p.TableName.Split('-')[0])).Count()
+                            <a class="edit-img-link" href="/Floor/Edit/@item.FloorPlanId">
+                                <img class="edit-img" src="/images/floor-edit.png" alt="" />
+                            </a>
+                        </td>
+                    </tr>
+                    <tr class="rooftop-info-main" style="background: none;">
+                        <td style="width:100%; padding:initial;">
+                            <table class="sortingtable">
+
+
+                                @if (item.FloorTables.Count() > 0)
+                                {
+                                    foreach (var table in item.FloorTables.AsEnumerable().Where(t => !array.Contains(t.TableName.Split('-')[0]) && t.IsDeleted == false))
+                                    {
+
+                                        <tr class="notoggle">
+
+                                            <td style="width:10%"></td>
+                                            <td style="width:8%"></td>
+                                            <td style="width:7%"></td>
+                                            <td style="width:8%">
+                                                @table.TableName
+                                            </td>
+
+
+                                            <td style="width:7%">
+                                                
+                                                <div class="select-t">
+
+
+                                                    <select id="@table.FloorTableId" onchange="changeSeatingPriority(this);">
+                                                        @for (int i = 1; i <= 100; i++)
+                                                        {
+                                                            if (table.SeatingPriority == i)
+                                                            {
+                                                                <option selected="selected" value="@i">@i</option>
+                                                            }
+                                                            else
+                                                            {
+                                                                <option value="@i">@i</option>
+                                                            }
+
+                                                        }
+
+                                                    </select>
+                                                </div>
+
+                                            </td>
+
+                                            <td style="width:5%">
+                                                @if (table.SectionId > 0)
+                                                {
+                                                    <span style="background:@table.Section.Color;border-radius:10px;padding:0 7px 0 9px;margin-right:5px">
+                                                    </span>@table.Section.Name
+                                                }
+                                                else
+                                                {
+                                                    <span>Not Assigned</span>
+                                                }
+                                            </td>
+
+
+                                            <td style="width:29%">
+                                                <span> Temporary</span>
+                                                <input style=" margin-top: 18px; " class="checkbox" type="checkbox" name="" value="" checked="@table.IsTemporary" />
+                                            </td>
+                                            <td style="width:6%"></td>
+                                            <td></td>
+
+
+
+                                        </tr>
+
+                                    }
+                                }
+
+
+
+
+                            </table>
+
+
+                        </td>
+                    </tr>
+                }
+                @*<tr class="rooftop-toggle">
+                        <td>
+                            <h2>
+                                Rooftop Patio</h2>
+                        </td>
+                        <td>
+                            <div class="select-t">
+                                <select>
+                                    <option value="">2</option>
+                                    <option value="aye">1</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            20
                         </td>
                         <td>
                             --
@@ -76,104 +234,18 @@
                             --
                         </td>
                         <td class="show-name">
-                            @(Convert.ToDateTime(item.UpdatedOn).ToString("dd MMM yyyy"))
-                            <span class="tooltip_time-p">
+                            18 Mar 2014 <span class="tooltip_time-p">
                                 <div class="arrow-down">
                                 </div>
-                                @item.EditerProfile.FirstName @item.EditerProfile.LastName<br />
-                                <span>@(Convert.ToDateTime(item.UpdatedOn).ToString("hh:mm tt"))</span> </span>
+                                Leigh Manager<br>
+                                <span>8:00 PM</span> </span>
                         </td>
                         <td>
-                        </td>
-                        <td>
-                            <a  class="edit-img-link" href="/Floor/Edit/@item.FloorPlanId">
+                            <a class="edit-img-link" href="/Floor/Edit/1">
                                 <img class="edit-img" src="/images/floor-edit.png" alt="" />
                             </a>
                         </td>
-                    </tr>
-                    <tr class="rooftop-info-main" style="background: none;">
-                        <td style="width: 100%; padding: 0;">
-                            <div>
-                                <div class="rooftop-info content_1" style="height: auto;">
-                                    <ul>
-                                        @if (item.FloorTables.Count() > 0)
-                                        {
-                                            foreach (var table in item.FloorTables.AsEnumerable().Where(t => !array.Contains(t.TableName.Split('-')[0])))
-                                            {
-                                            <li>
-                                                <div class="rooftop-info-inner">
-                                                    <ul id="@table.FloorTableId">
-                                                        <li>@table.TableName</li>
-                                                        <li>
-                                                            @if (table.SectionId > 0)
-                                                            {
-                                                                <span style="background:@table.Section.Color;border-radius:10px;padding:0 7px 0 9px;margin-right:5px">
-                                                                </span>@table.Section.Name
-                                                            }
-                                                            else
-                                                            {
-                                                                <span>Not Assigned</span>
-                                                            }
-                                                        </li>
-                                                        <li>Temporary
-                                                            <input class="checkbox" type="checkbox" name="" value="" checked="@table.IsTemporary" /></li>
-                                                    </ul>
-                                                </div>
-                                            </li>
-                                            
-                                            }
-                                        }
-                                        else
-                                        { 
-                                            <li>
-                                                <h1>
-                                                    No Table.</h1>
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                }
-                @*<tr class="rooftop-toggle">
-                    <td>
-                        <h2>
-                            Rooftop Patio</h2>
-                    </td>
-                    <td>
-                        <div class="select-t">
-                            <select>
-                                <option value="">2</option>
-                                <option value="aye">1</option>
-                            </select>
-                        </div>
-                    </td>
-                    <td>
-                        20
-                    </td>
-                    <td>
-                        --
-                    </td>
-                    <td>
-                        --
-                    </td>
-                    <td>
-                        --
-                    </td>
-                    <td class="show-name">
-                        18 Mar 2014 <span class="tooltip_time-p">
-                            <div class="arrow-down">
-                            </div>
-                            Leigh Manager<br>
-                            <span>8:00 PM</span> </span>
-                    </td>
-                    <td>
-                        <a class="edit-img-link" href="/Floor/Edit/1">
-                            <img class="edit-img" src="/images/floor-edit.png" alt="" />
-                        </a>
-                    </td>
-                </tr>*@
+                    </tr>*@
             </tbody>
         </table>
     </div>

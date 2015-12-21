@@ -51,7 +51,7 @@ $(function () {
 function EnableMergeTableIfRequired(ddlCovers, floorId, time) {
     var covers = parseInt($(ddlCovers).val());
     if (covers > maxCoverLimit) {
-        // debugger;
+        //  
         EnableMergeTableOptions(ddlCovers, floorId, time);
         BindMergeTableEvents();
     }
@@ -63,7 +63,7 @@ function EnableMergeTableIfRequired(ddlCovers, floorId, time) {
 
 function EnableMergeTableOptions(ddlCovers, floorId, time) {
     var ReservationForm = $(ddlCovers).parents('.resOptParent');
-    //debugger;
+    // 
     var dataObj = {
         resDate: Floor.currentDate,
         time: ReservationForm.find('#time').val(),
@@ -87,7 +87,7 @@ function EnableMergeTableOptions(ddlCovers, floorId, time) {
         type: 'POST',
         data: dataObj,
         success: function (data) {
-            //debugger;
+            // 
             if (data.availTables !== null) {
                 MergeTableService = new MergedTable();
                 MergeTableService.AvailableTablesForMerging = data.availTables;
@@ -220,7 +220,7 @@ function BindMergeTableEvents() {
 
 //function OpenMergeTablePopUp(ddlCovers, floorId, time) {
 //    var ReservationForm = $(ddlCovers).parents('.resOptParent');
-//    //debugger;
+//    // 
 //    var dataObj = {
 //        resDate: Floor.currentDate,
 //        time: ReservationForm.find('#time').val(),

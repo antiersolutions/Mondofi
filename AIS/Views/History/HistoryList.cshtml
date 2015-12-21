@@ -136,109 +136,118 @@
                     var audits = reservation.ReservationAudits.OrderByDescending(o => o.CreatedOn).ToList();
                     var lastAudit = audits.First();
                     var otherAudits = audits.Where(a => a.ReservationAuditId != lastAudit.ReservationAuditId).ToList();
-                    var lastPerformedBy = (lastAudit.PinUser != null ? lastAudit.PinUser : lastAudit.LoginUser);
                     var firstnextAudit = audits.SkipWhile(x => x != lastAudit).Skip(1).FirstOrDefault() ?? new AISModels.ReservationAudit();
-                    var firstnextPerformedBy = firstnextAudit.ReservationAuditId == 0 ? new AIS.Models.UserProfile() : (firstnextAudit.PinUser != null ? firstnextAudit.PinUser : firstnextAudit.LoginUser);
+                    //if (!(firstnextAudit.PinUserId != null && firstnextAudit.PinUser == null) && !(firstnextAudit.LoginUserId != null && firstnextAudit.LoginUser == null) && !(lastAudit.PinUserId == null && lastAudit.PinUser == null) && !(lastAudit.LoginUserId == null && lastAudit.LoginUserId == null))
+                    //{
 
-                    <tr class="hideChanges @(isEven ? Html.Raw("isEven") : null)" data-time="@(lastAudit.Reservation.TimeForm.TimeOfDay.Ticks)" onclick="@(otherAudits.Count > 0 ? "ToggleSubAudits(this);" : "")">
-                        <td style="width: 12px !important; font-size: 25px; font-weight: 800; cursor:pointer;">@(otherAudits.Count > 0 ? "+" : " ")</td>
-                        <td>@lastAudit.Reservation.ReservationDate.ToShortDateString()</td>
-                        <td class="@IsChanged(firstnextAudit.TimeForm, lastAudit.TimeForm)"><strong>@lastAudit.TimeForm.ToString("h:mm tt")</strong></td>
-                        <td class="@IsChanged(firstnextAudit.Covers, lastAudit.Covers)"><strong>@lastAudit.Covers</strong></td>
-                        <td><strong>@(lastAudit.Reservation.Customers.LastName)</strong></td>
-                        <td><strong>@(lastAudit.Reservation.Customers.FirstName)</strong></td>
-                        <td>@(lastAudit.Reservation.Customers.PhoneNumbers.Count > 0 ? Convert.ToInt64(lastAudit.Reservation.Customers.PhoneNumbers.First().PhoneNumbers.Replace(" ", string.Empty)).ToString("000'-'000'-'0000") : string.Empty)</td>
-                        <td @(lastAudit.Reservation.Customers.Emails.Count > 0 ? Html.Raw("class=\"show-name\"") : null)>
-                            @*style=\"text-align: right !important;\"*@
-                            <strong>@(lastAudit.Reservation.Customers.Emails.Count > 0 ? "Available" : " - ")</strong>
-                            @if (lastAudit.Reservation.Customers.Emails.Count > 0)
-                            {
-                                <span class="tooltip_time-p" style="left: -10px; white-space: normal; ">
-                                    <div class="arrow-down">
-                                    </div>
-                                    @lastAudit.Reservation.Customers.Emails.First().Email
-                                </span>
-                            }
-                        </td>
-                        <td class="@IsChanged(firstnextAudit.TableName, lastAudit.TableName)"><strong>@(lastAudit.TableName)</strong></td>
-                        <td class="@IsChanged(firstnextAudit.Notes, lastAudit.Notes) @((!string.IsNullOrEmpty(lastAudit.Notes)) ? "show-name" : string.Empty)">
-                            @((!string.IsNullOrEmpty(lastAudit.Notes)) ? (lastAudit.Notes.Length > 20 ? string.Format("{0}...", lastAudit.Notes.Remove(20)) : lastAudit.Notes) : "No notes available")
-                            @if (!string.IsNullOrEmpty(lastAudit.Notes))
-                            {
-                                <span class="tooltip_time-p" style="min-width: 300px; white-space: normal;">
-                                    <div class="arrow-down">
-                                    </div>
-                                    @lastAudit.Notes
-                                </span>
-                            }
-                        </td>
-                        <td class="@IsChanged(firstnextAudit.CreatedOn, lastAudit.CreatedOn)">@lastAudit.Action</td>
-                        <td class="@IsChanged(firstnextAudit.CreatedOn, lastAudit.CreatedOn)">@lastAudit.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).Date.ToShortDateString()</td>
-                        <td class="@IsChanged(firstnextAudit.CreatedOn, lastAudit.CreatedOn)">@lastAudit.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).ToString("h:mm tt")</td>
-                        <td class="@IsChanged(firstnextPerformedBy.FirstName, lastPerformedBy.FirstName)">@(lastPerformedBy.FirstName + " " + lastPerformedBy.LastName)</td>
-                        <td>@(lastAudit.Reservation.ReservationId)</td>
-                        <td class="@IsChanged(firstnextAudit.StatusId, lastAudit.StatusId)" style="text-transform: uppercase;">@(statusList.Find(s => s.StatusId == lastAudit.StatusId).StatusName)</td>
-                    </tr>
+                        var lastPerformedBy = (lastAudit.PinUser != null ? lastAudit.PinUser : lastAudit.LoginUser);
+                        var firstnextPerformedBy = firstnextAudit.ReservationAuditId == 0 ? new AIS.Models.UserProfile() : (firstnextAudit.PinUser != null ? firstnextAudit.PinUser : firstnextAudit.LoginUser);
 
-                    if (otherAudits.Count > 0)
-                    {
-                        <tr style="display: none; background: infobackground;">
-                            <td colspan="14" style="width: 100% !important; background: infobackground; padding:0px;">
-                                <table style="width:100%;">
-                                    @foreach (var audit in otherAudits)
-                                    {
-                                        var nextAudit = otherAudits.SkipWhile(x => x != audit).Skip(1).FirstOrDefault() ?? new AISModels.ReservationAudit();
-                                        var nextPerformedBy = nextAudit.ReservationAuditId == 0 ? new AIS.Models.UserProfile() : (nextAudit.PinUser != null ? nextAudit.PinUser : nextAudit.LoginUser);
-                                        var performedBy = (audit.PinUser != null ? audit.PinUser : audit.LoginUser);
 
-                                        <tr>
-                                            <td style="width: 12px !important;"></td>
-                                            <td>@audit.Reservation.ReservationDate.ToShortDateString()</td>
-                                            <td class="@IsChanged(nextAudit.TimeForm, audit.TimeForm)"><strong>@audit.TimeForm.ToString("h:mm tt")</strong></td>
-                                            <td class="@IsChanged(nextAudit.Covers, audit.Covers)"><strong>@audit.Covers</strong></td>
-                                            <td><strong>@(audit.Reservation.Customers.LastName)</strong></td>
-                                            <td><strong>@(audit.Reservation.Customers.FirstName)</strong></td>
-                                            <td>@(audit.Reservation.Customers.PhoneNumbers.Count > 0 ? Convert.ToInt64(audit.Reservation.Customers.PhoneNumbers.First().PhoneNumbers.Replace(" ", string.Empty)).ToString("000'-'000'-'0000") : string.Empty)</td>
-                                            <td @(audit.Reservation.Customers.Emails.Count > 0 ? Html.Raw("class=\"show-name\"") : null)>
-                                                @*style=\"text-align: right !important;\"*@
-                                                <strong>@(audit.Reservation.Customers.Emails.Count > 0 ? "Available" : " - ")</strong>
-                                                @if (audit.Reservation.Customers.Emails.Count > 0)
-                                                {
-                                                    <span class="tooltip_time-p" style="left: -10px; white-space: normal;">
-                                                        <div class="arrow-down">
-                                                        </div>
-                                                        @audit.Reservation.Customers.Emails.First().Email
-                                                    </span>
-                                                }
-                                            </td>
-                                            <td class="@IsChanged(nextAudit.TableName, audit.TableName)"><strong>@(audit.TableName)</strong></td>
-                                            <td class="@IsChanged(nextAudit.Notes, audit.Notes) @((!string.IsNullOrEmpty(audit.Notes)) ? "show-name" : string.Empty)">
-                                                @((!string.IsNullOrEmpty(audit.Notes)) ? (audit.Notes.Length > 20 ? string.Format("{0}...", audit.Notes.Remove(20)) : audit.Notes) : "No notes available")
-                                                @if (!string.IsNullOrEmpty(audit.Notes))
-                                                {
-                                                    <span class="tooltip_time-p" style="min-width: 300px; white-space: normal;">
-                                                        <div class="arrow-down">
-                                                        </div>
-                                                        @audit.Notes
-                                                    </span>
-                                                }
-                                            </td>
-
-                                            <td class="@IsChanged(nextAudit.CreatedOn, audit.CreatedOn)">@audit.Action</td>
-                                            <td class="@IsChanged(nextAudit.CreatedOn, audit.CreatedOn)">@audit.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).Date.ToShortDateString()</td>
-                                            <td class="@IsChanged(nextAudit.CreatedOn, audit.CreatedOn)">@audit.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).ToString("h:mm tt")</td>
-                                            <td class="@IsChanged(nextPerformedBy.FirstName, performedBy.FirstName)">@(performedBy.FirstName + " " + performedBy.LastName)</td>
-                                            <td>@(audit.Reservation.ReservationId)</td>
-                                            <td class="@IsChanged(nextAudit.StatusId, audit.StatusId)" style="text-transform: uppercase;">@(statusList.Find(s => s.StatusId == audit.StatusId).StatusName)</td>
-                                        </tr>
-                                    }
-                                </table>
+                        <tr class="hideChanges @(isEven ? Html.Raw("isEven") : null)" data-time="@(lastAudit.Reservation.TimeForm.TimeOfDay.Ticks)" onclick="@(otherAudits.Count > 0 ? "ToggleSubAudits(this);" : "")">
+                            <td style="width: 12px !important; font-size: 25px; font-weight: 800; cursor:pointer;">@(otherAudits.Count > 0 ? "+" : " ")</td>
+                            <td>@lastAudit.Reservation.ReservationDate.ToShortDateString()</td>
+                            <td class="@IsChanged(firstnextAudit.TimeForm, lastAudit.TimeForm)"><strong>@lastAudit.TimeForm.ToString("h:mm tt")</strong></td>
+                            <td class="@IsChanged(firstnextAudit.Covers, lastAudit.Covers)"><strong>@lastAudit.Covers</strong></td>
+                            <td><strong>@(lastAudit.Reservation.Customers.LastName)</strong></td>
+                            <td><strong>@(lastAudit.Reservation.Customers.FirstName)</strong></td>
+                            <td>@(lastAudit.Reservation.Customers.PhoneNumbers.Count > 0 ? Convert.ToInt64(lastAudit.Reservation.Customers.PhoneNumbers.First().PhoneNumbers.Replace(" ", string.Empty)).ToString("000'-'000'-'0000") : string.Empty)</td>
+                            <td @(lastAudit.Reservation.Customers.Emails.Count > 0 ? Html.Raw("class=\"show-name\"") : null)>
+                                @*style=\"text-align: right !important;\"*@
+                                <strong>@(lastAudit.Reservation.Customers.Emails.Count > 0 ? "Available" : " - ")</strong>
+                                @if (lastAudit.Reservation.Customers.Emails.Count > 0)
+                                {
+                                    <span class="tooltip_time-p" style="left: -10px; white-space: normal; ">
+                                        <div class="arrow-down">
+                                        </div>
+                                        @lastAudit.Reservation.Customers.Emails.First().Email
+                                    </span>
+                                }
                             </td>
+                            <td class="@IsChanged(firstnextAudit.TableName, lastAudit.TableName)"><strong>@(lastAudit.TableName)</strong></td>
+                            <td class="@IsChanged(firstnextAudit.Notes, lastAudit.Notes) @((!string.IsNullOrEmpty(lastAudit.Notes)) ? "show-name" : string.Empty)">
+                                @((!string.IsNullOrEmpty(lastAudit.Notes)) ? (lastAudit.Notes.Length > 20 ? string.Format("{0}...", lastAudit.Notes.Remove(20)) : lastAudit.Notes) : "No notes available")
+                                @if (!string.IsNullOrEmpty(lastAudit.Notes))
+                                {
+                                    <span class="tooltip_time-p" style="min-width: 300px; white-space: normal;">
+                                        <div class="arrow-down">
+                                        </div>
+                                        @lastAudit.Notes
+                                    </span>
+                                }
+                            </td>
+                            <td class="@IsChanged(firstnextAudit.CreatedOn, lastAudit.CreatedOn)">@lastAudit.Action</td>
+                            <td class="@IsChanged(firstnextAudit.CreatedOn, lastAudit.CreatedOn)">@lastAudit.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).Date.ToShortDateString()</td>
+                            <td class="@IsChanged(firstnextAudit.CreatedOn, lastAudit.CreatedOn)">@lastAudit.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).ToString("h:mm tt")</td>
+                            <td class="@IsChanged(firstnextPerformedBy.FirstName, lastPerformedBy.FirstName)">@(lastPerformedBy.FirstName + " " + lastPerformedBy.LastName)</td>
+                            <td>@(lastAudit.Reservation.ReservationId)</td>
+                            <td class="@IsChanged(firstnextAudit.StatusId, lastAudit.StatusId)" style="text-transform: uppercase;">@(statusList.Find(s => s.StatusId == lastAudit.StatusId).StatusName)</td>
                         </tr>
-                    }
-                }
 
-                isEven = !isEven;
+                        if (otherAudits.Count > 0)
+                        {
+                            <tr style="display: none; background: infobackground;">
+                                <td colspan="14" style="width: 100% !important; background: infobackground; padding:0px;">
+                                    <table style="width:100%;">
+                                        @foreach (var audit in otherAudits)
+                                        {
+                                            var nextAudit = otherAudits.SkipWhile(x => x != audit).Skip(1).FirstOrDefault() ?? new AISModels.ReservationAudit();
+                                            //if (!(nextAudit.LoginUserId == null && nextAudit.LoginUser == null) && !(nextAudit.PinUserId == null && nextAudit.PinUser == null))
+                                            //{
+                                            var nextPerformedBy = nextAudit.ReservationAuditId == 0 ? new AIS.Models.UserProfile() : (nextAudit.PinUser != null ? nextAudit.PinUser : nextAudit.LoginUser);
+                                            var performedBy = (audit.PinUser != null ? audit.PinUser : audit.LoginUser);
+
+
+                                            <tr>
+                                                <td style="width: 12px !important;"></td>
+                                                <td>@audit.Reservation.ReservationDate.ToShortDateString()</td>
+                                                <td class="@IsChanged(nextAudit.TimeForm, audit.TimeForm)"><strong>@audit.TimeForm.ToString("h:mm tt")</strong></td>
+                                                <td class="@IsChanged(nextAudit.Covers, audit.Covers)"><strong>@audit.Covers</strong></td>
+                                                <td><strong>@(audit.Reservation.Customers.LastName)</strong></td>
+                                                <td><strong>@(audit.Reservation.Customers.FirstName)</strong></td>
+                                                <td>@(audit.Reservation.Customers.PhoneNumbers.Count > 0 ? Convert.ToInt64(audit.Reservation.Customers.PhoneNumbers.First().PhoneNumbers.Replace(" ", string.Empty)).ToString("000'-'000'-'0000") : string.Empty)</td>
+                                                <td @(audit.Reservation.Customers.Emails.Count > 0 ? Html.Raw("class=\"show-name\"") : null)>
+                                                    @*style=\"text-align: right !important;\"*@
+                                                    <strong>@(audit.Reservation.Customers.Emails.Count > 0 ? "Available" : " - ")</strong>
+                                                    @if (audit.Reservation.Customers.Emails.Count > 0)
+                                                    {
+                                                        <span class="tooltip_time-p" style="left: -10px; white-space: normal;">
+                                                            <div class="arrow-down">
+                                                            </div>
+                                                            @audit.Reservation.Customers.Emails.First().Email
+                                                        </span>
+                                                    }
+                                                </td>
+                                                <td class="@IsChanged(nextAudit.TableName, audit.TableName)"><strong>@(audit.TableName)</strong></td>
+                                                <td class="@IsChanged(nextAudit.Notes, audit.Notes) @((!string.IsNullOrEmpty(audit.Notes)) ? "show-name" : string.Empty)">
+                                                    @((!string.IsNullOrEmpty(audit.Notes)) ? (audit.Notes.Length > 20 ? string.Format("{0}...", audit.Notes.Remove(20)) : audit.Notes) : "No notes available")
+                                                    @if (!string.IsNullOrEmpty(audit.Notes))
+                                                    {
+                                                        <span class="tooltip_time-p" style="min-width: 300px; white-space: normal;">
+                                                            <div class="arrow-down">
+                                                            </div>
+                                                            @audit.Notes
+                                                        </span>
+                                                    }
+                                                </td>
+
+                                                <td class="@IsChanged(nextAudit.CreatedOn, audit.CreatedOn)">@audit.Action</td>
+                                                <td class="@IsChanged(nextAudit.CreatedOn, audit.CreatedOn)">@audit.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).Date.ToShortDateString()</td>
+                                                <td class="@IsChanged(nextAudit.CreatedOn, audit.CreatedOn)">@audit.CreatedOn.ToDefaultTimeZone(User.Identity.GetDatabaseName()).ToString("h:mm tt")</td>
+                                                <td class="@IsChanged(nextPerformedBy.FirstName, performedBy.FirstName)">@(performedBy.FirstName + " " + performedBy.LastName)</td>
+                                                <td>@(audit.Reservation.ReservationId)</td>
+                                                <td class="@IsChanged(nextAudit.StatusId, audit.StatusId)" style="text-transform: uppercase;">@(statusList.Find(s => s.StatusId == audit.StatusId).StatusName)</td>
+                                            </tr>
+                                            @*}*@
+                                        }
+                                    </table>
+                                </td>
+                            </tr>
+                        }
+
+                        isEven = !isEven;
+                    //}
+                }
             }
 
             @if (@Model.Count() == 0)
@@ -254,7 +263,7 @@
 </div>
 <script type="text/javascript">
     $(function () {
-        //debugger;
+        //
         myHilitor = new Hilitor("tblSearch");
         myHilitor.setMatchType("open");
         myHilitor.apply("@(searchKey)");

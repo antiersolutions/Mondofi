@@ -3,6 +3,7 @@
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_LayoutBase.cshtml";
 }
+
 @section styles
 {
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" />
@@ -288,8 +289,10 @@
                 }
     </style>
 }
+
 @section scripts
 {
+
     <script type="text/javascript">
         $(function () {
             $("#StartDateEdit").datepicker({
@@ -358,6 +361,14 @@
         });
 
         $('#formEdit').submit(function () {
+
+
+
+        });
+
+
+        function saveFrom() {
+
             if ($('input[name = selectedTables]').filter(':checked').length == 0) {
                 alert("Please select atleast one table before saving.");
                 return false;
@@ -372,10 +383,199 @@
                 alert("Please select an availability status before saving.");
                 return false;
             }
-        });
+
+            var selectedTable = "";
+            var selectedday = "";
+            var checkedSelectDay = $('input[name = selectedWeekDays]').filter(':checked');
+            var checkedselectTable = $('input[name = selectedTables]').filter(':checked');
+
+            checkedselectTable.each(function (index) {
+
+                selectedTable += $(this).attr('value') + ',';
+
+            });
+
+            checkedSelectDay.each(function (index) {
+
+                selectedday += $(this).attr('id') + ',';
+
+            });
+
+            debugger;
+            var sTime = $('#TATimeRangeForm #StartTime').val($('#formEdit select[name = StartTime]').val()).val();
+            var eTime = $('#TATimeRangeForm #EndTime').val($('#formEdit select[name = EndTime]').val()).val();
+
+            $.ajax({
+                data: { startdate: $('#StartDate').val(), endDate: $('#EndDate').val(), selectedT: selectedTable, startTime: sTime, endTime: eTime },
+                url: '/TableAvailablity/CheckTableAvailabity',
+                success: function (data) {
+
+                    var htm = '<table style="width: 476px;" border="1"><thead><tr><th data-key="id" data-column="0" data-order="asc">id</th><th data-key="date" data-column="1" data-order="asc">date</th><th data-key="notify" data-column="2" data-order="asc">notify</th></tr></thead><tbody><tr><td>1</td><td>31-03-2013 06:12:57 PM</td><td>gold</td></tr><tr><td>2</td><td>31-03-2013 06:14:57 PM</td><td>diamond</td></tr><tr><td>3</td><td>31-03-2013 06:10:57 PM</td><td>silver</td></tr></tbody></table>'
+
+                    if (data.length > 0) {
+
+                        var html = "";
+                        $.each(data, function (key, index) {
+
+                            html += '<tr><td align="center">' + index.id + '</td><td align="center">' + index.tableName + '</td><td align="center">' + index.timeFrom + '</td><td>' + index.timeto + '</td><td align="center">' + index.CurrentStatus + '</td></tr>';
+                        })
+                        var htmlset = '<table style="width: 476px;" ><thead style="background-color: #B7B1B1;"><tr><th data-key="id" data-column="0" data-order="asc">ReservationId</th><th  data-key="TableName" data-column="1" data-order="asc">Table Name</th><th data-key="Dateandtimefrom" data-column="2" data-order="asc">Date and time from</th><th data-key="Dateandtimeto" data-column="3" data-order="asc">Date and time to</th><th data-key="CurrentStatus" data-column="4" data-order="asc">Current Status</th></tr></thead><tbody>' + html + '</tbody></table>';
+
+                        alertify.confirm("These changes will override status for following existing reservations", htmlset + '<br\><div style="padding:16px;"><p style="float: right;font-size: 15px;"><strong>Do you still want to continue ?</strong></p></div>', function (e) {
+                            if (e) {
+
+                                $('#formEdit').submit();
+
+                            } else {
+
+                                return false;
+                            }
+
+                        }, function () {
+
+
+                        }).set('labels', { ok: 'Ok!', cancel: 'cancel' }).set('movable', true);
+
+                        function getDate(str) {
+                            debugger;
+                            var ar = /(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2}):(\d{2}) ([AM|PM]+)/
+                                 .exec(str)
+
+                            return new Date(
+                                (+ar[3]),
+                                (+ar[2]) - 1, // Careful, month starts at 0!
+                                (+ar[1]),
+                                (+ar[4]) + (ar[7] == 'PM' ? 12 : 0),
+                                (+ar[5]),
+                                (+ar[6])
+                            );
+                        };
+
+                        $(function () {
+
+
+                            var sorter = {
+
+                                order: [1, -1],
+                                column: 0,
+                                key: 'id',
+
+                                setOrder: function (k) {
+
+                                    this.order = ({
+                                        asc: [1, -1], desc: [-1, 1]
+                                    })[k] || this.order;
+
+                                    return this;
+                                },
+                                setColumn: function (c) {
+
+                                    this.column = c || this.column;
+                                    return this;
+                                },
+
+                                setKey: function (k) {
+                                    this.key = k || this.key;
+                                    return this;
+                                },
+
+                                sort: function (els) {
+                                    debugger;
+                                    var sortFunc = this.key;
+
+                                    return els.sort(this[sortFunc]);
+                                },
+
+                                getValue: function (a, b) {
+
+                                    return {
+                                        a: $(a).find('td:eq(' + sorter.column + ')').text(),
+                                        b: $(b).find('td:eq(' + sorter.column + ')').text()
+                                    }
+                                },
+                                comp: function (val) {
+                                    debugger;
+                                    if (val.a == val.b) {
+                                        return 0;
+                                    }
+
+                                    return val.a > val.b ?
+                                            sorter.order[0] : sorter.order[1];
+
+                                },
+                                id: function (a, b) {
+
+                                    //var val = sorter.getValue(a, b);
+
+                                    //val.a = parseInt(val.a, 10);
+                                    //val.b = parseInt(val.b, 10);
+
+                                    //return sorter.comp(val);
+                                    var val = sorter.getValue(a, b);
+                                    return sorter.comp(val);
+
+                                },
+
+                                Dateandtimefrom: function (a, b) {
+
+                                    var val = sorter.getValue(a, b);
+                                    return sorter.comp(val);
+
+                                },
+                                CurrentStatus: function (a, b) {
+
+                                    var val = sorter.getValue(a, b);
+                                    return sorter.comp(val);
+
+                                },
+                                Dateandtimeto: function (a, b) {
+
+                                    //var val = sorter.getValue(a, b);
+
+                                    //val.a = getDate(val.a);
+                                    //val.b = getDate(val.b);
+
+                                    //return sorter.comp(val);
+
+                                    var val = sorter.getValue(a, b);
+                                    return sorter.comp(val);
+
+                                }
+                            }
+                            debugger;
+                            $('.ajs-content>table thead').on('click', 'th', function () {
+
+                                var sorted = sorter.setOrder($(this).attr('data-order'))
+                                                   .setColumn($(this).attr('data-column'))
+                                                   .setKey($(this).attr('data-key'))
+                                                   .sort($('.ajs-content>table tbody tr'));
+
+                                debugger;
+                                $('.ajs-content>table tbody').empty().append(sorted);
+
+                                $('.ajs-content>table thead th').not(this)
+                                                   .attr('data-order', 'asc');
+
+                                $(this).attr(
+                                    'data-order',
+                                    ($(this).attr('data-order') == 'asc' ? 'desc' : 'asc')
+                                );
+
+                            });
+                        });
+
+                    }
+                    else {
+                        $('#formEdit').submit();
+                    }
+
+                }
+            });
+        }
+
 
         function UpdateBottomText() {
-            //debugger;
+            //
             var html = "";
 
             if ($('input[name = selectedTables]').filter(':checked').length > 0) {
@@ -402,7 +602,7 @@
                                 "<strong>Table</strong> " + tblNames + "</p>";
 
 
-                //debugger;
+                //
                 if ($.trim($('#StartDate').val()) != "" && $.trim($('#EndDate').val()) != "") {
                     html += "<p>" +
                                 "<strong>From</strong> " + $.datepicker.formatDate('DD, d MM, yy', $('#StartDateEdit').datepicker('getDate')) + " <strong>Until</strong> " + $.datepicker.formatDate('DD, d MM, yy', $('#EndDateEdit').datepicker('getDate')) + "</p>";
@@ -452,6 +652,7 @@
         }
 
         function UpdateWeekDays() {
+
             $.post('/TableAvailablity/GetDayofWeekList?startDate=' + $('#StartDate').val() + '&endDate=' + $('#EndDate').val(),
                 $('#daysOfWeek input').serialize(),
                 function (data) {
@@ -490,8 +691,19 @@
                 $(select).val($(select).attr('previous')).attr('selected', true);
             }
         }
+
+
+
+
+
+
+
     </script>
+
+
+
 }
+
 <div class="middle-section calendar-sec">
     <div class="top-filter">
         <ul style="width: auto;">
@@ -500,7 +712,7 @@
             <li><a href="/ShiftHour/Index">Hours</a></li>
             <li><a href="/Floor/Index">Floorplan</a></li>
             <li><a class="active" href="/TableAvailablity/Index">Table Availability</a></li>
-            
+
         </ul>
         <div class="ta-search-edithd">
             TABLE AVAILABILITY<br />
@@ -640,6 +852,9 @@
                         </div>
                         <div class="row-check">
                             <div id="btmText">
+
+
+
                                 @*<p>
                                         <strong>Table</strong> 1,2 & Three</p>
                                     <p>
@@ -655,7 +870,8 @@
                                         <strong>Setting Table Availability</strong> to Online & In House</p>*@
                             </div>
                             <div class="buttons">
-                                <input type="submit" value="Save" name="" />
+                                <input type="button" value="Save" onclick="saveFrom()" name="" />
+                                @*<input type="submit" value="Save" name="" />*@
                                 <input type="button" value="Cancel" name="" onclick="window.location.href = '/TableAvailablity'" />
                             </div>
                         </div>

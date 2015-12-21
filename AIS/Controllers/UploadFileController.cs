@@ -208,6 +208,63 @@ namespace AIS.Controllers
         }
 
 
+
+        [HttpPost]
+        [AllowAnonymous]
+        public string uploadLogoimageReser(HttpPostedFileBase fileData)
+        {
+            if (fileData != null)
+            {
+                var filename = "";
+                if (fileData != null && fileData.ContentLength > 0)
+                {
+                    if (fileData.ContentLength < 524288)
+                    {
+                        var FileExtension = Path.GetExtension(fileData.FileName).Substring(1);
+                        if (FileExtension.ToLower() == "jpg" || FileExtension.ToLower() == "png" || FileExtension.ToLower() == "gif")
+                        {
+                            var img = Image.FromStream(fileData.InputStream, true, true);
+
+                            if (img.Height != 95 && img.Width != 202)
+                            {
+                                return "resolution";
+                            }
+
+                            filename = Path.GetFileName(fileData.FileName);
+                            string uid = getUniqueID();
+                            filename = uid + "_" + filename;
+                            var path = Path.Combine(Server.MapPath("~/Content/UserData"), filename);
+                            var logoPath = "/Content/UserData/" + filename;
+                            var logoSetting = db.tabSettings.Where(s => s.Name.Contains("OnlineResosL")).Single();
+                            logoSetting.Value = logoPath;
+                            db.Entry(logoSetting).State = System.Data.Entity.EntityState.Modified;
+
+                            db.SaveChanges();
+
+                            fileData.SaveAs(path);
+
+                            return filename.ToString();
+                        }
+                        else
+                        {
+                            return "extentions";
+
+                        }
+                    }
+                    else
+                    {
+                        return "size";
+                    }
+                }
+                return filename.ToString();
+            }
+            else
+            {
+                return "error";
+            }
+        }
+
+
         private string getUniqueID()
         {
             byte[] buffer = Guid.NewGuid().ToByteArray();

@@ -2,8 +2,55 @@
 @{
     int i = 1;
     int j = 1;
+    var tabMatrix = ViewBag.TabMatrix;
 }
-<div style="float: left; width: 133px; height: auto;">
+<style>
+    .tblvail-sec .avail-main-tab table.avail-table tbody tr td {
+        font-size: 9px;
+        height: 18px;
+        width: 16.7px;
+    }
+
+        .tblvail-sec .avail-main-tab table.avail-table tbody tr td > a {
+            display: table-cell;
+            height: 17px;
+            width: 17px;
+            padding: 0;
+        }
+
+    .tblvail-sec .avail-main-tab table.avail-table thead tr td {
+        font-size: 9px;
+    }
+
+        .tblvail-sec .avail-main-tab table.avail-table thead tr td span.arw {
+            background: rgba(0, 0, 0, 0) url("/images/1403094036_icon-arrow-down-b.png") no-repeat scroll 0 9px;
+        }
+
+    .tblvail-sec .avail-main-tab table.avail-table tr td.tblnm:last-child {
+        width: 96px;
+    }
+</style>
+<script>
+    $('.demo-x .avail-table').width(((("@tabMatrix") * 1607) / 100) + 'px');
+
+    $('.tblvail-sec .avail-main-tab table.avail-table thead tr td').each(function () {
+        $(this).css({ 'font-size': ((9 * ("@tabMatrix")) / 100) + 'px' });
+    });
+
+    $('.tblvail-sec .avail-main-tab table.avail-table tbody tr td').each(function () {
+        $(this).css({ 'font-size': ((9 * ("@tabMatrix")) / 100) + 'px', 'height': ((18 * ("@tabMatrix")) / 100) + 'px', 'width': ((16.7 * ("@tabMatrix")) / 100) + 'px' });
+    });
+    $('.tblvail-sec .avail-main-tab table.avail-table tr td.tblnm:last-child').each(function () {
+        $(this).css({ 'width': ((96 * ("@tabMatrix")) / 100) + 'px' });
+    });
+    $('.tblvail-sec .avail-main-tab table.avail-table tbody tr td > a').each(function () {
+        $(this).css({ 'height': ((16 * ("@tabMatrix")) / 100) + 'px', 'width': ((16 * ("@tabMatrix")) / 100) + 'px' });
+    });
+    $('.availT').each(function () {
+        $(this).css({ 'width': ((133 * ("@tabMatrix")) / 100) + 'px' });
+    });
+</script>
+<div class="availT" style="float: left; width: 133px; height: auto;">
     <table class="avail-table" cellpadding="0" cellspacing="0" style="width: 133px; border-collapse: collapse;">
         <thead>
             <tr>
@@ -11,7 +58,7 @@
                     Lvl
                 </td>
                 <td>
-                    Cls
+                    SP
                 </td>
                 <td class="tblnm">
                     Tbl
@@ -31,7 +78,8 @@
                         @table.FloorTable.FloorPlan.FLevel
                     </td>
                     <td>
-                        @((table.FloorTable.IsTemporary == null) || (table.FloorTable.IsTemporary == false) ? "P" : "T")
+                        @table.FloorTable.SeatingPriority
+                        @*@((table.FloorTable.IsTemporary == null) || (table.FloorTable.IsTemporary == false) ? "P" : "T")*@
                     </td>
                     <td class="tblnm" @((table.FloorTable.SectionId != 0) ? "style=color:white;background:" + (table.FloorTable.Section.Color) + ";" : string.Empty)>
                         @table.FloorTable.TableName
@@ -42,11 +90,11 @@
     </table>
 </div>
 <div class="demo-x" style="float: left; height: auto; width: calc(100% - 135px);">
-    <table class="avail-table" cellpadding="0" cellspacing="0" style="width: 3072px;
+    <table class="avail-table" cellpadding="0" cellspacing="0" style="width: 1607px;
         border-collapse: collapse;">
         <thead>
             <tr>
-                <td colspan="100" style="width: 3072px;">
+                <td colspan="100" style="width: 100%">
                     <strong>@Model.Tables[0].AvailStatus[0].time.Date.ToString("dddd, MMMM d, yyyy")</strong>
                 </td>
             </tr>
@@ -103,7 +151,7 @@
                         }
                         else if (AvailStatus.shiftId > 0)
                         {
-                            <td class="tblSts@(AvailStatus.Status) @(beginHr)">
+                            <td class="tblSts@(AvailStatus.Status == 0 ? 3 : AvailStatus.Status) @(beginHr)">
                                 <a href="@(Url.Action("Edit", "TableAvailablity", new AIS.Models.TableAvailablity.EditAvailVM
                                      {
                                          StartDate = AvailStatus.time.Date.ToString("MM/dd/yyyy"),
@@ -127,7 +175,7 @@
         </tbody>
     </table>
 </div>
-<div class="btmDiv">
+<div class="btmDiv" style="position:fixed; bottom:0;">
     <div class="section" style="position: relative;">
         <strong>Section:</strong>
         <div class="secSelect">
@@ -169,4 +217,6 @@
             <input type="button" value="Reserved" style="background: #FF8080;" />
         </div>
     </div>
+</div>
+<div class="btmDiv" style="border:none">
 </div>

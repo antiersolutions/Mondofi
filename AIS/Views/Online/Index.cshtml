@@ -1,23 +1,72 @@
 ﻿@model AIS.Models.OnlineAvailTables
+@using AIS.OnlineExtensions;
 @{
     ViewBag.Title = "Make a reservation";
     Layout = "~/Views/Shared/_LayoutOnline.cshtml";
     var date = (DateTime)ViewBag.date;
-    var company = ViewContext.RouteData.Values["company"].ToString();
-}
-<style>
-    .result-sec1.fail {
-        color: #4b4b4b;
-        font-size: 14px;
+    var getdate = date.Date;
+    var company = string.Empty;
+    try
+    {
+        company = ViewContext.RouteData.Values["company"].ToString();
     }
-    /*dharminder*/
-    .s-date input {
-        cursor: pointer;
+    catch (Exception)
+    {
+        company = string.Empty;
+
     }
 
-    .custSelect select.form-control {
-        cursor: pointer;
-    }
+    var today = DateTime.UtcNow.ToDefaultTimeZone(company);
+}
+<style>
+        .result-sec1.fail {
+            color: #4b4b4b;
+            font-size: 14px;
+        }
+        /*dharminder*/
+        .s-date input {
+            cursor: pointer;
+        }
+
+        .custSelect select.form-control {
+            cursor: pointer;
+        }
+
+        .custSelect select.form-control {
+            -moz-appearance: none;
+            -webkit-appearance: none;
+            background-size: 100% auto;
+            border-radius: 3px;
+            -moz-border-radius: 3px;
+            -webkit-border-radius: 3px;
+            box-shadow: -1px 2px 3px -1px #ccc inset;
+            height: 50px;
+            padding: 7px 10px 8px 45px;
+            text-indent: 0.01px;
+            text-overflow: "";
+            width: 100%;
+            background-image: url("../Content/Online/img/arrow-down.png");
+            background-repeat: no-repeat;
+            background-size: inherit;
+            background-position: 93% center;
+        }
+
+        .iconTN::after {
+            content: none;
+        }
+
+        /*.res li:nth-child(1) a:hover {
+            text-decoration: none;
+            color: #fff;
+        }*/
+        /*.res li:hover a {
+        text-decoration: none;
+        color: #fff;
+    }*/
+
+        /*.res li:nth-child(1) a {
+            color: #000;
+        }*/
 </style>
 @section scripts{
     <script type="text/javascript">
@@ -39,7 +88,7 @@
             $("#date").datepicker();
             //$('#date').datepicker("option", "dateFormat", 'mm/dd/yy');// live
             $('#date').datepicker("option", "dateFormat", 'dd/MM/yy');// local
-            $("#date").datepicker("option", "minDate", new Date());
+            $("#date").datepicker("option", "minDate", new Date('@today.Year', '@(today.Month - 1)', '@today.Day'));
             $('#date').datepicker('setDate', new Date('@date.Year', '@(date.Month - 1)', '@date.Day'));
         });
 
@@ -54,7 +103,8 @@
                         $.each(data, function (index, item) {
                             options += '<option value="' + item.Value + '">' + item.Text + '</option>';
                         });
-
+                        $('select#time').empty()
+                        $('select#time').html(options)
                         //$('select#time').html(options)
                         //    .selectpicker('refresh');
                         //$('.bootstrap-select').removeClass('input-validation-error');
@@ -62,6 +112,13 @@
                 }
             });
         }
+
+        function setclick(e) {
+          
+            var href = $(e).find('.rsrv-btn').eq(0).attr('href');
+          window.location.href = href;
+        }
+
     </script>
 }
 
@@ -83,22 +140,31 @@ else if (Model != null && Model.OtherMatches.Count > 0)
         <ul class="res">
             @foreach (var match in Model.OtherMatches)
             {
-                <li>
-                    <span>@match.StartTime.ToString("h:mm tt") </span><br />
-                    @Html.ActionLink("Reserve", "Reserve", new
+
+                <li onclick="setclick(this)" style="cursor:pointer;">
+                    @*<a href="@Url.Action("Reserve", "online", new {
+                         date = ((DateTime)ViewBag.date).ToString("dddd, dd MMM, yy"),
+                         time = match.StartTime.ToString("h:mm tt"),
+                         covers = (int)ViewBag.covers,
+                         company = company
+                     },new)">*@
+                        <span>@match.StartTime.ToString("h:mm tt") </span><br />
+                        @Html.ActionLink("Reserve", "Reserve", new
                     {
                         date = ((DateTime)ViewBag.date).ToString("dddd, dd MMM, yy"),
                         time = match.StartTime.ToString("h:mm tt"),
                         covers = (int)ViewBag.covers,
-                        company=company
+                        company = company
                     }, new { @class = "btn btn-default rsrv-btn" })
-                    @if (match.AvailableTables.Count < 3)
-                    {
-                        <h4 style="padding-top:5px;">
-                            <span style="color:maroon;">Only @match.AvailableTables.Count left!</span>
-                        </h4>
-                    }
+                        @if (match.AvailableTables.Count < 3)
+                        {
+                            <h4 style="padding-top:5px;">
+                                <span style="color:maroon;">Only @match.AvailableTables.Count left!</span>
+                            </h4>
+                        }
+                    @*</a>*@
                 </li>
+
             }
         </ul>
     </div>
@@ -125,7 +191,7 @@ else if (Model != null && Model.OtherMatches.Count > 0)
         </div>
         <div class="col-sm-12 nopadding marginBottom s-date">
             <label for="covers" class="party-cover">Time@(Html.ValidationMessage("time"))</label>
-            <div class="custSelect iconT">
+            <div class="custSelect iconT iconTN">
                 @Html.DropDownList("time", new SelectList(ViewBag.TimeList, "Value", "Text"), "-Select Time-", new
                 {
                     @class = "selectpicker show-tick form-control pick-time",
@@ -137,7 +203,7 @@ else if (Model != null && Model.OtherMatches.Count > 0)
         </div>
         <div class="col-sm-12 nopadding marginBottom s-date">
             <label for="covers" class="party-cover">Party Size@(Html.ValidationMessage("covers"))</label>
-            <div class="custSelect iconP">
+            <div class="custSelect iconP iconTN">
                 @Html.DropDownList("covers", new SelectList(ViewBag.CoverList, "Value", "Text"), "-Select covers-", new
                 {
                     @class = "selectpicker show-tick form-control",

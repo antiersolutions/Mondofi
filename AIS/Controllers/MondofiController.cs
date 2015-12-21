@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AIS.Helpers.Fakes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,24 +7,28 @@ using System.Web.Mvc;
 
 namespace AIS.Controllers
 {
-   
+
     public class MondofiController : Controller
     {
-        public ActionResult Index()
+         [SelectedTab("VenueManagement")]
+        public ActionResult Index(string val)
         {
             //if (Request.Browser.IsMobileDevice)
             //{
             //    return RedirectToAction("Index", "Book");
             //}
-
-            //ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
+            if (val!=null && val!=string.Empty)
+            {
+                ViewBag.val = val;
+            }
+           
             return View();
 
             //return View();
         }
 
 
-
+        [SelectedTab("Price")]
         public ActionResult Price()
         {
             //if (Request.Browser.IsMobileDevice)
@@ -37,6 +42,7 @@ namespace AIS.Controllers
             //return View();
         }
 
+        [SelectedTab("VenueManagement")]
         public ActionResult Index2()
         {
             //if (Request.Browser.IsMobileDevice)

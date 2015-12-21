@@ -320,7 +320,7 @@
                 step: 0.01,
                 value: 1,
                 slide: function (e, ui) {
-                    //  debugger;
+                    //   
                     //$('#floor').css('opacity', ui.value)
                     $('#floor-back').css('background', 'rgba(transparent,transparent,transparent,' + ui.value + ')');
                     $slideMe.text(parseInt((ui.value) * 100) + '%');
@@ -515,7 +515,7 @@
         </div>
     </div>
 </div>
-<div class="manage-section add-table-floor">
+<div class="manage-section add-table-floor" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="m-right-btn">
     </div>
     <ul class="t-main-link">
@@ -523,164 +523,203 @@
         <li><a href="javascript:void(0)">Combine Tables</a></li>
     </ul>
     <h2 class="tblText">
-        Add Tables to your Floorplan</h2>
+        Add Tables to your Floorplan
+    </h2>
     <p class="tblText">
         Click on a table below to add to your floorplan. You can then name, select your
-        min & max cover counts and move it around your floorplan.</p>
+        min & max cover counts and move it around your floorplan.
+    </p>
     <h2 class="othrText" style="display: none;">
-        Add Other Elements to your Floorplan</h2>
+        Add Other Elements to your Floorplan
+    </h2>
     <p class="othrText" style="display: none;">
         Click on an item below to add it to your floorplan. You can then move the items
-        around your floorplan.</p>
+        around your floorplan.
+    </p>
     <div id="tabs" class="table-tabs">
         <div class="nav-m">
             <ul class="main">
-                <li><a class="tblAddPanel" href="#tabs-1" onclick="javascript:$('#dltTable').hide(); ChangeText(this);">
-                    Tables </a></li>
-                <li><a href="#tabs-2" onclick="javascript:$('#dltTable').hide(); ChangeText(this);">
-                    Others </a></li>
-                <li><a href="#tabs-3" onclick="javascript:$('#dltTable').hide(); ChangeText(this);">
-                    Background </a></li>
-                <li style="display: none;"><a class="tblEditPanel" href="#tabs-4" onclick="javascript:$('#dltTable').show(); ChangeText(this);">
-                    Edit</a></li>
+                <li>
+                    <a class="tblAddPanel" href="#tabs-1" onclick="javascript:$('#dltTable').hide(); ChangeText(this);">
+                        Tables
+                    </a>
+                </li>
+                <li>
+                    <a href="#tabs-2" onclick="javascript:$('#dltTable').hide(); ChangeText(this);">
+                        Others
+                    </a>
+                </li>
+                <li>
+                    <a href="#tabs-3" onclick="javascript:$('#dltTable').hide(); ChangeText(this);">
+                        Background
+                    </a>
+                </li>
+                <li style="display: none;">
+                    <a class="tblEditPanel" href="#tabs-4" onclick="javascript:$('#dltTable').show(); ChangeText(this);">
+                        Edit
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="tab-con content_1">
             <div id="tabs-1">
                 <h2>
-                    Round Tables</h2>
+                    Round Tables
+                </h2>
                 <div class="table-shape">
                     <ul>
                         <li onclick="AddNewItemToFloor(1, 2, 'small', 'Round', true);">
                             <img class="first" src="@Url.Content("~/images/r-table3.png")" alt="">
                             <h5>
-                                1-2 Top</h5>
+                                1-2 Top
+                            </h5>
                         </li>
                         <li onclick="AddNewItemToFloor(2, 4, 'medium', 'Round', true);">
                             <img class="second" src="@Url.Content("~/images/r-table2.png")" alt="">
                             <h5>
-                                2-4 Top</h5>
+                                2-4 Top
+                            </h5>
                         </li>
                         <li onclick="AddNewItemToFloor(4, 6, 'large', 'Round', true);">
                             <img src="@Url.Content("~/images/r-table1.png")" alt="">
                             <h5>
-                                4-6 Top</h5>
+                                4-6 Top
+                            </h5>
                         </li>
                     </ul>
                 </div>
                 <h2>
-                    Square Tables</h2>
+                    Square Tables
+                </h2>
                 <div class="table-shape">
                     <ul>
                         <li onclick="AddNewItemToFloor(1, 2, 'small', 'Square', true);">
-                            <img class="first" src="@Url.Content("~/images/s-table3.png")" alt=""/>
+                            <img class="first" src="@Url.Content("~/images/s-table3.png")" alt="" />
                             <h5>
-                                1-2 Top</h5>
+                                1-2 Top
+                            </h5>
                         </li>
                         <li onclick="AddNewItemToFloor(2, 4, 'medium', 'Square', true);">
                             <img class="second" src="@Url.Content("~/images/s-table2.png")" alt="" />
                             <h5>
-                                2-4 Top</h5>
+                                2-4 Top
+                            </h5>
                         </li>
                         <li onclick="AddNewItemToFloor(4, 6, 'large', 'Square', true);">
-                            <img src="@Url.Content("~/images/s-table1.png")" alt=""/>
+                            <img src="@Url.Content("~/images/s-table1.png")" alt="" />
                             <h5>
-                                4-6 Top</h5>
+                                4-6 Top
+                            </h5>
                         </li>
                     </ul>
                 </div>
                 <h2>
-                    Rectangular Tables</h2>
+                    Rectangular Tables
+                </h2>
                 <div class="table-shape">
                     <ul class="rac-t-section">
                         <li onclick="AddNewItemToFloor(1, 2, 'small', 'Rectangle', true);">
-                            <img class="first" src="@Url.Content("~/images/rac-table3.png")" alt=""/>
+                            <img class="first" src="@Url.Content("~/images/rac-table3.png")" alt="" />
                             <h5>
-                                1-2 Top</h5>
+                                1-2 Top
+                            </h5>
                         </li>
                         <li onclick="AddNewItemToFloor(2, 4, 'medium', 'Rectangle', true);">
                             <img class="second" src="@Url.Content("~/images/rac-table2.png")" alt="" />
                             <h5>
-                                2-4 Top</h5>
+                                2-4 Top
+                            </h5>
                         </li>
                         <li onclick="AddNewItemToFloor(4, 6, 'large', 'Rectangle', true);">
-                            <img src="@Url.Content("~/images/rac-table1.png")" alt=""/>
+                            <img src="@Url.Content("~/images/rac-table1.png")" alt="" />
                             <h5>
-                                4-6 Top</h5>
+                                4-6 Top
+                            </h5>
                         </li>
                     </ul>
                 </div>
             </div>
             <div id="tabs-2">
                 <h2>
-                    Walls</h2>
+                    Walls
+                </h2>
                 <div class="table-shape" style="min-height: 200px;">
                     <div class="row">
                         <div class="shape-img" onclick="AddNewItemToFloor(1, 1, '', 'Wall', true);">
                             <img src="@Url.Content("~/images/wall1.png")" alt="">
                         </div>
                         <h4>
-                            Wall 1</h4>
+                            Wall 1
+                        </h4>
                     </div>
                     <div class="row">
                         <div class="shape-img" onclick="AddNewItemToFloor(1, 1, '', 'SolidWall', true);">
                             <img src="@Url.Content("~/images/solid-wall.png")" alt="">
                         </div>
                         <h4>
-                            Solid wall</h4>
+                            Solid wall
+                        </h4>
                     </div>
                     <div class="row">
                         <div class="shape-img" onclick="AddNewItemToFloor(1, 1, '', 'GlassWall', true);">
                             <img src="@Url.Content("~/images/glass-wall.png")" alt="">
                         </div>
                         <h4>
-                            Glass Wall</h4>
+                            Glass Wall
+                        </h4>
                     </div>
                     <div class="row">
                         <div class="shape-img" onclick="AddNewItemToFloor(1, 1, '', 'BarTable', true);">
                             <img src="@Url.Content("~/images/bar-table.png")" alt="">
                         </div>
                         <h4>
-                            Bar table</h4>
+                            Bar table
+                        </h4>
                     </div>
                     <div class="row">
                         <div class="shape-img" onclick="AddNewItemToFloor(1, 1, '', 'Fence', true);">
                             <img src="@Url.Content("~/images/fence.png")" alt="">
                         </div>
                         <h4>
-                            Fence</h4>
+                            Fence
+                        </h4>
                     </div>
                     <div class="row">
                         <div class="shape-img" onclick="AddNewItemToFloor(1, 1, '', 'Pillar', true);">
                             <img src="@Url.Content("~/images/pillar.png")" alt="">
                         </div>
                         <h4>
-                            Pillar</h4>
+                            Pillar
+                        </h4>
                     </div>
                 </div>
                 <h2>
-                    Others</h2>
+                    Others
+                </h2>
                 <div class="table-shape">
                     <div class="row">
                         <div class="shape-img" onclick="AddNewItemToFloor(1, 1, '', 'Sofa', true);">
-                            <img alt="" src="@Url.Content("~/images/sofa.png")" alt=""/>
+                            <img alt="" src="@Url.Content("~/images/sofa.png")" alt="" />
                         </div>
                         <h4>
-                            Sofa</h4>
+                            Sofa
+                        </h4>
                     </div>
                     <div class="row">
                         <div class="shape-img" onclick="AddNewItemToFloor(1, 1, '', 'Chair', true);">
                             <img alt="" src="@Url.Content("~/images/single-chair.png")">
                         </div>
                         <h4>
-                            Single Chair</h4>
+                            Single Chair
+                        </h4>
                     </div>
                     <div class="row">
                         <div class="shape-img" onclick="AddNewItemToFloor(1, 1, '', 'SofaTable', true);">
                             <img alt="" src="@Url.Content("~/images/single-table.png")">
                         </div>
                         <h4>
-                            Table</h4>
+                            Table
+                        </h4>
                     </div>
                 </div>
             </div>
@@ -695,17 +734,20 @@
                         </div>
                         <h5>
                             Size<br>
-                            1024x768</h5>
+                            1024x768
+                        </h5>
                     </div>
                     <div class="row bg-scale">
                         <h3>
-                            Background Scale</h3>
+                            Background Scale
+                        </h3>
                         <div id="slider" style="position: relative;">
                         </div>
                     </div>
                     <div class="row bg-scale">
                         <h3>
-                            Background Opacity</h3>
+                            Background Opacity
+                        </h3>
                         <div id="slider2" style="position: relative;">
                         </div>
                     </div>
@@ -726,8 +768,8 @@
                     @Html.HiddenFor(m => m.Guid)
                     @Html.HiddenFor(m => m.FloorName, new { @id = "hdnFloorName" })
                     @Html.HiddenFor(m => m.UserId)
-                    
-                    
+
+
                     <input type="button" name="" value="Save Floorplan" onclick="SaveFloorplan()" />
                 }
             </div>

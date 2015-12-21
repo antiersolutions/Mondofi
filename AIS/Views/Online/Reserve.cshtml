@@ -1,59 +1,82 @@
 ﻿@model  AIS.Models.ReservationVM
+@using AIS.Models
+
 @{
     ViewBag.Title = "Reserve";
     Layout = "~/Views/Shared/_LayoutOnline.cshtml";
-    var company = Request["company"].ToString();
+    var company = string.Empty;
+    try
+    {
+       company = Request["company"].ToString();
+    }
+    catch (Exception)
+    {
+        company = string.Empty;
+       
+    }
+   
+    int count = 1;
+    var addressHtml = string.Empty;
+    UsersContext db = new UsersContext(company);
+    var Address = db.tabSettings.Where(s => s.Name.Contains("Address")).Single().Value;
+    var PhoneSetting = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single().Value;
+    string[] values = Address.Split(',');
+    string laststring = Address.Split(',').Last();
+    int stringcount = values.Count();
+
 }
+
+
 @section scripts{
     @if (Model != null)
     {
         <script type="text/javascript">
-    $("#Processing").hide();
-    $("form").submit(function () {
-        var form = $(this);
-        if (form.valid()) {
-            $(this).validate();
-            $("#MakeReservation").hide();
-            $("#Processing").show();
-        }
-    });
-    var alreadPrompted = false;
-
-    var timeOut = 300;
-    var timer = window.setInterval(function () {
-        if (timeOut == 0) {
-            clearInterval(timer);
-            @*ReleaseTable('@Model.tableIdd');*@
-            window.location.href = '/online/ReserveFail/1&company=@company';
-        }
-        else {
-            var min = parseInt(timeOut / 60);
-            var sec = parseInt(timeOut % 60)
-            min = min < 10 ? '0' + min : min;
-            sec = sec < 10 ? '0' + sec : sec;
-            $('#count-down').text(min + ':' + sec);
-            timeOut--;
-        }
-    }, 1000);
-
-    $(document).ready(function () {
-        $(window).bind('beforeunload', function (event) {
-            return ReleaseTable('@(((Guid)ViewBag.BlockId).ToString())');
-        });
-    });
-
-    function ReleaseTable(tableId) {
-        if (!alreadPrompted) {
-            alreadPrompted = true;
-            $.ajax({
-                url: '@Url.Action("ReleaseTable")',
-                async: false,
-                timeout: 4000,
-                data: { id: tableId, company: "@company" },
-                type: 'POST'
+            $("#Processing").hide();
+            $("form").submit(function () {
+                var form = $(this);
+                if (form.valid()) {
+                    $(this).validate();
+                    $("#MakeReservation").hide();
+                    $("#Processing").show();
+                }
             });
-        }
-    }
+            var alreadPrompted = false;
+
+            var timeOut = 300;
+            var timer = window.setInterval(function () {
+                if (timeOut == 0) {
+                    clearInterval(timer);
+                    @*ReleaseTable('@Model.tableIdd');*@
+                    window.location.href = '/online/ReserveFail/1&company=@company';
+                }
+                else {
+                    var min = parseInt(timeOut / 60);
+                    var sec = parseInt(timeOut % 60)
+                    min = min < 10 ? '0' + min : min;
+                    sec = sec < 10 ? '0' + sec : sec;
+                    $('#count-down').text(min + ':' + sec);
+                    timeOut--;
+                }
+            }, 1000);
+
+            $(document).ready(function () {
+                $(window).bind('beforeunload', function (event) {
+                    return ReleaseTable('@(((Guid)ViewBag.BlockId).ToString())');
+                });
+            });
+
+            function ReleaseTable(tableId) {
+                if (!alreadPrompted) {
+                    alreadPrompted = true;
+                    $.ajax({
+                        url: '@Url.Action("ReleaseTable")',
+                        async: false,
+                        timeout: 4000,
+                        data: { id: tableId, company: "@company" },
+                        type: 'POST'
+                    });
+                }
+            }
         </script>
     }
 }
@@ -72,10 +95,26 @@
 
     <ul class="col-xs-6 col-sm-8 col-md-8 Address pull-right">
         <li><span>Address</span></li>
-        <li>1517 Anderson St.</li>
-        <li>Granville Island, Vancouver, BC</li>
-        <li>V6H 3R5</li>
-        <li>Canada</li>
+        @foreach (var item in values)
+        {
+            if (stringcount - 1 == count)
+            {
+                <li>@item,@laststring</li>
+            }
+            else if (stringcount > count)
+            {
+
+                <li>@item,</li>
+            }
+
+            count++;
+        }
+        <li><span>Call us at</span></li>
+        <li>@PhoneSetting</li>
+        @*<li>1517 Anderson St.</li>
+            <li>Granville Island, Vancouver, BC</li>
+            <li>V6H 3R5</li>
+            <li>Canada</li>*@
     </ul>
 
 </div>

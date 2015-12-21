@@ -4,7 +4,48 @@
 
     Layout = "~/Views/Shared/_LayoutMondofiNew.cshtml";
 
+    String domain = "http://" + Request.Url.Host;
+
+    var selectedTab = string.Empty;
+
+
+    var gettab = "t";
+
+    if (ViewBag.val!=null)
+    {
+        gettab = ViewBag.val;
+    }
+   
+
 }
+
+<script>
+
+
+    if ('@gettab' == 'Table_Management') {
+        $(document).ready(function () {
+            var obj = { Title: "test", Url: "/" };
+            history.pushState(obj, obj.Title, obj.Url);
+
+            var target = '#@gettab.ToString()',
+                   menu = target;
+            $target = $(target);
+            $('html, body').stop().animate({
+                'scrollTop': $target.offset().top + 2
+            }, 500, 'swing', function () {
+                //window.location.hash = target;
+                $(document).on("scroll", onScroll);
+            });
+             
+            
+        });
+    }
+   
+   
+    //$(".setlink").click();
+
+
+</script>
 
 
 <div class="container-fluid noPadd HomeSlider">
@@ -12,13 +53,13 @@
 
     <!-- Slider -->
 
-    <div id="mainslider" class="carousel slide" data-ride="carousel">
+    <div id="mainslider" class="carousel slide" data-ride="carousel" ontouchstart="touchStart(event, 'mainslider');" ontouchend="    touchEnd(event);" ontouchmove="    touchMove(event);" ontouchcancel="    touchCancel(event);" style="position:relative;width:100%;height:100%;">
         <!-- Indicators -->
-        <ol class="carousel-indicators">
-            <li data-target="#mainslider" data-slide-to="0" class="active"></li>
-            <li data-target="#mainslider" data-slide-to="1"></li>
-            <li data-target="#mainslider" data-slide-to="2"></li>
-        </ol>
+        @*<ol class="carousel-indicators">
+                <li data-target="#mainslider" data-slide-to="0" class="active"></li>
+                <li data-target="#mainslider" data-slide-to="1"></li>
+                <li data-target="#mainslider" data-slide-to="2"></li>
+            </ol>*@
 
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">
@@ -27,7 +68,9 @@
                 <div class="carousel-caption">
                     <div class="slider-text">
                         <h1>
-                            Powerful
+                            <span style="font-size: 44px;font-weight: 200;text-transform: capitalize;">
+                                Powerful
+                            </span>
                             <span>Venue Management System</span>
                         </h1>
                         <a href="/Account/register"> <button type="button" class="btn btn-default">Request A Free Demo</button></a>
@@ -35,24 +78,26 @@
                 </div>
             </div>
             <div class="item">
-                <img src="~/Content/MondofiThemeNew/images/slide-1.jpg" alt="...">
+                <img src="~/Content/MondofiThemeNew/images/slide-2.jpg" alt="...">
                 <div class="carousel-caption">
-                    <div class="slider-text">
-                        <h1>
-                            Powerful
-                            <span>Venue Management System</span>
+                    <div class="slider-textChnage">
+                        <h1 style="text-align:center;">
+                            <span style="font-size: 52px;font-weight: 200; margin-left: 173px;text-transform: capitalize; text-align:left;">Focus </span>
+                            <b> <span style="font-size: 47px;font-weight: 400;text-align:center;">ON YOUR CUSTOMER &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span></b>
                         </h1>
                         <a href="/Account/register"> <button type="button" class="btn btn-default">Request A Free Demo</button></a>
                     </div>
                 </div>
             </div>
             <div class="item">
-                <img src="~/Content/MondofiThemeNew/images/slide-1.jpg" alt="...">
+                <img src="~/Content/MondofiThemeNew/images/slide-3.jpg" alt="...">
                 <div class="carousel-caption">
-                    <div class="slider-text">
+                    <div class="slider-textChangeSlider">
                         <h1>
-                            Powerful
-                            <span>Venue Management System</span>
+                            <span style="font-size:52px;font-weight: 200;text-transform: capitalize;">
+                                Efficient
+                            </span>
+                            <b><span style="font-size: 35px; font-weight: 600;">Easy To Learn & Use &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </span></b>
                         </h1>
                         <a href="/Account/register"> <button type="button" class="btn btn-default">Request A Free Demo</button></a>
                     </div>
@@ -81,31 +126,27 @@
     <div class="container">
         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
 
-            <h1>Powerfull</h1>
+            <h1>Robust</h1>
             <p>
-                Everything you need to run your business.
-                Accessible from any device, anywhere in
-                the orld. Stable and reliable.
+                Feature rich and capable of managing thousands of covers simultaneously and with ease. Exhaustively tested in real-world venue environments.
             </p>
+
 
         </div>
         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <h1>Flexible</h1>
+            <h1>Insightful &amp; Agile</h1>
             <p>
-                Works for restaurants of al shapes and sizes.
-                Big or smal. Fancy or casual. Reservations required
-                or walk-in only.
+                Built by restaurant owners, for restaurant owners. New features added regularly based on feedback from users.
             </p>
         </div>
         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
-            <h1>Affordable & easy</h1>
+            <h1>Affordable & Scalable</h1>
             <p>
-                $99 per month. That’s it. No cover fees and no
-                contracts. So easy to use you can train your staff
-                in minutes.
+                More afforable the busier you get - not the other way around like some systems. Helps grow and grows with your business.
             </p>
         </div>
     </div>
+</div>
 </div>
 <!-- Website CTA's Ends-->
 <!-- inside Navigation -->
@@ -113,34 +154,28 @@
 <!-- inside Navigation -->
 
 
-<section id="seamLessTM">
+<section id="Table_Management">
     <div class="container">
         <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 sec-left">
-            <h1>Seamless</h1>
+            <h1>Effortless</h1>
             <h2>Table Management</h2>
             <p>
-                Keep track of your entire floor at glance, so you’re always
-                runningat ful capacity. Easily assign servers to tables, and
-                make sure guests are equally distributed. Give walk-in
-                guests accurate wait time quotes.
+                Manage your entire venue efficiently and with ease. Concurrently administer reservations & walk-ins and effortlessly seat tables, assign servers and manage guest flow.
             </p>
         </div>
         <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 sec-img">
-            <img src="~/Content/MondofiThemeNew/images/seamless_img.jpg" alt="">
+            <img src="~/Content/MondofiThemeNew/images/seamless_img.png" alt="">
         </div>
     </div>
 </section>
 
-<section id="onlineReser">
+<section id="Online_Reservations">
     <div class="container">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 sec-left">
-            <h1>Online</h1>
-            <h2>Reservations made easy</h2>
+            <h1>Online Reservations</h1>
+            <h2>Are A Snap!</h2>
             <p>
-                Take reservations 24 hours a day, 7 days a week, within a
-                few minutes, you’ll be read o accept reservations from
-                your website and mondofi page. The system automtically
-                confirms and reminds guests, so you don’t have to
+                Take reservations 24 hours a day, 7 days a week, from your branded and customized web interface. An intuitive user experience for both the venue and guest makes everything simple!
             </p>
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 sec-img">
@@ -150,34 +185,28 @@
     </div>
 </section>
 
-<section id="streamlineWait">
+<section id="Wait_List">
     <div class="container">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 sec-img">
             <img src="~/Content/MondofiThemeNew/images/streamline-your-wait.png" alt="">
         </div>
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 sec-left">
-            <h1>Streamline</h1>
-            <h2>your wait list</h2>
+            <h1>Simplify</h1>
+            <h2>Your Wait List</h2>
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Treat guests who are waiting to give you business with the same respect you offer those already seated! Provide accurate wait times and send automatic texts to their hand-held devices to let them know their table is ready!
             </p>
         </div>
     </div>
 </section>
 
-<section id="makeGuest">
+<section id="Guestbook">
     <div class="container">
         <div class="col-xs-12 col-sm-5 col-md-5 col-lg-5 sec-left">
-            <h1>Make</h1>
-            <h2>every guest a regular</h2>
+            <h1>Know</h1>
+            <h2>Every Guest</h2>
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                Getting to know your guests is the key to loyalty. As a function of system design, you will automatically learn about those things that make each guest unique, and with each visit, you'll further personalize your relationship with each one.
             </p>
         </div>
         <div class="col-xs-12 col-sm-7 col-md-7 col-lg-7 sec-img">
@@ -186,11 +215,11 @@
     </div>
 </section>
 
-<section id="more">
+<section id="More">
     <div class="container-fluid h-localDine">
-        <h1>Your </h1>
-        <h2>Local Dining Finder</h2>
-        <p>The best restaurants at the best price</p>
+        <h1>Information </h1>
+        <h2>About Us</h2>
+        <p>The philosophy behind Mondofi</p>
     </div>
 
     <div class="container-fluid h-gallery">
@@ -206,12 +235,11 @@
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <h1>
-                                Diners' Choice
-                                Winners
+                                What's out there
                             </h1>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
-                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam.</p>
-                            <a class="readMore" href="javascript:void(0)">read more</a>
+                            <p>Having been venue owners for over 11 years, we're well aware of the existing venue management systems currently available. Like our experience, many of our colleagues have expressed frustration with an extremely low value for money ratio they have received with current systems along with lack of features, lack of support and generally feeling like they are a voiceless cog in an enormous machine.</p>
+                            <p>We have set out to build the most powerful, agile, user-friendly and attractive venue management & online reservation system on the market. We're not the cheapest, as we truly believe that you always get what you pay for, but we will unquestionably provide you with value for your hard-earned money and will help support the growth of your business, not make it cost-prohibitive the busier you get.</p>
+                            <!--<a class="readMore" href="javascript:void(0)">read more</a>-->
                         </div>
                     </div>
                 </div>
@@ -225,20 +253,18 @@
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <h1>
-                                Easy to find and
-                                reserve table
-                            </h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            <a class="readMore" href="javascript:void(0)">read more</a>
+                                Easy to find and reserve a table
+                            </h1><p>Mondofi is here to make this simple. We allow guests to easily book a table in your venue and then, give you the tools to manage that guest experience efficiently.</p>
+                            <!--<a class="readMore" href="javascript:void(0)">read more</a>-->
                         </div>
                     </div>
 
                     <div class="row sec-three">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <h1>
-                                Easy to find and
-                                reserve table
-                            </h1><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                            <a class="readMore" href="javascript:void(0)">read more</a>
+                                We are here for you
+                            </h1><p>The goal of Mondofi is to offer a superior product and service. Most importantly though, we're here to listen to what you have to say! From that, we'll continually refine the product so that it helps make your business easier to operate. </p>
+                            <!--<a class="readMore" href="javascript:void(0)">read more</a>-->
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <div class="row">
@@ -255,8 +281,8 @@
             <div class="row sec-four">
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <h1>Who we are</h1>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
-                    <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Ut enim ad minim veniam.</p>
+                    <p>Mondofi is a company made up of restaurant, pub & nightclub veterans who live and breathe the guest experience. We also have extensive experience in Internet technologies and have been building cutting-edge web applications for over 15 years.</p>
+                    <p>We take pride in a hands-on approach to building software that solves customer pain-points and conveniently, are our own customer. We continue to operate Mondofi in our own venues which allows first-hand experience in continually refining the system as technologies evolve.  </p>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                     <div class="row">

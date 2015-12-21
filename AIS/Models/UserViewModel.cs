@@ -11,7 +11,7 @@ namespace AIS.Models
     {
         public long? UserId { get; set; }
 
-
+        [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{7,}$", ErrorMessage = "*")]
         [Required(ErrorMessage = " *")]
         public string Password { get; set; }
 

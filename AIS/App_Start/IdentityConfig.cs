@@ -47,8 +47,10 @@ namespace AIS
             manager.UserValidator = new UserValidator<UserProfile, long>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = false
+
             };
+
 
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
@@ -94,7 +96,8 @@ namespace AIS
             manager.UserValidator = new UserValidator<UserProfile, long>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                RequireUniqueEmail = false
+
             };
 
             // Configure validation logic for passwords
@@ -109,6 +112,7 @@ namespace AIS
 
             // Configure user lockout defaults
             manager.UserLockoutEnabledByDefault = true;
+
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
             manager.MaxFailedAccessAttemptsBeforeLockout = 5;
 
@@ -160,4 +164,6 @@ namespace AIS
             return new ApplicationSignInManager(ApplicationUserManager.Create(dbConn), context.Authentication);
         }
     }
+
+
 }

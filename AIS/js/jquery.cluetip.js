@@ -650,7 +650,8 @@
     };
 
     // close cluetip and reset some things
-    var cluetipClose = function(el) {
+    var cluetipClose = function (el) {
+        //   
       var $closer = el && el.data('cluetip') ? el : $link,
           ct = $closer.data('cluetip') && $closer.data('cluetip').selector,
           ctSelector = ct || 'div.cluetip',
@@ -679,7 +680,8 @@
 
     // Check to see if we should be closing by checking where the user is hovering.
     // We do a short 50ms delay for two reasons: to prevent flicker, and to allow the user time to hover on other element
-    var mouseOutClose = function() {
+    var mouseOutClose = function () {
+       
       var el = this;
       clearTimeout(closeOnDelay);
       closeOnDelay = setTimeout(function() {

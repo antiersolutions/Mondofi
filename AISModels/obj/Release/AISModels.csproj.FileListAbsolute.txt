@@ -63,6 +63,5 @@ D:\NewProjectAIS\20150909AIS0953\AIS\Mondofi\AISModels\bin\Release\System.Web.Ra
 D:\NewProjectAIS\20150909AIS0953\AIS\Mondofi\AISModels\bin\Release\System.Web.WebPages.xml
 D:\NewProjectAIS\20150909AIS0953\AIS\Mondofi\AISModels\bin\Release\System.Web.WebPages.Deployment.xml
 D:\NewProjectAIS\20150909AIS0953\AIS\Mondofi\AISModels\bin\Release\System.Web.WebPages.Razor.xml
-D:\NewProjectAIS\20150909AIS0953\AIS\Mondofi\AISModels\obj\Release\AISModels.csprojResolveAssemblyReference.cache
 D:\NewProjectAIS\20150909AIS0953\AIS\Mondofi\AISModels\obj\Release\AISModels.dll
 D:\NewProjectAIS\20150909AIS0953\AIS\Mondofi\AISModels\obj\Release\AISModels.pdb

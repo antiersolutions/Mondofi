@@ -62,7 +62,7 @@ namespace AIS.Controllers
                 var totalMinCovers = 0;
 
                 Db.tabTempFloorTables.GetFloorItemCount(tblDB.FloorPlanId, out totalTables, out totalMinCovers, out totalMaxCovers);
-
+                ClearTableCache();
                 return Json(new
                 {
                     Status = ResponseStatus.Success,
@@ -186,7 +186,7 @@ namespace AIS.Controllers
                         totalMinCovers = totalMinCovers,
                         IsUpdated = SaveChanges
                     };
-
+                    ClearTableCache();
                     return Json(response, JsonRequestBehavior.AllowGet);
                 }
                 else
@@ -201,7 +201,7 @@ namespace AIS.Controllers
                     origionalTable.TableDesign = this.RenderPartialViewToString("~/Views/Floor/GetFloorItemTemplate.cshtml", copyOrigionalTable);
 
                     Db.tabTempFloorTables.GetFloorItemCount(table.FloorPlanId, out totalTables, out totalMinCovers, out totalMaxCovers);
-
+                    ClearTableCache();
                     var response = new
                     {
                         Status = ResponseStatus.Success,
@@ -264,7 +264,7 @@ namespace AIS.Controllers
                 var totalMinCovers = 0;
 
                 Db.tabTempFloorTables.GetFloorItemCount(floorId, out totalTables, out totalMinCovers, out totalMaxCovers);
-
+                ClearTableCache();
                 return Json(new
                 {
                     Status = ResponseStatus.Success,
@@ -299,6 +299,7 @@ namespace AIS.Controllers
                 table.UpdatedOn = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName());
                 table.CreatedOn = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName());
                 table.IsDeleted = false;
+                table.SeatingPriority = 1;
 
                 Db.tabFloorTables.Add(table);
                 Db.SaveChanges();
@@ -360,6 +361,7 @@ namespace AIS.Controllers
                 tbl.TBottom = table.TBottom;
                 tbl.TLeft = table.TLeft;
                 tbl.TRight = table.TRight;
+                tbl.SeatingPriority = table.SeatingPriority;
                 tbl.UpdatedOn = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName());
 
                 Db.Entry(tbl).State = EntityState.Modified;
@@ -370,7 +372,7 @@ namespace AIS.Controllers
                 var totalMinCovers = 0;
 
                 Db.tabFloorTables.GetFloorItemCount(tbl.FloorPlanId, out totalTables, out totalMinCovers, out totalMaxCovers);
-
+                ClearTableCache();
                 return Json(new
                 {
                     Status = ResponseStatus.Success,
@@ -387,6 +389,32 @@ namespace AIS.Controllers
             finally
             {
                 ClearFloorCache();
+            }
+        }
+
+        [HttpPost]
+        public JsonResult UpdateFloorTableSeatingPriority(Int64 id, int priority)
+        {
+            try
+            {
+                var tbl = Db.tabFloorTables.Find(id);
+
+                tbl.SeatingPriority = priority;
+                tbl.UpdatedOn = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName());
+
+                Db.Entry(tbl).State = EntityState.Modified;
+                Db.SaveChanges();
+
+                ClearTableCache();
+                return Json(new { Status = ResponseStatus.Success });
+            }
+            catch (Exception)
+            {
+                return Json(new { Status = ResponseStatus.Fail, ItemId = 0 });
+            }
+            finally
+            {
+                ClearTableCache();
             }
         }
 
@@ -422,12 +450,14 @@ namespace AIS.Controllers
                         tblDB.TableDesign = table.TableDesign;
                         tblDB.MinCover = table.MinCover;
                         tblDB.MaxCover = table.MaxCover;
+                        tblDB.SeatingPriority = table.SeatingPriority;
                         tblDB.UpdatedOn = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName());
 
                         Db.Entry(tblDB).State = EntityState.Modified;
                         Db.SaveChanges();
 
                         ClearFloorCache();
+                        ClearTableCache();
                     }
                     else
                     {
@@ -539,7 +569,7 @@ namespace AIS.Controllers
 
                 Db.tabFloorTables.AsEnumerable()
                     .GetFloorItemCount(floorId, out totalTables, out totalMinCovers, out totalMaxCovers);
-
+                ClearTableCache();
                 return Json(new
                 {
                     Status = ResponseStatus.Success,
@@ -577,6 +607,14 @@ namespace AIS.Controllers
             });
         }
 
+
+        private void ClearTableCache()
+        {
+            //cache.RemoveByPattern(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN);
+            cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN_TableAvailability, User.Identity.GetDatabaseName()));
+            cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_ONLY, User.Identity.GetDatabaseName()));
+        }
+
         #endregion
 
         #region private methods
@@ -590,7 +628,7 @@ namespace AIS.Controllers
             //cache.RemoveByPattern(CacheKeys.FILTERED_RESERVATION_PATTREN);
             cache.RemoveByPattern(string.Format(CacheKeys.FILTERED_RESERVATION_COMPANY_PATTREN, User.Identity.GetDatabaseName()));
             //cache.RemoveByPattern(CacheKeys.STAFF_PATTREN);
-            cache.RemoveByPattern(string.Format(CacheKeys.STAFF_COMPANY_PATTREN,User.Identity.GetDatabaseName()));
+            cache.RemoveByPattern(string.Format(CacheKeys.STAFF_COMPANY_PATTREN, User.Identity.GetDatabaseName()));
         }
 
         private string AssignItemName(Int64 itemId, string shape)

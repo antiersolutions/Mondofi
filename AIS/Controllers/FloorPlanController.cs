@@ -500,7 +500,7 @@ namespace AIS.Controllers
         {
             ModelState.Clear();
             //var table = InitializeAddResOptionsNew(model, considerFloor: true, isMerging: isMerging);
-            var table = InitializeAddResOptionsNew20150512(model, considerFloor: true, isMerging: isMerging);
+            var table = InitializeAddResOptionsNew20151215(model, considerFloor: true, isMerging: isMerging);
 
             ViewBag.TableList = (table != null && table.Count() > 0)
                 ?
@@ -573,14 +573,15 @@ namespace AIS.Controllers
         {
             ModelState.Clear();
             //var table = InitializeAddResOptionsNew(model, isDateChanged, considerFloor, isMerging);
-            var table = InitializeAddResOptionsNew20150512(model, isDateChanged, considerFloor, isMerging);
+            var table = InitializeAddResOptionsNew20151215(model, isDateChanged, considerFloor, isMerging);
             bool anyTable = (table != null && table.Count() > 0);
             var Tables = (table != null && table.Count() > 0)
                 ?
                 (table.Select(p => new
                 {
                     Id = p.FloorTableId,
-                    Name = "L" + p.FloorPlan.FLevel + "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0" + p.TableName + "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0(" + p.MinCover + "/" + p.MaxCover + ")"
+                    Name = "L" + p.FloorPlan.FLevel + "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0" + p.TableName + "\xA0\xA0\xA0\xA0\xA0\xA0\xA0\xA0(" + p.MinCover + "/" + p.MaxCover + ")",
+                    
                 }).ToList<object>())
                 :
                 (new List<object>()
@@ -724,7 +725,7 @@ namespace AIS.Controllers
         {
             ModelState.Clear();
             //var table = InitializeAddResOptionsNew(model, considerFloor: true);
-            var table = InitializeAddResOptionsNew20150512(model, considerFloor: true);
+            var table = InitializeAddResOptionsNew20151215(model, considerFloor: true);
             bool anyTable = (table != null && table.Count() > 0);
             var Tables = (table != null && table.Count() > 0)
                 ?
@@ -1245,7 +1246,7 @@ namespace AIS.Controllers
             return reservations.Select(r => new ReservationListItemVM
             {
                 Reservation = r,
-                HTMLString = cache.Get<string>(string.Format(CacheKeys.RESERVATION_RIGHT_LIST_ITEM,db.Database.Connection.Database, r.ReservationId), () =>
+                HTMLString = cache.Get<string>(string.Format(CacheKeys.RESERVATION_RIGHT_LIST_ITEM, db.Database.Connection.Database, r.ReservationId), () =>
                 {
                     ModelState.Clear();
                     return htmlMinifier.Minify(this.RenderPartialViewToString("~/Views/FloorPlan/ReservationListItemPartial.cshtml", r),
@@ -1850,8 +1851,7 @@ namespace AIS.Controllers
 
         //    return table.OrderBy(t => t.FloorPlan.FLevel).ThenBy(t => t.TableName, new AlphaNumericComparer()).ToList();
         //}
-
-        private IList<FloorTable> InitializeAddResOptionsNew20150512(ReservationVM model, bool isDateChanged = false, bool considerFloor = false, bool isMerging = false)
+        private IList<FloorTable> InitializeAddResOptionsNew20151215(ReservationVM model, bool isDateChanged = false, bool considerFloor = false, bool isMerging = false)
         {
             int maxCoversLimit = db.GetMaxFloorCovers();
 
@@ -1866,7 +1866,7 @@ namespace AIS.Controllers
 
             var coverList = new List<object>();
 
-            for (int i = 1; i <= 30; i++)
+            for (int i = 1; i <= 90; i++)
             {
                 coverList.Add(new { Value = i, Text = i + " Cover" });
             }
@@ -2107,7 +2107,7 @@ namespace AIS.Controllers
             {
                 if (table != null && table.Count() > 0 && model.Covers <= maxCoversLimit)
                 {
-                    model.tableIdd = table.First().FloorTableId.ToString();
+                    model.tableIdd = table.OrderBy(c=>c.SeatingPriority).First().FloorTableId.ToString();
                 }
                 else
                 {
@@ -2175,6 +2175,332 @@ namespace AIS.Controllers
 
             return table.OrderBy(t => t.FloorPlan.FLevel).ThenBy(t => t.TableName, new AlphaNumericComparer()).ToList();
         }
+
+        /// i comment this code date 15-12-2015 and make new  fuction (InitializeAddResOptionsNew20151215)
+        //private IList<FloorTable> InitializeAddResOptionsNew20150512(ReservationVM model, bool isDateChanged = false, bool considerFloor = false, bool isMerging = false)
+        //{
+        //    int maxCoversLimit = db.GetMaxFloorCovers();
+
+        //    ViewBag.StatusList = db.GetStatusList();
+        //    ViewBag.ShiftList = db.GetFoodMenuShifts();
+        //    ViewBag.LevelList = db.tabFloorPlans.ToList().Select(fp => new
+        //    {
+        //        Text = "L" + fp.FLevel.Value + "-" + fp.FloorName,
+        //        Value = fp.FloorPlanId
+
+        //    });
+
+        //    var coverList = new List<object>();
+
+        //    for (int i = 1; i <= 90; i++)
+        //    {
+        //        coverList.Add(new { Value = i, Text = i + " Cover" });
+        //    }
+
+        //    ViewBag.CoverList = coverList;
+
+        //    ViewBag.DurationList = this.GetDurationList("15MIN", "4HR");
+
+        //    if (string.IsNullOrEmpty(model.Duration))
+        //    {
+        //        model.Duration = "1HR 30MIN";
+        //        //model.Duration = "2HR"; //2015-07-01 Leigh's request
+        //    }
+
+        //    // code for getting time  list
+        //    var day = model.resDate.DayOfWeek.ToString().Trim();
+
+        //    int sId = model.ShiftId;
+
+        //    var dId = db.GetWeekDays().Single(p => p.DayName.Contains(day)).DayId;
+
+        //    var openTime = new DateTime();
+        //    var closeTime = new DateTime();
+
+        //    var ttime = db.GetMenuShiftHours().Where(p => p.DayId == dId).AsEnumerable();
+        //    var minOpenAt = ttime.Where(p => p.OpenAt != null).Min(p => Convert.ToDateTime(p.OpenAt));
+        //    var maxCloseAt = ttime.Where(p => p.CloseAt != null).Max(p => Convert.ToDateTime(p.CloseAt).AddDays(Convert.ToInt32(p.IsNext)));
+
+        //    openTime = Convert.ToDateTime(minOpenAt);
+        //    closeTime = Convert.ToDateTime(maxCloseAt);
+
+        //    if (!string.IsNullOrEmpty(model.Duration))
+        //    {
+        //        closeTime = closeTime.AddMinutes(-(model.Duration.GetMinutesFromDuration() - 15));
+        //    }
+
+        //    var op = openTime;
+        //    var cl = closeTime;
+
+        //    var TimeList = new List<object>();
+
+        //    var aa = db.GetMenuShiftHours().AsEnumerable().Where(p => p.DayId == dId);
+
+        //    while (op < cl)
+        //    {
+        //        var startTime = op;
+        //        op = op.AddMinutes(15);
+
+        //        int tShiftId = 0;
+
+        //        var openTM = new DateTime();
+        //        var closeTM = new DateTime();
+
+        //        var timeShift = aa.Where(s => (DateTime.TryParse(s.OpenAt, out openTM) && DateTime.TryParse(s.CloseAt, out closeTM)) &&
+        //            startTime.Date.Add(openTM.TimeOfDay) <= startTime &&
+        //            startTime.Date.Add(closeTM.TimeOfDay).AddDays(s.IsNext.Value) >= startTime).FirstOrDefault();
+
+        //        if (timeShift != null)
+        //        {
+        //            tShiftId = timeShift.FoodMenuShiftId;
+        //        }
+
+        //        TimeList.Add(new
+        //        {
+        //            Text = startTime.ToString("hh:mm tt"),
+        //            Value = new DateTime().Add(startTime.TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " + new DateTime().Add(op.TimeOfDay).ToString("ddMMyyyyhhmmtt") + " - " + tShiftId
+        //        });
+        //    }
+
+        //    ViewBag.TimeList = TimeList;
+
+        //    //  end of code for getting time  list
+        //    if (isDateChanged || string.IsNullOrEmpty(model.time))
+        //    {
+        //        model.time = ((dynamic)TimeList[0]).Value;
+        //    }
+
+        //    // code to get tables list
+
+        //    var tt = model.time.Split('-');
+
+        //    var startTm = model.resDate.Add(DateTime.ParseExact(tt[0].Trim(), "ddMMyyyyhhmmtt", CultureInfo.InvariantCulture).TimeOfDay);
+        //    var endTime = new DateTime();
+        //    if (string.IsNullOrEmpty(model.Duration))
+        //    {
+        //        endTime = model.resDate.Add(DateTime.ParseExact(tt[1].Trim(), "ddMMyyyyhhmmtt", CultureInfo.InvariantCulture).TimeOfDay);
+        //    }
+        //    else
+        //    {
+        //        endTime = startTm.AddMinutes(model.Duration.GetMinutesFromDuration());
+        //    }
+
+        //    var reservation = db.tabReservations.SingleOrDefault(r => !r.IsDeleted && r.ReservationId == model.ReservationId);
+
+        //    if (reservation != null)
+        //    {
+        //        model.EdtTableId = reservation.FloorTableId;
+        //    }
+
+        //    IList<FloorTable> table = null;
+
+        //    var array = new string[] { "Sofa", "Chair", "SofaTable", "Wall", "SolidWall", "GlassWall", "BarTable", "Fence", "Pillar" };
+
+        //    if (considerFloor)
+        //    {
+        //        if (model.FloorPlanId == 0)
+        //        {
+        //            model.FloorPlanId = 1;
+        //        }
+
+        //        maxCoversLimit = db.GetMaxFloorCovers(model.FloorPlanId);
+
+        //        var floorPlan = db.tabFloorPlans.Include("FloorTables").Where(f => f.FloorPlanId == model.FloorPlanId).Single();
+        //        table = floorPlan.FloorTables.Where(t => t.IsDeleted == false).AsEnumerable().Where(t => !array.Contains(t.TableName.Split('-')[0])).ToList();
+        //    }
+        //    else
+        //    {
+        //        table = db.tabFloorTables.Where(t => t.IsDeleted == false).ToList().Where(t => !array.Contains(t.TableName.Split('-')[0])).ToList();
+        //    }
+
+        //    var resList = db.GetReservationByDate(model.resDate);
+
+        //    var rejectedTables = new List<long>();
+
+        //    // check if status is FINISHED, CANCELLED, CANCELLED2
+
+        //    var rejectedStatus = new List<long>()
+        //                             {
+        //                                 ReservationStatus.Finished,
+        //                                 ReservationStatus.Cancelled
+        //                                 //ReservationStatus.Cancelled_2
+        //                             };
+
+        //    resList = resList.Where(r => !rejectedStatus.Contains(r.StatusId.Value)).ToList();
+
+
+        //    if (reservation != null)
+        //    {
+        //        resList = resList.Where(r => r.ReservationId != reservation.ReservationId).ToList();
+        //        if (reservation.ReservationDate.Date == model.resDate.Date && startTm == reservation.TimeForm && reservation.Duration.Trim() == model.Duration.Trim())
+        //        {
+        //            if (reservation.MergedFloorTableId > 0)
+        //            {
+        //                var orgTables = reservation.MergedFloorTable.OrigionalTables.Select(ot => ot.FloorTable).ToList();
+        //                ViewBag.SelectedTables = orgTables;
+        //            }
+        //        }
+        //    }
+
+        //    foreach (var item in resList)
+        //    {
+        //        var resStart = item.TimeForm;
+        //        var resEnd = item.TimeForm.AddMinutes(item.Duration.GetMinutesFromDuration());
+
+        //        if ((resStart <= startTm && resEnd >= endTime)
+        //            || (resStart >= startTm && resEnd <= endTime)
+        //            || (resStart < startTm && resEnd > startTm)
+        //            || (resStart < endTime && resEnd > endTime)) //(resStart >= startTm && resStart < endTime) || (resEnd <= endTime && resEnd > startTm)
+        //        {
+        //            if (item.FloorTableId == 0 && item.MergedFloorTableId > 0)
+        //            {
+        //                foreach (var origionalTbl in item.MergedFloorTable.OrigionalTables)
+        //                {
+        //                    rejectedTables.Add(origionalTbl.FloorTableId);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                rejectedTables.Add(item.FloorTableId);
+        //            }
+        //        }
+        //    }
+
+        //    /**** Enable Merge table feature enabled  start here *****/
+
+        //    var isManualMerge = false;
+
+        //    if (model.enableMerging)
+        //    {
+        //        foreach (var tbl in table)
+        //        {
+        //            if (tbl.MaxCover >= model.Covers && !rejectedTables.Contains(tbl.FloorTableId))
+        //            {
+        //                rejectedTables.Add(tbl.FloorTableId);
+        //                isManualMerge = true;
+        //            }
+        //        }
+        //    }
+
+        //    /**** Enable Merge table feature enabled  end here *****/
+
+        //    if (table != null && table.Count() > 0)
+        //        maxCoversLimit = table.Where(t => !rejectedTables.Contains(t.FloorTableId)).Any() ? table.Where(t => !rejectedTables.Contains(t.FloorTableId)).Max(t => t.MaxCover) : 1;
+
+        //    foreach (var tbl in table)
+        //    {
+        //        if (tbl.MaxCover < model.Covers)
+        //        {
+        //            if (!rejectedTables.Contains(tbl.FloorTableId))
+        //            {
+        //                rejectedTables.Add(tbl.FloorTableId);
+        //            }
+        //        }
+        //    }
+
+        //    table = table.Where(t => !rejectedTables.Contains(t.FloorTableId)).ToList();
+
+        //    /**** Table availability feature enabled  start here *****/
+
+        //    var availList = db.tabTableAvailabilities
+        //        .Include("TableAvailabilityFloorTables")
+        //        .Include("TableAvailabilityWeekDays")
+        //        .Where(ta => ta.StartDate <= model.resDate && model.resDate <= ta.EndDate
+        //        && ta.TableAvailabilityWeekDays.Any(taw => taw.DayId == dId)).ToList();
+
+        //    var blockList = db.GetFloorTableBlockTimeList(model.resDate);
+
+        //    table = table.Where(t => !availList.CheckAvailStatus(model.resDate, startTm, endTime, t, 2)
+        //        && !blockList.IsTableBlocked(t.FloorTableId, startTm, endTime)).ToList();
+
+        //    /**** Table availability feature enabled end here *****/
+
+        //    // Ends here
+
+        //    if (model.Covers == 0)
+        //    {
+        //        model.Covers = 1;
+        //    }
+
+        //    model.ShiftId = Convert.ToInt32(tt[2]);
+
+        //    if (string.IsNullOrEmpty(model.Status))
+        //    {
+        //        model.Status = ReservationStatus.Not_confirmed.ToString();
+        //    }
+
+        //    if (string.IsNullOrEmpty(model.tableIdd) || !table.Any(t => t.FloorTableId == Convert.ToInt64(model.tableIdd)))
+        //    {
+        //        if (table != null && table.Count() > 0 && model.Covers <= maxCoversLimit)
+        //        {
+        //            model.tableIdd = table.First().FloorTableId.ToString();
+        //        }
+        //        else
+        //        {
+        //            model.tableIdd = "0";
+        //            ViewBag.LevelList = new List<object>()
+        //                { 
+        //                    new
+        //                    {
+        //                        Text = "-No Level-",
+        //                        Value = 0
+        //                    }
+        //                };
+        //        }
+        //    }
+
+        //    var fTblId = Convert.ToInt64(model.tableIdd);
+
+        //    if (!isMerging)
+        //    {
+        //        if (table != null && table.Count() > 0 && model.Covers <= maxCoversLimit)
+        //        {
+        //            model.FloorPlanId = db.tabFloorTables.Find(fTblId).FloorPlanId;
+        //        }
+        //        else
+        //            model.FloorPlanId = 0; // 
+        //    }
+        //    else
+        //    {
+        //    }
+
+        //    if (model.MergeTableId.HasValue && model.MergeTableId.Value > 0)
+        //    {
+        //        var mergedTable = db.tabMergedFloorTables.Find(model.MergeTableId.Value);
+
+        //        var flrTable = new FloorTable
+        //        {
+        //            FloorTableId = 0,
+        //            TableName = mergedTable.TableName
+        //        };
+
+        //        table = new List<FloorTable>()
+        //        {
+        //            new FloorTable
+        //            {
+        //                FloorTableId = 0,
+        //                TableName = mergedTable.TableName,
+        //                FloorPlan = mergedTable.FloorPlan,
+        //                MinCover = mergedTable.MinCover,
+        //                MaxCover = mergedTable.MaxCover
+        //            }
+        //        };
+
+        //        ViewBag.LevelList = new List<object>()
+        //                { 
+        //                    new
+        //                    {
+        //                        Text = "L" + mergedTable.FloorPlan.FLevel.Value + "-" + mergedTable.FloorPlan.FloorName,
+        //                        Value = 0
+        //                    }
+        //                };
+        //    }
+
+        //    ViewBag.MaxAvailCovers = maxCoversLimit;
+        //    ViewBag.IsAutoMerge = !isManualMerge && (maxCoversLimit < model.Covers);
+
+        //    return table.OrderBy(t => t.FloorPlan.FLevel).ThenBy(t => t.TableName, new AlphaNumericComparer()).ToList();
+        //}
 
         private List<Reservation> GetEndingReservationList(DateTime endResDate, int timeInMin, int minToAdd, out  List<long> disabledList)
         {

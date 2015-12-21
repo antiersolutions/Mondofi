@@ -126,7 +126,7 @@ function ClearEditPanel() {
 
     $EditForm.find("#FloorTableId").val('');
     $EditForm.find("#FloorPlanId").val('');
-    $EditForm.find("#SectionId").val(''); 
+    $EditForm.find("#SectionId").val('');
     $EditForm.find("#TableName").val('');
     $EditForm.find("#HtmlId").val('');
     $EditForm.find("#Shape").val('');
@@ -221,7 +221,7 @@ function SetRotateToFloorItems() {
 }
 
 function SetRotateToTableSeats(table) {
-    //debugger;
+    // 
     var seatCount = $(table).parents('.table-main').find('.seat').length;
     var angle = (360 / seatCount);
     var sumAngl = 0;
@@ -305,6 +305,7 @@ function AddNewItemToFloor(minCover, maxCover, size, shape, isTemp) {
 }
 
 function EditTable(item) {
+
     if (!($(item).parents('.table-main').attr('id') == $('#tblEditForm #HtmlId').val())) {
         if (isPendingChanges) {
             if (confirm('You have pending changes for table: "' + $('#tblEditForm #TableName').val() + '. Do you want to save changes?"')) {
@@ -345,6 +346,7 @@ function UpdateEditTableFormValues(item) {
     $EditForm.find("#TTop").val($Table.find("#TTop").val());
     $EditForm.find("#TLeft").val($Table.find("#TLeft").val());
     $EditForm.find("#IsTemporary").val($Table.find("#IsTemporary").val());
+    $EditForm.find("#SeatingPriority").val($Table.find("#SeatingPriority").val());
     $EditForm.find("#SaveChanges").val(false);
     $EditForm.find("#CancelChanges").val(false);
 
@@ -353,6 +355,10 @@ function UpdateEditTableFormValues(item) {
     $('#TTempEdt').val($Table.find("#IsTemporary").val());
     $('.TShape#T' + $Table.find("#Shape").val()).addClass('active');
     $('#TSizeEdt').val($Table.find("#Size").val());
+
+    //$('#SPriority option[value="'+$Table.find("#SeatingPriority").val()+'"]').attr('selected', true)
+    $('#SPriority').val($Table.find("#SeatingPriority").val());
+
     $('#TMinCover').val($Table.find("#MinCover").val());
     $('#TMaxCover').val($Table.find("#MaxCover").val());
 

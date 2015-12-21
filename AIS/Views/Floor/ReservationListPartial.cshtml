@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<AISModels.Reservation>
 @using AIS.Extensions;
+@using Microsoft.AspNet.Identity;
 @{
     var RCount = Model.Count();
     int i = 1;
@@ -11,7 +12,7 @@
     //    StatusList = db.Status.ToList();
     //}
 
-    var clientDateTime = DateTime.UtcNow.ToClientTime();
+    var clientDateTime = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName());
 }
 <div class="show-tooltip-left" style="padding-bottom: 0px; height: auto;">
     <div class="table-tooltip-inner" style="height: auto;">

@@ -280,7 +280,7 @@
             // image deletion function
             var recycle_icon = "<a href='javascript:void(0)' title='Recycle this image' class='ui-icon ui-icon-refresh'>X</a>";
             function deleteImage($item, obj) {
-                //debugger;
+                // 
                 updateTable($item, obj)
                 $item.fadeOut(function () {
                     var $list = $("ul", $(obj)).length ? $("ul", $(obj)) : $("<ul class='gallery ui-helper-reset'/>").appendTo($(obj));
@@ -474,7 +474,7 @@
         }
     </div>
 </div>
-<div class="manage-section unassign-table-sec">
+<div class="manage-section unassign-table-sec" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="m-right-btn">
     </div>
     <h2>

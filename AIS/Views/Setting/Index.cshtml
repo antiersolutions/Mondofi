@@ -1,5 +1,7 @@
 ﻿@using System.Linq;
 @using AIS.Helpers.Caching;
+
+
 @model AISModels.Setting
 @{
     ViewBag.Title = "Index";
@@ -7,11 +9,13 @@
 }
 @{
     var defaultTimeZone = string.Empty;
-
+    var url = string.Empty;
 
     using (var db = new AIS.Models.UsersContext())
     {
         defaultTimeZone = (db.GetDefaultTimeZone() ?? TimeZoneInfo.Local).Id;
+        //url = "https://www.mondofi.com/" + db.Database.Connection.Database + "/online";
+        url = "http://www.mondofi.dev.antech.in/" + db.Database.Connection.Database + "/online";
     }
 
     var timeZoneList = System.TimeZoneInfo.GetSystemTimeZones().Select(tz => new SelectListItem
@@ -21,8 +25,135 @@
         Selected = tz.Id.Equals(defaultTimeZone)
     });
 
+    var setTime = System.TimeZoneInfo.GetSystemTimeZones().Select(tz => new SelectListItem
+    {
+        Text = tz.DisplayName,
+        Value = tz.Id,
+        Selected = tz.Id.Equals(defaultTimeZone)
+    });
+
+
+    var timeSet = ViewBag.timeSet;
+
+    var phone = ViewBag.Phone;
+    var Address = ViewBag.Address;
+    var ReplyToEmail = ViewBag.ReplyToEmail;
+    var OnlineResosL = ViewBag.OnlineResosL;
+    var BCCEmail = ViewBag.BCCEmail;
+    var Salutation = ViewBag.Salutation;
+
+    List<SelectListItem> itemTimeSet = new List<SelectListItem>();
+    for (int i = 15; i <= 240; i+=15)
+    {
+        if (timeSet==i.ToString())
+        {
+            itemTimeSet.Add(new SelectListItem
+            {
+
+                Text = i.ToString(),
+                Value = i.ToString(),
+                Selected = true,
+
+            }); 
+        }
+        else
+        {
+            itemTimeSet.Add(new SelectListItem
+            {
+
+                Text = i.ToString(),
+                Value = i.ToString(),
+                //Selected = true,
+
+            });
+        }
+       
+    }
+
+    
 }
+
+
+
 @section styles{
+
+
+
+
+    <style>
+        .changebackgroung {
+            background-color: #e8867c;
+            color: #fff;
+        }
+
+        .changGck {
+            border-color: #e8867c !important;
+            border: 2px solid #e8867c !important;
+        }
+        /*html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }*/
+
+        #map {
+            height: 100%;
+        }
+    </style>
+
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+
+    <style>
+        #locationField, #controls {
+            position: relative;
+            width: 480px;
+        }
+
+        #autocomplete {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 99%;
+        }
+
+        .label {
+            text-align: right;
+            font-weight: bold;
+            width: 100px;
+            color: #303030;
+        }
+
+        #address {
+            border: 1px solid #000090;
+            background-color: #f0f0ff;
+            width: 480px;
+            padding-right: 2px;
+        }
+
+            #address td {
+                font-size: 10pt;
+            }
+
+        .field {
+            width: 99%;
+        }
+
+        .slimField {
+            width: 80px;
+        }
+
+        .wideField {
+            width: 200px;
+        }
+
+        #locationField {
+            height: 20px;
+            margin-bottom: 2px;
+        }
+    </style>
+
+
+
     <style type="text/css">
         .tzone {
             float: left;
@@ -30,8 +161,11 @@
             margin-top: 6px;
         }
     </style>
+
     <link href="/Content/Colorbox/colorbox.css" rel="stylesheet" type="text/css" />
+
     <link href="/Content/uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+
     <style type="text/css">
         .field-validation-error {
             color: #e80c4d;
@@ -74,10 +208,185 @@
 }
 @section scripts
 {
+    <script src="~/Scripts/ckeditor/ckeditor.js"></script>
+
+    <script src="~/Scripts/ckeditor/adapters/jquery.js"></script>
+
+
+
     <script src="../../Content/Colorbox/jquery.colorbox.js" type="text/javascript"></script>
     <script src="../../Content/uploadify/jquery.uploadify.min.js" type="text/javascript"></script>
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            $(".CheckUpdate").click(function () {
+
+                var url = this.href;
+                var album_text = [];
+                var album_text1 = [];
+
+
+                $(".changGck").each(function () {
+
+                    var value = this;
+                    if (value) {
+                        album_text1.push(value);
+                    }
+                });
+                if (album_text1.length != 0) {
+                    alertify.confirm("please check", "You have pending changes on this page that have not been saved.", function () {
+
+                    }, function (e) {
+
+                        if (e) {
+                            window.location.href = url;
+
+                        } else {
+                            alertify.success('Ok');
+                        }
+                    }).set('labels', { ok: 'Ok', cancel: 'cancel' }).set('movable', true);
+
+                    return false;
+                }
+
+                else {
+                    //send data
+                }
+
+
+                $(".changebackgroung").each(function () {
+                    var value = $(this).val();
+                    if (value) {
+                        album_text.push(value);
+                    }
+                });
+                if (album_text.length != 0) {
+
+                    //              if (!alertify.errorAlert) {
+                    //                  //define a new errorAlert base on alert
+                    //                  alertify.dialog('errorAlert', function factory() {
+                    //                      return {
+                    //                          build: function () {
+                    //                              var errorHeader = '<span class="fa fa-times-circle fa-2x" '
+                    //                              + 'style="vertical-align:middle;color:#e10000;">'
+                    //                              + '</span> Application Error';
+                    //                              this.setHeader(errorHeader);
+                    //                          }
+                    //                      };
+                    //                  }, true, 'alert');
+                    //              }
+                    //              alertify.errorAlert("This is a none singleton modal error alert! <br/><br/><br/>" +
+                    //  "To show another error alert: " +
+                    //"<a href='javascript:alertify.errorAlert(\"Another error\");'> Click here </a>");
+                    alertify.confirm("please check", "You have pending changes on this page that have not been saved.", function () {
+
+                    }, function (e) {
+
+                        if (e) {
+                            window.location.href = url;
+
+                        } else {
+                            alertify.success('Ok');
+                        }
+                    }).set('labels', { ok: 'Ok!', cancel: 'cancel' }).set('movable', true);
+
+                    return false;
+                }
+
+                else {
+                    //send data
+                }
+
+
+
+
+            });
+
+            //window.confirm = function (message, callback, caption) {
+            //    // confirm dialog
+
+            //    //alertify.confirm("asas","Message", function (e) {
+            //    //    if (e) {
+            //    //        debugger;
+            //    //        alert("ok");
+            //    //    } else {
+            //    //        // user clicked "cancel"
+            //    //    }
+            //    //});
+            //    alertify.confirm('You have pending changes on this page that have not been saved.').title('assas').autoCancel(5).set('oncancel', function () { alertify.error('declined'); });
+            //    return false;
+            //};
+
+            //$(window).bind('beforeunload', function (e) {
+            //    var album_text = [];
+            //    var album_text1 = [];
+
+
+            //    $(".changGck").each(function () {
+
+            //        var value = this;
+            //        if (value) {
+            //            album_text1.push(value);
+            //        }
+            //    });
+            //    if (album_text1.length != 0) {
+
+            //        return "You have pending changes on this page that have not been saved.";
+            //    }
+
+            //    else {
+            //        //send data
+            //    }
+
+
+            //    $(".changebackgroung").each(function () {
+            //        var value = $(this).val();
+            //        if (value) {
+            //            album_text.push(value);
+            //        }
+            //    });
+            //    if (album_text.length != 0) {
+
+            //        return confirm("You have pending changes on this page that have not been saved.");
+
+            //    }
+
+            //    else {
+            //        //send data
+            //    }
+            //    //var ddd = $("body").find(".changebackgroung");
+            //    //return confirm("Are you sure you want to leave this page?");
+            //});
+
+            //$(window).unload(function () {
+            //    return "sddsdd";
+            //});
+
+        });
+
+        $(function () {
+            $(window).on('resize load', function () {
+                SetMiddleWidthOnSideButtonClick();
+            });
+
+            $(window).on('load', function () {
+                SetSectionHeight();
+            });
+
+            $('.m-right-btn').click(function () {
+                $('.manage-section').toggleClass('manage-section-toggle');
+                $('.m-right-btn').toggleClass('m-right-btn-toggle');
+                //
+
+                SetMiddleWidthOnSideButtonClick();
+            });
+
+
+
+        });
+
+
+
         $(document).ready(function () {
             SetMiddleSectionHeight();
 
@@ -121,7 +430,7 @@
                             $("#PhotoPath").val('/Content/UserData/' + data);
 
                             location.reload();
-                           
+
                         }
 
                     }
@@ -132,17 +441,484 @@
                 }
             });
         });
+
+        $(function () {
+            $("#FileUpload2").uploadify({
+                'method': 'post',
+                'swf': '../../Content/uploadify/uploadify.swf',
+                'uploader': '../../UploadFile/uploadLogoimageReser',
+                'onUploadSuccess': function (file, data, response) {
+
+                    if (data != "error") {
+                        if (data == "size") {
+
+                            alert("Upload the image less then 500KB size.")
+                            return false;
+                        }
+                        else if (data == "resolution") {
+
+                            alert("Please Logo image should be 202 x 95 pixels in size.")
+                            return false;
+                        }
+                        else if (data == "extentions") {
+
+
+                            alert("Upload  image only in jpg,png,bmp & gif format.")
+                            return false;
+                        }
+                        else {
+
+                            $("#a1").text('Change Logo');
+                            $('#cboxClose').click();
+
+                            $("#imgProfile1").attr('src', '/Content/UserData/' + data);
+                            $("#PhotoPath1").val('/Content/UserData/' + data);
+
+                            location.reload();
+
+                        }
+
+                    }
+                    else {
+
+                        alert("Some error occure please try again.")
+                    }
+                }
+            });
+        });
+        UpdateTimeSet
+
+        function UpdatePhone(e) {
+
+            var number = $("#phoneNumber").val();
+            if (number != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "/Setting/UpdatePhone",
+                    data: { phone: number },
+                    success: function (data) {
+                        $(e).removeClass('svbtn')
+                        $('.changPhone').removeClass('changebackgroung');
+                        alert("Phone number  updated successfully.")
+                    }
+                });
+            }
+            else {
+                alert("Please add Phone number.")
+            }
+        }
+        function UpdatePhone(e) {
+
+            var number = $("#phoneNumber").val();
+            if (number != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "/Setting/UpdatePhone",
+                    data: { phone: number },
+                    success: function (data) {
+                        $(e).removeClass('svbtn')
+                        $('.changPhone').removeClass('changebackgroung');
+                        alert("Phone number  updated successfully.")
+                    }
+                });
+            }
+            else {
+                alert("Please add Phone number.")
+            }
+        }
+        function Save(e) {
+
+            $.ajax({
+                type: 'Post',
+                url: '/Setting/Update',
+                //data: JSON.stringify(arr),
+                data: { timezone: $('#timezone').val() },
+                success: function (myData) {
+                    $(e).removeClass('svbtn')
+                    $('.changtime').removeClass('changebackgroung');
+                    alert("TimeZone is updated successfully.")
+
+                }
+            })
+        }
+
+
+        function UpdateTimeSet(e) {
+
+            $.ajax({
+                type: 'Post',
+                url: '/Setting/UpdateTimeSet',
+                //data: JSON.stringify(arr),
+                data: { time: $('#TimeSet').val() },
+                success: function (myData) {
+                    $(e).removeClass('svbtn')
+                    $('.changtime').removeClass('changebackgroung');
+                    alert(" Online reservation Time is updated successfully.")
+
+                }
+            })
+        }
+
+        function UpdateAddress(e) {
+
+            var address = $("#autocomplete").val().trim();
+            if (address != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "/Setting/UpdateAddress",
+                    data: { address: address },
+                    success: function (data) {
+                        $(e).removeClass('svbtn')
+                        $('.changaddress').removeClass('changebackgroung');
+                        alert("Venue address is updated successfully.")
+                    }
+                });
+            }
+            else {
+                alert("Please add Address.")
+            }
+
+
+        }
+
+        function UpdateEmail(e) {
+
+            var ReplyToEmail = $("#ReplyToEmail").val();
+
+
+            var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
+            if (filter.test(ReplyToEmail)) {
+
+
+                if (ReplyToEmail != '') {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Setting/UpdateReplyToEmail",
+                        data: { ReplyToEmail: ReplyToEmail },
+                        success: function (data) {
+                            $(e).removeClass('svbtn')
+                            $('.changremail').removeClass('changebackgroung');
+                            alert("Email address is updated successfully.")
+                        }
+                    });
+                }
+                else {
+                    alert("Please add Email address.")
+                }
+
+            }
+
+            else {
+
+                alert("Invalid Email Address");
+                return false
+
+            }
+        }
+
+        function UpdateBCCEmail(e) {
+
+            var BCCEmail = $("#BCCEmail").val();
+
+            var filter = /^([\w-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$/;
+
+            if (filter.test(BCCEmail)) {
+
+
+                if (BCCEmail != '') {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Setting/UpdateBCCEmail",
+                        data: { BCCEmail: BCCEmail },
+                        success: function (data) {
+                            $(e).removeClass('svbtn')
+                            $('.changrbcc').removeClass('changebackgroung');
+                            alert("BCC Email is updated successfully.")
+                        }
+                    });
+                }
+                else {
+                    alert("Please add BCC Email.")
+                }
+
+            }
+
+            else {
+
+                alert("Invalid Email Address");
+                return false
+
+            }
+
+        }
+
+
+        function UpdateSalutation(e) {
+
+            var Salutation = CKEDITOR.instances['Salutation'].getData()
+
+            if (Salutation != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "/Setting/UpdateSalutation",
+                    dataType: "text",
+                    data: { Salutation: Salutation },
+
+                    success: function (data) {
+                        $(e).removeClass('svbtn')
+                        $('.changrck').removeClass('changebackgroung');
+                        $('#cke_Salutation').removeClass("changGck");
+                        alert("Salutation is updated successfully.")
+                    }
+                });
+            }
+            else {
+                alert("Please add Salutation.")
+            }
+
+
+        }
+
+        var specialKeys = new Array();
+        specialKeys.push(8); //Backspace
+        function IsNumeric(e, i) {
+
+            checkFormat(i)
+            var keyCode = e.which ? e.which : e.keyCode
+            var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
+            return ret;
+        }
+
+
+        function checkFormat(text) {
+            var textFormat = text.value.replace(/(\d{3})(\d{3})(\d{3})/, "$1 $2 $3");
+
+            $("#phoneNumber").val(textFormat);
+
+        }
+
+
+        $("input").on('keyup', function () {
+
+            if (this.value == this.defaultValue) {
+                $(this).removeClass("changebackgroung");
+                $(this).closest("li").parent().parent().find('.btn').removeClass('svbtn')
+            }
+            else {
+                $(this).closest("li").parent().parent().find('.btn').addClass('svbtn')
+                $(this).addClass("changebackgroung");
+            }
+        });
+
+        $("select").change(function () {
+
+            if (this.value == this.defaultValue) {
+                $(this).closest("li").parent().parent().find('.btn').removeClass('svbtn')
+                $(this).removeClass("changebackgroung");
+
+            }
+            else {
+                $(this).closest("li").parent().parent().find('.btn').addClass('svbtn')
+                $(this).addClass("changebackgroung");
+            }
+        });
+
+
+
+
+        CKEDITOR.on('instanceCreated', function (evt) {
+            var editor = evt.editor;
+            editor.on('blur', function () {
+
+                $('#cke_Salutation').closest("li").parent().parent().find('.btn').addClass('svbtn')
+                $('#cke_Salutation').addClass("changGck");
+
+
+
+            });
+        });
+
+
+
     </script>
+
+
+    @*<script>
+            // This example displays an address form, using the autocomplete feature
+            // of the Google Places API to help users fill in the information.
+
+            var placeSearch, autocomplete;
+            var componentForm = {
+                street_number: 'short_name',
+                route: 'long_name',
+                locality: 'long_name',
+                administrative_area_level_1: 'short_name',
+                country: 'long_name',
+                postal_code: 'short_name'
+            };
+
+            function initAutocomplete() {
+                // Create the autocomplete object, restricting the search to geographical
+                // location types.
+                autocomplete = new google.maps.places.Autocomplete(
+                    /** @@type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+                    { types: ['geocode'] });
+
+                // When the user selects an address from the dropdown, populate the address
+                // fields in the form.
+                autocomplete.addListener('place_changed', fillInAddress);
+            }
+
+            // [START region_fillform]
+            function fillInAddress() {
+                // Get the place details from the autocomplete object.
+                var place = autocomplete.getPlace();
+
+                for (var component in componentForm) {
+                    document.getElementById(component).value = '';
+                    document.getElementById(component).disabled = false;
+                }
+
+                // Get each component of the address from the place details
+                // and fill the corresponding field on the form.
+                for (var i = 0; i < place.address_components.length; i++) {
+                    var addressType = place.address_components[i].types[0];
+                    if (componentForm[addressType]) {
+                        var val = place.address_components[i][componentForm[addressType]];
+                        document.getElementById(addressType).value = val;
+                    }
+                }
+            }
+            // [END region_fillform]
+
+            // [START region_geolocation]
+            // Bias the autocomplete object to the user's geographical location,
+            // as supplied by the browser's 'navigator.geolocation' object.
+            function geolocate() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        var geolocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        var circle = new google.maps.Circle({
+                            center: geolocation,
+                            radius: position.coords.accuracy
+                        });
+                        autocomplete.setBounds(circle.getBounds());
+                    });
+                }
+            }
+            // [END region_geolocation]
+
+
+        </script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAme_dZ1Mkn2dIrL33jVlDv-l0HaEc9lbM&signed_in=true&libraries=places&callback=initAutocomplete"
+                async defer></script>*@
+
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places"></script>
+    <script type="text/javascript">
+
+        var map;
+        var markersArray = [];
+        var count = 0;
+
+
+        google.maps.event.addDomListener(window, 'load', pageLoad);
+
+        function pageLoad() {
+
+            var input = (document.getElementById('autocomplete'));
+            var searchBox = new google.maps.places.SearchBox((input));
+            google.maps.event.addListener(searchBox, 'places_changed', function () {
+                var places = searchBox.getPlaces();
+                if (map != null) {
+                    for (var i = 0, marker; marker = markersArray[i]; i++) {
+                        marker.setMap(null);
+                    }
+                }
+                // For each place, get the icon, place name, and location.
+                markersArray = [];
+                var bounds = new google.maps.LatLngBounds();
+                $('#txtResults').empty();
+
+                for (var i = 0, place; place = places[i]; i++) {
+                    //            var image = {
+                    //                url: place.icon,
+                    //                size: new google.maps.Size(71, 71),
+                    //                origin: new google.maps.Point(0, 0),
+                    //                anchor: new google.maps.Point(17, 34),
+                    //                scaledSize: new google.maps.Size(25, 25)
+                    //            };
+
+                    if (i == 0) {
+                        var myOptions = {
+                            center: place.geometry.location,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP,
+                            maxZoom: 13,
+                            minZoom: 2
+                        }
+                        map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                    }
+                    if (i == 0) {
+                        PopulatedAddress(place.geometry.location.lat(), place.geometry.location.lng());
+                        //alert(place.geometry.location.lat());
+                    }
+                    // Create a marker for each place.
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        title: place.name + " " + place.formatted_address,
+                        position: place.geometry.location
+                    });
+                    //                    var inputRadio = "<input name='rad' id='adradio" + i + "' style='margin-bottom:8px;' type='radio' onclick='radioClick(this)' ><span id=sp" + i + ">" + place.formatted_address + "<input type='hidden' value='" + place.geometry.location.lat() + "," + place.geometry.location.lng() + "' id='hd" + i + "' /> </span><br/>";
+                    //                    document.getElementById("txtResults").innerHTML += inputRadio;
+                    markersArray.push(marker);
+                    bounds.extend(place.geometry.location);
+                }
+                map.fitBounds(bounds);
+            });
+            // Bias the SearchBox results towards places that are within the bounds of the
+            google.maps.event.addListener(map, 'bounds_changed', function () {
+                var bounds = map.getBounds();
+                searchBox.setBounds(bounds);
+            });
+        }
+
+        function PopulatedAddress(lat, log) {
+            //alert(lat);
+            //alert(log);
+
+            //getLocationDetails(lat, log);
+            var temp = lat + "," + log;
+            // GetAddressPopulated(temp);
+            console.log("temp=" + temp)
+
+        }
+    </script>
+
 }
 <div class="middle-section hours-section">
     <div class="top-filter">
         <ul>
-            <li><a href="/Setting/Index">Settings</a></li>
-            <li><a href="/User/Index">Users</a></li>
-            <li><a class="active" href="/ShiftHour/Index">Hours</a></li>
-            <li><a href="/Floor/Index">Floorplan</a></li>
-            <li><a href="/TableAvailablity/Index">Table Availability</a></li>
-            
+            <li><a class="active CheckUpdate" href="/Setting/Index">Settings</a></li>
+            <li><a class="CheckUpdate" href="/User/Index">Users</a></li>
+            <li><a class="CheckUpdate" href="/ShiftHour/Index">Hours</a></li>
+            <li><a class="CheckUpdate" href="/Floor/Index">Floorplan</a></li>
+            <li><a class="CheckUpdate" href="/TableAvailablity/Index">Table Availability</a></li>
+            <li>
+                <a href="javascript:void(0)">Master</a>
+                <ul>
+                    <li><a class="CheckUpdate" href="/Allergy/Index">Allergies</a></li>
+                    <li><a class="CheckUpdate" href="/Restriction/Index">Restriction</a></li>
+                    <li><a class="CheckUpdate" href="/SpecialStatus/Index">SpecialStatus</a></li>
+                    <li><a class="CheckUpdate" href="/City/Index">City</a></li>
+                    <li><a class="CheckUpdate" href="/Designation/Index">Designation</a></li>
+                    <li><a class="CheckUpdate" href="/PhoneTypes/Index">PhoneTypes</a></li>
+                </ul>
+            </li>
+            <li class="CheckUpdate"><a href="/History/Index">History</a></li>
+
         </ul>
     </div>
 
@@ -153,29 +929,85 @@
             <li>Value</li>
         </ul>
         <div class="venue-shift-inner content_1">
-         
-                <div class="shift-head">
-                    <ul class="shift-timing">
-                        <li>
-                            <h2 style="padding: 30px 0;">
-                                Logo
-                            </h2>
-                        </li>
 
-                        <li>
-                            <div class="add-new-sec-2">
-                                <a href="#upImages" class="inlineUp">
-                                    <img class="new-pro-pic" id="imgProfile" src="@Model.Value"
-                                         alt="">
-                                </a>
-                            </div>
-                        </li>
-                        <li style="width: 24%;">
-                           Logo image should be 114 x 91 pixels in size.  
-                        </li>
-                    </ul>
-                </div>
-        
+            <div class="shift-head">
+                <ul class="shift-timing">
+                    <li>
+                        <h2 style="padding: 30px 0;">
+                            Logo
+                        </h2>
+                    </li>
+
+                    <li>
+                        <div class="add-new-sec-2">
+                            @*<a href="#upImages" class="inlineUp">*@
+                            <img class="new-pro-pic" id="imgProfile" src="@Model.Value"
+                                 alt="">
+                            @*</a>*@
+                            <input type="file" id="FileUpload1" name="FileUpload2" />
+                        </div>
+                    </li>
+                    <li style="width: 38%;">
+                        <div>
+                            <p style="line-height:1.2"> Logo image should be 114 x 91 pixels in size and on a WHITE background</p>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+
+            <div class="shift-head">
+                <ul class="shift-timing">
+                    <li>
+                        <h2 style="padding: 30px 0;">
+                            Logo for online reservation
+                        </h2>
+                    </li>
+
+                    <li>
+                        <div class="add-new-sec-2">
+                            @*<a href="#upImages1" class="inlineUp">*@
+                            <img class="new-pro-pic" id="imgProfile1" src="@OnlineResosL.Value"
+                                 alt="">
+                            @*</a>*@
+                            <input type="file" id="FileUpload2" name="FileUpload2" />
+                        </div>
+                    </li>
+                    <li style="width: 38%;">
+                        <div>
+                            <p style="line-height:1.2"> Logo image should be 202 x 95 pixels in size and on a BLACK background.</p>
+                        </div>
+
+                    </li>
+                </ul>
+            </div>
+
+            <div class="shift-row">
+                <ul class="shift-timing for-edit">
+                    <li style="width: 19%;">
+                        <h2 style="">
+                            Online reservation URL
+                        </h2>
+                    </li>
+
+                    <li style="width:446px;">
+                        <div class="tzone" style="margin-left:0px;">
+
+                            <input style="width: 357px;" type="text" value="@url" disabled="disabled" />
+                        </div>
+
+                    </li>
+                    <li>
+                        @*<input type="button" name="" value="Cancel" onclick="javascript:window.location.reload();" />*@
+
+                    </li>
+
+                </ul>
+            </div>
+
+
+
+
 
             <div class="shift-row">
                 <ul class="shift-timing for-edit">
@@ -185,12 +1017,165 @@
                         </h2>
                     </li>
 
-                    <li style="width:657px;">
+                    <li style="width:500px;">
                         <div class="tzone">
 
-                            @Html.DropDownList("timezone", timeZoneList, "- Select TimeZone -")
+                            @Html.DropDownList("timezone", timeZoneList, "- Select TimeZone -", new { @class = "changG changtime" })
                         </div>
 
+                    </li>
+                    <li>
+                        @*<input type="button" name="" value="Cancel" onclick="javascript:window.location.reload();" />*@
+                        <input type="button" name="" value="Update" class="TimeZoneS btn" onclick="Save(this);" />
+                    </li>
+
+                </ul>
+            </div>
+            <div class="shift-row">
+                <ul class="shift-timing for-edit">
+                    <li style="width: 20%;">
+                        <h2 style="">
+                            Online booking advance time
+                        </h2>
+                    </li>
+
+                    <li style="width:438px;">
+                        <div class="tzone" style="margin-left:0px !important; width: 425px; line-height: 0.2;">
+
+                            @Html.DropDownList("TimeSet", itemTimeSet, new { @class = "changG changtime" }) (minutes)
+
+                        </div>
+                        <p style="line-height:1.2"> (The number of minutes in advance of current time you would like to accept online reservations.)</p>
+
+                    </li>
+                    <li>
+                        @*<input type="button" name="" value="Cancel" onclick="javascript:window.location.reload();" />*@
+                        <input type="button" name="" value="Update" class="TimeZoneS btn" onclick="UpdateTimeSet(this);" />
+                    </li>
+
+                </ul>
+            </div>
+
+
+            <div class="shift-row">
+                <ul class="shift-timing for-edit">
+                    <li>
+                        <h2 style="">
+                            Phone
+                        </h2>
+                    </li>
+
+                    <li style="width:500px;">
+                        <div class="tzone">
+                            <input id="phoneNumber" class="changG changPhone" placeholder="Enter your phone number" onkeypress="return IsNumeric(event,this);" ondrop="return false;" type="text" value="@phone.Value" />
+                        </div>
+
+                    </li>
+                    <li>
+                        <input type="button" name="phone" class="btn" onclick="UpdatePhone(this)" value=" Update" />
+                    </li>
+                </ul>
+            </div>
+
+            <div class="shift-row">
+                <ul class="shift-timing for-edit">
+                    <li>
+                        <h2 style="">
+                            Address
+                        </h2>
+                    </li>
+
+                    <li style="width:500px;">
+                        <div class="tzone">
+                            <div id="locationField">
+                                <input id="autocomplete" class="changG changaddress" value="@Address.Value" placeholder="Enter your address"
+                                       onfocus="geolocate()" type="text"></input>
+                            </div>
+                            <p style="line-height:1.2"> (This address will be used to create a Google map for your venue, so please be as accurate as possible.)</p>
+
+                        </div>
+
+                    </li>
+                    <li>
+                        <input type="button" name="address" onclick="UpdateAddress(this)" class="btn" value=" Update" />
+                    </li>
+                </ul>
+            </div>
+            <div class="shift-row">
+                <ul class="shift-timing for-edit">
+                    <li>
+                        <h2 style="">
+                            Reply To Email
+                        </h2>
+                    </li>
+
+                    <li style="width:500px;">
+                        <div class="tzone">
+                            <div id="locationField">
+                                <input id="ReplyToEmail" class="changG changremail" placeholder="Enter your Email" type="text" value="@ReplyToEmail.Value" />
+                            </div>
+                            <p style="line-height:1;margin-top:10px; ">    (This email address will be seen by guests when they reply to a reservation confirmation email.)</p>
+
+
+                        </div>
+
+                    </li>
+                    <li>
+                        <input type="button" name="address" onclick="UpdateEmail(this)" class="btn" value=" Update" />
+                    </li>
+                </ul>
+            </div>
+
+
+
+
+
+            <div class="shift-row">
+                <ul class="shift-timing for-edit">
+                    <li>
+                        <h2 style="">
+                            BCC Email
+                        </h2>
+                    </li>
+
+                    <li style="width:500px;">
+                        <div class="tzone">
+                            <div id="locationField">
+                                <input id="BCCEmail" class="changG changrbcc" placeholder="Enter your Email" type="text" value="@BCCEmail.Value" />
+                            </div>
+                            (Guest reservation confirmations will be BCCd to this address)
+
+
+                        </div>
+
+                    </li>
+                    <li>
+                        <input type="button" name="address" onclick="UpdateBCCEmail(this)" class="btn" value=" Update" />
+                    </li>
+                </ul>
+            </div>
+
+
+            <div class="shift-row">
+                <ul class="shift-timing for-edit">
+                    <li>
+                        <h2 style="">
+                            Salutation
+                        </h2>
+                    </li>
+
+                    <li style="width:500px;">
+                        <div class="tzone">
+
+                            <textarea class="ckeditor changG changrck" cols="20" id="Salutation" name="Salutation " rows="2" style="visibility: hidden; display: none;">@Salutation.Value</textarea>
+
+                            <p style="line-height:1.2">(Please include an email footer here for your guest reservation confirmation emails. For example, your name, title, venue name, email address etc.)</p>
+
+                        </div>
+
+                    </li>
+                    <li>
+                        <input type="button" name="address" onclick="UpdateSalutation(this)" class="btn" value=" Update" />
                     </li>
                 </ul>
             </div>
@@ -224,3 +1209,21 @@
         </div>
     </div>
 </div>
+
+<div style='display: none'>
+    <div id='upImages1'>
+        <div style="padding: 5px;">
+            <div style="padding: 0 0 0 10px; width: auto; line-height: 25px;">
+                <table cellpadding="5" cellspacing="5">
+                    <tr>
+                        <td>
+                            <input type="file" id="FileUpload2" name="FileUpload2" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

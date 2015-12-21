@@ -32,7 +32,8 @@ namespace AIS.Models
         public SAASContext()
             : base("DefaultConnection")
         {
-
+            //Disable initializer
+            Database.SetInitializer<SAASContext>(null);
         }
 
         public static SAASContext Create()
@@ -50,14 +51,16 @@ namespace AIS.Models
         public UsersContext()
             : base(CommonHelper.getCurrentUserConnectionString())
         {
-
+            //Disable initializer
+            Database.SetInitializer<UsersContext>(null);
         }
 
 
         public UsersContext(string dbname)
             : base(CommonHelper.getCurrentUserConnectionString(dbname))
         {
-
+            //Disable initializer
+            Database.SetInitializer<UsersContext>(null);
         }
         //public static UsersContext Create()
         //{
@@ -188,8 +191,10 @@ namespace AIS.Models
         public int UserCode { get; set; }
         public bool EnablePIN { get; set; }
         public string RestaurantName { get; set; }
+        public string VenueName { get; set; }
         public bool? TermAndCondition { get; set; }
         public bool? Approved { get; set; }
+        public bool? IsDelete { get; set; }
         public string Notes { get; set; }
         public long? AddressId { get; set; }
         public virtual Address Address { get; set; }
@@ -208,12 +213,13 @@ namespace AIS.Models
 
             using (var mainDB = new SAASContext())
             {
-                var user = mainDB.Users.Where(u => u.UserName == this.UserName).SingleOrDefault();
+                var user = mainDB.Users.Where(u => u.UserName == this.UserName && u.IsDelete==false).SingleOrDefault();
                 string databasename = user.RestaurantName;
                 databasename = databasename.Replace(" ", "");
                 if (user != null)
                 {
                     userIdentity.AddClaim(new Claim("databaseInfo", databasename));
+                    userIdentity.AddClaim(new Claim("VenueNameInfo", user.VenueName));
                     userIdentity.AddClaim(new Claim("companyId", databasename));
                     userIdentity.AddClaim(new Claim("mainDbUserId", databasename));
                 }
@@ -278,8 +284,9 @@ namespace AIS.Models
     public class ForgotPasswordModel
     {
         [Required]
-        [Display(Name = "User name")]
-        [Remote("IsEmailExist", "Account")]
+        [Display(Name = "Email")]
+        [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "Email address is not valid")]
+        [Remote("IsEmailExistForgot", "Account", ErrorMessage = "Email does not exist")]
         public string UserName { get; set; }
     }
 
@@ -308,6 +315,7 @@ namespace AIS.Models
         public string Email { get; set; }
 
         [Required]
+        [Remote("IsEmailExist", "Account", AdditionalFields = "RestaurantName", ErrorMessage = "This {0} is already used.")]
         [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "Email address is not valid")]
         [Display(Name = "Email")]
         public string UserName { get; set; }
@@ -323,8 +331,14 @@ namespace AIS.Models
 
 
         [Required]
-        [Display(Name = "Venue Name")]
+        [Remote("IsVenueExist", "Account", AdditionalFields = "RestaurantName", ErrorMessage = "This {0} is already used.")]
+        [RegularExpression("^[a-zA-Z][a-zA-Z0-9]*$", ErrorMessage = "Venue Short name should be alphanumeric.")]
+        [Display(Name = "Venue Short Name")]
         public string RestaurantName { get; set; }
+
+        [Required]
+        [Display(Name = "Venue Name")]
+        public string VenueName { get; set; }
 
 
 
@@ -350,6 +364,8 @@ namespace AIS.Models
         public bool Approved { get; set; }
 
         public string Notes { get; set; }
+
+        public string price { get; set; }
 
         public long AddressId { get; set; }
         public virtual Address Address { get; set; }

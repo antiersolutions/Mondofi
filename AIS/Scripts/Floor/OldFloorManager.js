@@ -91,7 +91,7 @@ function CreateTable(tableName, design, minCover, maxCover) {
         case 'Round':
 
             var radius = (maxCover * 15) + 25;
-            //debugger;
+            // 
             if (radius < 100) {
                 radius = 100;
             }
@@ -134,7 +134,7 @@ function CreateTable(tableName, design, minCover, maxCover) {
 
         //******* Square  ******//                                                                                   
         case 'Square':
-            //debugger;
+            // 
             var leftSeat = 0, rightSeat = 0, topSeat = 0, bottomSeat = 0;
 
             var remainder = maxCover % 4;
@@ -183,7 +183,7 @@ function CreateTable(tableName, design, minCover, maxCover) {
 
         //******* Rectangle  ******//                              
         case 'Rectangular':
-            //debugger;
+            // 
             var sideSeat = 0, topSeat = 0, bottomSeat = 0;
             //var contWidth = (20*maxCover)+(((maxCover-2)/2)*5);
             //alert(contWidth);
@@ -227,7 +227,7 @@ function CreateTable(tableName, design, minCover, maxCover) {
     }
 
     $('.table').click(function () {
-        //debugger;
+        // 
         //        var table = $(this);
         //        var tableName = table.find('#tblname').val();
         //        var tableShape = table.find('#tbldesign').val();
@@ -420,7 +420,7 @@ function CreatePillar() {
 
 
 //function CreateSofa() {
-//    //debugger;
+//    // 
 //    $("#floor").append('<div id="table' + tableno + '" class="walls-main table-main table item "><div  class="sofa"><div class="sofa-inner"><div class="s-left"></div><div class="s-right"></div><div class="s-bottom"></div></div><div class ="rotate" style="display:none;"><a title="table' + tableno + '" href="javascript:void(0);" class="rotateAnti"> </a><a title="table' + tableno + '" href="javascript:void(0);" class="rotateClock"> </a></div></div></div>');
 //    $("#table" + tableno).append('<input id="TempFloorTableId" name="TempFloorTableId" type="hidden" value=""/><input id="tblname" name="tblname" type="hidden" value="Sofa-' + tableno + '"/><input id="tbldesign" name="tbldesign" type="hidden" value=""/><input id="tblangle" name="tblangle" type="hidden" value="0"/><input id="tblmincover" name="tblmincover" type="hidden" value="1"/><input id="tblmaxcover" name="tblmaxcover" type="hidden" value="3"/>');
 //    tableno++;
@@ -447,7 +447,7 @@ function CreatePillar() {
 //                case 'Round':
 
 //                    var radius = (maxCover * 15) + 25;
-//                    //debugger;
+//                    // 
 //                    if (radius < 88) {
 //                        radius = 88;
 //                    }
@@ -490,7 +490,7 @@ function CreatePillar() {
 
 //                //******* Square  ******//                                                               
 //                case 'Square':
-//                    //debugger;
+//                    // 
 //                    var leftSeat = 0, rightSeat = 0, topSeat = 0, bottomSeat = 0;
 
 //                    var remainder = maxCover % 4;
@@ -582,7 +582,7 @@ function CreatePillar() {
 //            }
 
 //            $('.table').click(function () {
-//                //debugger;
+//                // 
 //                var table = $(this);
 //                var tableName = table.find('#tblname').val();
 //                var tableShape = table.find('#tbldesign').val();

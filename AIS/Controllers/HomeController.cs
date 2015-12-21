@@ -11,13 +11,13 @@ namespace AIS.Controllers
     {
         public ActionResult Index()
         {
-            if (Request.Browser.IsMobileDevice)
-            {
-                return RedirectToAction("Index", "Book");
-            }
+            //if (Request.Browser.IsMobileDevice)
+            //{
+            //    return RedirectToAction("Index", "Book");
+            //}
 
             //ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
-            return RedirectToAction("FloorPlan", "FloorPlan");
+            return RedirectToAction("Index", "Setting");
 
             //return View();
         }

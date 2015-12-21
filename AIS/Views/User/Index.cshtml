@@ -32,7 +32,7 @@
                 </ul>
             </li>
             <li><a href="/History/Index">History</a></li>
-          
+
         </ul>
     </div>
     <div class="for-edit">
@@ -69,7 +69,7 @@
     <div id="profileView" class="profile">
     </div>
 </div>
-<div class="manage-section">
+<div class="manage-section" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="m-right-btn">
     </div>
     <div class="search-main">
@@ -175,4 +175,6 @@
             $(".content_1").mCustomScrollbar({ updateOnContentResize: true });
         })(jQuery);
     </script>
+
+
 }

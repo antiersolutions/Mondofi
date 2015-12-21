@@ -13,8 +13,8 @@
 
         using (var companyUserManger = AIS.ApplicationUserManager.Create(User.Identity.GetDatabaseName()))
         {
-            var superuserrole = companyUserManger.IsInRole(User.Identity.GetUserId<long>(), "SuperAdmin");
-            var userrole = companyUserManger.IsInRole(User.Identity.GetUserId<long>(), "Admin");
+            var superuserrole = companyUserManger.IsInRole(item.Id, "SuperAdmin");
+            var userrole = companyUserManger.IsInRole(item.Id, "Admin");
       
 
         <ul class="people-status">
@@ -29,7 +29,7 @@
                 }
                 <h1 style="text-align: left;">
                     @item.LastName, @(item.FirstName)@((item.Designation != null) ? Html.Raw("<font size='3' weight='lighter' style='color: #888'>-" + item.Designation.Desgination + "</font>") : null)
-                    @if (userrole || superuserrole)
+                    @if (userrole==true || superuserrole==true)
                     {
                         <img style="width: 20px; float: right" src="/images/s-rating-pro.png" alt="" />
                     }<br />

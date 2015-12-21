@@ -66,7 +66,7 @@ namespace AIS.Helpers.Email
                       attachmentFileName: attachmentFileName);
         }
 
-        protected virtual MessageTemplate GetActiveMessageTemplate(string messageTemplateName,UsersContext db)
+        protected virtual MessageTemplate GetActiveMessageTemplate(string messageTemplateName, UsersContext db)
         {
             var messageTemplate = db.GetMessageTemplateByName(messageTemplateName);
 
@@ -103,13 +103,43 @@ namespace AIS.Helpers.Email
             var customerEmail = reservation.Customers.Emails.LastOrDefault();
             if (customerEmail == null)
                 return;
-
+            var restaurantName = db.Users.OrderBy(c => c.Id).Skip(1).First().VenueName;
             var messageTemplate = GetActiveMessageTemplate("Customer.OnlineBookingSucceed", db);
+            messageTemplate.Subject = "Your Reservation Details for " + restaurantName;
             if (messageTemplate == null)
                 return;
+            var logoName = db.tabSettings.Where(s => s.Name.Contains("OnlineResosL")).Single().Value;
+            var PhoneNumber = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single().Value;
+            var getAddress = db.tabSettings.Where(s => s.Name.Contains("Address")).Single().Value;
+            var Salutation = db.tabSettings.Where(s => s.Name.Contains("Salutation")).Single().Value;
+            string[] values = getAddress.Split(',');
+            string laststring = getAddress.Split(',').Last();
+            int stringCount = values.Count();
+            int count = 1;
+            var addressHtml = string.Empty;
+
+            foreach (var item in values)
+            {
+                if (stringCount - 1 == count)
+                {
+                    addressHtml += item + "<br/>";
+                }
+                else if (stringCount > count)
+                {
+                    addressHtml += item + ",<br/>";
+                }
+
+                count++;
+            }
+            addressHtml += "<h3 style='color:#000;line-height:125%;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:bold;margin-top:10px;margin-bottom:3px;text-align:left;'>Call us at</h3>" + PhoneNumber;
 
             //tokens
             var tokens = new List<Token>();
+            tokens.Add(new Token("Address", addressHtml, true));
+            tokens.Add(new Token("RestaurantName", restaurantName, true));
+            tokens.Add(new Token("Salutation", Salutation, true));
+            tokens.Add(new Token("Logo", "https://www.mondofi.com" + logoName));
+            tokens.Add(new Token("PhoneNumber", PhoneNumber));
             tokens.Add(new Token("ReservationId", reservation.ReservationId.ToString()));
             tokens.Add(new Token("ReservationDate", reservation.ReservationDate.ToString("ddd, MMM dd, yyyy")));
             tokens.Add(new Token("TimeForm", reservation.TimeForm.ToString("h:mm tt")));
@@ -118,13 +148,18 @@ namespace AIS.Helpers.Email
             //    ((reservation.Customers.LastName.Length > 1) ? reservation.Customers.LastName.Remove(1) : reservation.Customers.LastName)));
             tokens.Add(new Token("FullName", reservation.Customers.FirstName));
             //tokens.Add(new Token("EditUrl", System.Web.HttpContext.Current.Request.Url.Host + "/Online/ReserveSuccess/" + reservation.ReservationId));
-            tokens.Add(new Token("EditUrl", urlHelper.EncodedUrl("ReserveSuccess", "Online", new { id = reservation.ReservationId })));
-            tokens.Add(new Token("CancelUrl", urlHelper.EncodedUrl("ReserveSuccess", "Online", new { id = reservation.ReservationId })));
+            tokens.Add(new Token("EditUrl", urlHelper.EncodedUrl("ReserveSuccess", "Online", new { id = reservation.ReservationId, company = db.Database.Connection.Database })));
+            tokens.Add(new Token("CancelUrl", urlHelper.EncodedUrl("ReserveSuccess", "Online", new { id = reservation.ReservationId, company = db.Database.Connection.Database })));
             //tokens.Add(new Token("AppUrl", System.Web.HttpContext.Current.Request.Url.Host));
-            tokens.Add(new Token("AppUrl", "http://media.vanfish.com/reservation_email"));
+            tokens.Add(new Token("AppUrl", "https://www.mondofi.com"));
+            var replyToEmail = db.tabSettings.Where(s => s.Name.Contains("ReplyToEmail")).Single();
+            var Bcc = db.tabSettings.Where(s => s.Name.Contains("BCCEmail")).Single();
+            messageTemplate.BccEmailAddresses = Bcc.Value;
+            //var fromAddress = (string)ConfigurationManager.AppSettings["Email_To"];
+            //var fromName = (string)ConfigurationManager.AppSettings["Email_To"];
 
-            var fromAddress = (string)ConfigurationManager.AppSettings["Email_To"];
-            var fromName = (string)ConfigurationManager.AppSettings["Email_To"];
+            var fromAddress = replyToEmail.Value;
+            var fromName = replyToEmail.Value;
 
             var toEmail = customerEmail.Email;
             var toName = reservation.Customers.FirstName;

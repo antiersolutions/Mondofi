@@ -31,12 +31,13 @@ namespace AIS
            defaults: new { controller = "Account", action = "Register" }
          );
 
-            
-            routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Mondofi", action = "Index2", id = UrlParameter.Optional }
-            );
+               routes.MapRoute(
+                  name: "Default",
+                  url: "{controller}/{action}/{id}",
+                  defaults: new { controller = "Mondofi", action = "Index", id = UrlParameter.Optional }
+              );
+
+          
         }
     }
 }

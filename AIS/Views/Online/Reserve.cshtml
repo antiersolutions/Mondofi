@@ -4,13 +4,29 @@
 @{
     ViewBag.Title = "Reserve";
     Layout = "~/Views/Shared/_LayoutOnline.cshtml";
-    var company = Request["company"].ToString();
-
+    var company = string.Empty;
+    try
+    {
+       company = Request["company"].ToString();
+    }
+    catch (Exception)
+    {
+        company = string.Empty;
+       
+    }
+   
+    int count = 1;
+    var addressHtml = string.Empty;
     UsersContext db = new UsersContext(company);
     var Address = db.tabSettings.Where(s => s.Name.Contains("Address")).Single().Value;
+    var PhoneSetting = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single().Value;
     string[] values = Address.Split(',');
+    string laststring = Address.Split(',').Last();
+    int stringcount = values.Count();
 
 }
+
+
 @section scripts{
     @if (Model != null)
     {
@@ -81,13 +97,24 @@
         <li><span>Address</span></li>
         @foreach (var item in values)
         {
-            <li>@item,</li>
+            if (stringcount - 1 == count)
+            {
+                <li>@item,@laststring</li>
+            }
+            else if (stringcount > count)
+            {
+
+                <li>@item,</li>
+            }
+
+            count++;
         }
-        
+        <li><span>Call us at</span></li>
+        <li>@PhoneSetting</li>
         @*<li>1517 Anderson St.</li>
-        <li>Granville Island, Vancouver, BC</li>
-        <li>V6H 3R5</li>
-        <li>Canada</li>*@
+            <li>Granville Island, Vancouver, BC</li>
+            <li>V6H 3R5</li>
+            <li>Canada</li>*@
     </ul>
 
 </div>

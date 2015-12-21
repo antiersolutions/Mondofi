@@ -1,8 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity;
 
-
-
-
 @using (var companyUserManger = AIS.ApplicationUserManager.Create(User.Identity.GetDatabaseName()))
 {
     var superuserrole = companyUserManger.IsInRole(User.Identity.GetUserId<long>(), "SuperAdmin");
@@ -10,7 +7,7 @@
     <div class="menu-bar">
         @using (var db = new AIS.Models.UsersContext())
         {
-         var logoSetting = db.tabSettings.Where(s => s.Name.Contains("Logo")).Single();
+            var logoSetting = db.tabSettings.Where(s => s.Name.Contains("Logo")).Single();
             <div class="logo">
                 <a href="javascript:void(0)">
                     <img src="@logoSetting.Value" alt="">
@@ -52,29 +49,29 @@
         <div class="left-menu">
             <ul>
                 <li>
-                    <a id="aCalender" href="@Url.Action("Months", "Calendar")">
-                        <img src="/images/m-cal-icon.png" alt="" />Calender
+                    <a class="CheckUpdate" id="aCalender" href="@Url.Action("Months", "Calendar")">
+                        <img src="/images/m-cal-icon.png" alt="" />Calendar
                     </a>
                 </li>
                 <li>
-                    <a id="aFloor" href="@Url.Action("FloorPlan", "FloorPlan")">
+                    <a class="CheckUpdate" id="aFloor" href="@Url.Action("FloorPlan", "FloorPlan")">
                         <img src="/images/m-floor-icon.png" alt="" />Floor
                     </a>
                 </li>
                 <li>
-                    <a id="aGuests" href="@Url.Action("Index", "Customer")">
+                    <a class="CheckUpdate" id="aGuests" href="@Url.Action("Index", "Customer")">
                         <img src="/images/m-guests-icon.png" alt="" />Guests
                     </a>
                 </li>
                 <li>
-                    <a id="aNotification" href="javascript:void(0)">
+                    <a class="CheckUpdate" id="aNotification" href="javascript:void(0)">
                         <img src="/images/m-notification-icon.png" alt="" />Notification
                     </a>
                 </li>
                 @if (userrole || superuserrole)
                 {
                     <li>
-                        <a id="aSettings" href="@Url.Action("Index", "User")">
+                        <a class="CheckUpdate" id="aSettings" href="/Setting/Index">
                             <img src="/images/m-settings-icon.png" alt="" />Settings
                         </a>
                     </li>

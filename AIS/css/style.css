@@ -926,7 +926,7 @@ h1, h2, h3, h4, h5, h6 {
     .settings .hours-section .venue-shift .venue-shift-inner {
         width: 100%;
         float: left;
-        height: 612px;
+        height: 800px;
     }
 
         .settings .hours-section .venue-shift .venue-shift-inner .shift-head {
@@ -1186,11 +1186,11 @@ h1, h2, h3, h4, h5, h6 {
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit thead tr td:nth-child(1) {
-                        width: 14%;
+                        width: 10%;
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit thead tr td:nth-child(2) {
-                        width: 12%;
+                        width: 8%;
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit thead tr td:nth-child(3) {
@@ -1198,7 +1198,7 @@ h1, h2, h3, h4, h5, h6 {
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit thead tr td:nth-child(4) {
-                        width: 10%;
+                        width: 8%;
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit thead tr td:nth-child(5) {
@@ -1206,11 +1206,11 @@ h1, h2, h3, h4, h5, h6 {
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit thead tr td:nth-child(6) {
-                        width: 12%;
+                        width: 5%;
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit thead tr td:nth-child(7) {
-                        width: 10%;
+                        width: 29%;
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit thead tr td:nth-child(8) {
@@ -1242,7 +1242,7 @@ h1, h2, h3, h4, h5, h6 {
                 }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit tbody tr td:nth-child(1) {
-                        width: 14%;
+                        width: 10%;
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit tbody tr td:nth-child(2) {
@@ -1254,7 +1254,7 @@ h1, h2, h3, h4, h5, h6 {
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit tbody tr td:nth-child(4) {
-                        width: 10%;
+                        width: 6%;
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit tbody tr td:nth-child(5) {
@@ -1262,11 +1262,11 @@ h1, h2, h3, h4, h5, h6 {
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit tbody tr td:nth-child(6) {
-                        width: 12%;
+                        width: 5%;
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit tbody tr td:nth-child(7) {
-                        width: 10%;
+                        width: 25%;
                     }
 
                     .settings .floor-section .floor-plan-main table.floorPlan-edit tbody tr td:nth-child(8) {
@@ -6320,11 +6320,29 @@ img.img-logof {
             width: 97%;
         }
 
-@media (max-width:1366px) {
-    .settings .middle-section {
-        width: 64%;
-    }
 
+@media (max-width:1280px) {
+    .settings .hours-section .venue-shift .venue-shift-inner {
+        width: 100%;
+        float: left;
+        height: 600px;
+    }
+}
+
+
+@media (max-width:1366px) {
+  .settings .hours-section .venue-shift .venue-shift-inner {
+        width: 100%;
+        float: left;
+         height: 670px;
+
+    }
+   
+ /*.settings .hours-section .venue-shift .venue-shift-inner {
+  float: left;
+  height: 612px;
+  width: 100%;
+}*/
     .middle-section-toggle2 {
         width: 85% !important;
     }

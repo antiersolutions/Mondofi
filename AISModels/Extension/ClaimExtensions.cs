@@ -33,6 +33,21 @@ namespace AIS
             return null;
         }
 
+
+        public static string GetVenueName(this IIdentity identity)
+        {
+            if (identity == null)
+            {
+                throw new ArgumentNullException("identity");
+            }
+            var ci = identity as ClaimsIdentity;
+            if (ci != null)
+            {
+                return ci.FindFirstValue("VenueNameInfo");
+            }
+            return null;
+        }
+
         /// <summary>
         ///     Return the company id using the IdentityClaim
         /// </summary>

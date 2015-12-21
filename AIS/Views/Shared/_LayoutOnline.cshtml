@@ -2,6 +2,7 @@
     var logoSetting = string.Empty;
     var PhoneSetting = string.Empty;
     var company = string.Empty;
+    var restaurantName = string.Empty;
 
     try
     {
@@ -24,8 +25,9 @@
 
     using (var db = new AIS.Models.UsersContext(company))
     {
-        logoSetting = db.tabSettings.Where(s => s.Name.Contains("Logo")).Single().Value;
+        logoSetting = db.tabSettings.Where(s => s.Name.Contains("OnlineResosL")).Single().Value;
         PhoneSetting = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single().Value;
+        restaurantName = db.Users.OrderBy(c => c.Id).ToList().Skip(1).First().VenueName;
     }
 }
 <!DOCTYPE html>
@@ -63,7 +65,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 top-hdr clearfix">
                     <div class="col-xs-6 col-sm-4 col-md-4 top-hdr-left"><a href="#"><img src="@logoSetting" class="img-responsive" alt="" /></a></div>
                     <div class="col-xs-6 col-sm-8 col-md-8 top-hdr-right">
-                        <h1>Call us at <br /><span>604 559 FISH (@PhoneSetting)</span></h1>
+                        <h1><span>@restaurantName</span></h1>
                     </div>
                 </div>
             </div>

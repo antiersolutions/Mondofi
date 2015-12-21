@@ -14,7 +14,7 @@ namespace AIS.Helpers.Caching
 
         public static IList<Reservation> GetReservationByDate(this UsersContext db, DateTime date)
         {
-            string key = string.Format(CacheKeys.RESERVATION_BY_DATE,db.Database.Connection.Database, date.Ticks);
+            string key = string.Format(CacheKeys.RESERVATION_BY_DATE, db.Database.Connection.Database, date.Ticks);
 
             return cache.Get<IList<Reservation>>(key, () =>
             {
@@ -63,35 +63,66 @@ namespace AIS.Helpers.Caching
 
         public static IList<Reservation> GetReservationByDateRange(this UsersContext db, DateTime startDate, DateTime endDate, bool includeDeleted = false)
         {
-            string key = string.Format(CacheKeys.RESERVATION_BY_DATE_RANGE,db.Database.Connection.Database, startDate.Ticks, endDate.Ticks, includeDeleted);
+            string key = string.Format(CacheKeys.RESERVATION_BY_DATE_RANGE, db.Database.Connection.Database, startDate.Ticks, endDate.Ticks, includeDeleted);
 
             return cache.Get<IList<Reservation>>(key, 15, () =>
             {
                 // using (var dBContext = new UsersContext())
                 // {
-                var query = db.tabReservations
-                    //.Include("FloorTable.FloorTableServer.Server.ServingTables")
-                    .Include("FloorPlan")
-                    .Include("ReservationServer")
-                    .Include("Status")
-                    //.Include("MergedFloorTable.OrigionalTables.FloorTable.FloorTableServer.Server.ServingTables")
-                    .Include("Customers.PhoneNumbers")
-                    .Include("Customers.SpecialStatus.SpecialStatus")
-                    .Include("Customers.Allergies.Allergies")
-                    .Include("FoodMenuShift")
-                    .Where(r => r.ReservationDate >= startDate && r.ReservationDate <= endDate);
+                //var query = db.tabReservations
+                //    //.Include("FloorTable.FloorTableServer.Server.ServingTables")
+                //    .Include("FloorPlan")
+                //    .Include("ReservationServer")
+                //    .Include("Status")
+                //    //.Include("MergedFloorTable.OrigionalTables.FloorTable.FloorTableServer.Server.ServingTables")
+                //    .Include("Customers.PhoneNumbers")
+                //    .Include("Customers.SpecialStatus.SpecialStatus")
+                //    .Include("Customers.Allergies.Allergies")
+                //    .Include("FoodMenuShift")
+                //    .Where(r => r.ReservationDate >= startDate && r.ReservationDate <= endDate);
 
+                //if (!includeDeleted)
+                //    query = query.Where(r => !r.IsDeleted);
+
+                //return query.ToList();
+
+                var normalReservations = db.tabReservations
+               .Include("FloorTable.FloorTableServer.Server.ServingTables")
+               .Include("FloorPlan")
+               .Include("ReservationServer")
+               .Include("Status")
+                    // .Include("MergedFloorTable.OrigionalTables.FloorTable.FloorTableServer.Server.ServingTables")
+               .Include("Customers.PhoneNumbers")
+               .Include("Customers.SpecialStatus.SpecialStatus")
+               .Include("Customers.Allergies.Allergies")
+               .Include("FoodMenuShift").Where(r => r.ReservationDate >= startDate && r.ReservationDate <= endDate);
                 if (!includeDeleted)
-                    query = query.Where(r => !r.IsDeleted);
+                    normalReservations = normalReservations.Where(r => !r.IsDeleted);
 
-                return query.ToList();
+                var mergedReservations = db.tabReservations
+                    //.Include("FloorTable.FloorTableServer.Server.ServingTables")
+                 .Include("FloorPlan")
+                 .Include("ReservationServer")
+                 .Include("Status")
+                 .Include("MergedFloorTable.OrigionalTables.FloorTable.FloorTableServer.Server.ServingTables")
+                 .Include("Customers.PhoneNumbers")
+                 .Include("Customers.SpecialStatus.SpecialStatus")
+                 .Include("Customers.Allergies.Allergies")
+                 .Include("FoodMenuShift").Where(r => r.ReservationDate >= startDate && r.ReservationDate <= endDate);
+                if (!includeDeleted)
+                    mergedReservations = mergedReservations.Where(r => !r.IsDeleted);
+
+                var list = new List<Reservation>(normalReservations);
+                list.AddRange(mergedReservations);
+
+                return list;
                 // }
             });
         }
 
         public static IList<Waiting> GetWaitingByDate(this UsersContext db, DateTime date)
         {
-            string key = string.Format(CacheKeys.WAITING_BY_DATE,db.Database.Connection.Database, date.Ticks);
+            string key = string.Format(CacheKeys.WAITING_BY_DATE, db.Database.Connection.Database, date.Ticks);
 
             return cache.Get<IList<Waiting>>(key, () =>
             {
@@ -106,7 +137,7 @@ namespace AIS.Helpers.Caching
 
         public static IList<WeekDays> GetWeekDays(this UsersContext db)
         {
-            return cache.Get<IList<WeekDays>>(string.Format(CacheKeys.WEEKDAYS_COMPANY_PATTERN,db.Database.Connection.Database), () =>
+            return cache.Get<IList<WeekDays>>(string.Format(CacheKeys.WEEKDAYS_COMPANY_PATTERN, db.Database.Connection.Database), () =>
             {
                 return db.tabWeekDays.ToList();
             });
@@ -115,7 +146,7 @@ namespace AIS.Helpers.Caching
         public static IList<Status> GetStatusList(this UsersContext db)
         {
             //CacheKeys.RESERVATION_STATUS_PATTERN
-            return cache.Get<IList<Status>>(string.Format(CacheKeys.RESERVATION_STATUS_COMAPNY_PATTERN,db.Database.Connection.Database), () =>
+            return cache.Get<IList<Status>>(string.Format(CacheKeys.RESERVATION_STATUS_COMAPNY_PATTERN, db.Database.Connection.Database), () =>
             {
                 return db.Status.ToList();
             });
@@ -123,7 +154,7 @@ namespace AIS.Helpers.Caching
 
         public static IList<FoodMenuShift> GetFoodMenuShifts(this UsersContext db)
         {
-            return cache.Get<IList<FoodMenuShift>>(string.Format(CacheKeys.FOOD_MENUSHIFT_COMPANY_PATTERN,db.Database.Connection.Database), () =>
+            return cache.Get<IList<FoodMenuShift>>(string.Format(CacheKeys.FOOD_MENUSHIFT_COMPANY_PATTERN, db.Database.Connection.Database), () =>
             {
                 return db.tabFoodMenuShift.ToList();
             });
@@ -131,7 +162,7 @@ namespace AIS.Helpers.Caching
 
         public static IList<MenuShiftHours> GetMenuShiftHours(this UsersContext db)
         {
-            return cache.Get<IList<MenuShiftHours>>(string.Format(CacheKeys.FOOD_MENUSHIFT_SHIFTHOURS,db.Database.Connection.Database), () =>
+            return cache.Get<IList<MenuShiftHours>>(string.Format(CacheKeys.FOOD_MENUSHIFT_SHIFTHOURS, db.Database.Connection.Database), () =>
             {
                 return db.tabMenuShiftHours.ToList();
             });
@@ -139,7 +170,7 @@ namespace AIS.Helpers.Caching
 
         public static int GetMaxFloorCovers(this UsersContext db, Int64? floorPlanId = null)
         {
-            string key = string.Format(CacheKeys.FLOOR_PLAN_MAX_COVERS,db.Database.Connection.Database, floorPlanId.HasValue ? floorPlanId.Value : 0);
+            string key = string.Format(CacheKeys.FLOOR_PLAN_MAX_COVERS, db.Database.Connection.Database, floorPlanId.HasValue ? floorPlanId.Value : 0);
 
             return cache.Get(key, () =>
             {
@@ -153,8 +184,10 @@ namespace AIS.Helpers.Caching
                 {
                     result = tableQuery.Max(t => t.MaxCover);
                 }
-                catch (Exception ex){
-                    if (!ex.Message.Contains("")) {
+                catch (Exception ex)
+                {
+                    if (!ex.Message.Contains(""))
+                    {
                         throw;
                     }
                 }
@@ -165,7 +198,7 @@ namespace AIS.Helpers.Caching
 
         public static int GetMaxAvailableCovers(this UsersContext db, DateTime datetime, Int64? floorPlanId = null)
         {
-            string key = string.Format(CacheKeys.FLOOR_PLAN_MAX_COVERS,db.Database.Connection.Database, floorPlanId.HasValue ? floorPlanId.Value : 0);
+            string key = string.Format(CacheKeys.FLOOR_PLAN_MAX_COVERS, db.Database.Connection.Database, floorPlanId.HasValue ? floorPlanId.Value : 0);
 
             return cache.Get(key, () =>
             {
@@ -180,7 +213,7 @@ namespace AIS.Helpers.Caching
 
         public static IList<UserProfile> GetCachedStaffList(this UsersContext db)
         {
-            return cache.Get(string.Format(CacheKeys.STAFF_LIST,db.Database.Connection.Database), () =>
+            return cache.Get(string.Format(CacheKeys.STAFF_LIST, db.Database.Connection.Database), () =>
                {
                    using (var dbContext = new UsersContext())
                    {
@@ -198,7 +231,7 @@ namespace AIS.Helpers.Caching
 
         public static IList<FloorTableBlock> GetFloorTableBlockTimeList(this UsersContext db, DateTime date)
         {
-            string key = string.Format(CacheKeys.FLOOR_TABLES_BLOCK_BY_DATE,db.Database.Connection.Database, date.Ticks);
+            string key = string.Format(CacheKeys.FLOOR_TABLES_BLOCK_BY_DATE, db.Database.Connection.Database, date.Ticks);
 
             return cache.Get<IList<FloorTableBlock>>(key, () =>
             {
@@ -225,7 +258,7 @@ namespace AIS.Helpers.Caching
 
         public static Setting GetSettingByName(this UsersContext db, string settingName)
         {
-            string key = string.Format(CacheKeys.SETTING_BY_NAME_KEY,db.Database.Connection.Database, settingName);
+            string key = string.Format(CacheKeys.SETTING_BY_NAME_KEY, db.Database.Connection.Database, settingName);
 
             return cache.Get<Setting>(key, () =>
             {
@@ -244,13 +277,13 @@ namespace AIS.Helpers.Caching
             return TimeZoneInfo.FindSystemTimeZoneById(timezone);
         }
 
-        public static DayOpenCloseTime GetOpenAndCloseTime(this DayOfWeek day , string companyName)
+        public static DayOpenCloseTime GetOpenAndCloseTime(this DayOfWeek day, string companyName)
         {
 
             if (string.IsNullOrWhiteSpace(companyName))
                 throw new Exception("company name missing.");
-          
-            string key = string.Format(CacheKeys.FOOD_MENUSHIFT_OPEN_CLOSE_DAYTIME,companyName, day);
+
+            string key = string.Format(CacheKeys.FOOD_MENUSHIFT_OPEN_CLOSE_DAYTIME, companyName, day);
 
             return cache.Get<DayOpenCloseTime>(key, () =>
             {
@@ -271,6 +304,26 @@ namespace AIS.Helpers.Caching
                 }
             });
         }
+
+        public static IList<FloorTable> GetFloorTable(this UsersContext db)
+        {
+            return cache.Get<IList<FloorTable>>(string.Format(CacheKeys.FLOOR_TABLES_ONLY, db.Database.Connection.Database), () =>
+            {
+                return db.tabFloorTables.ToList();
+            });
+        }
+
+        public static IList<TableAvailability> GettabTableAvailabilities(this UsersContext db)
+        {
+            return cache.Get<IList<TableAvailability>>(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN_TableAvailability, db.Database.Connection.Database), () =>
+            {
+                return db.tabTableAvailabilities.Include("TableAvailabilityFloorTables")
+                .Include("TableAvailabilityWeekDays").ToList();
+
+            });
+        }
+
+
     }
 
     public class DayOpenCloseTime

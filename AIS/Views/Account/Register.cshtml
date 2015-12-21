@@ -2,14 +2,35 @@
 @{
     Layout = "~/Views/Shared/_LayoutMondofiNew.cshtml";
     ViewBag.Title = "Register";
+
+    var price = string.Empty;
+
+    try
+    {
+        price = Request["PL"].ToString();
+    }
+    catch (Exception)
+    {
+        price = string.Empty;
+
+    }
+
+
 }
 
 @*@Scripts.Render("~/bundles/jquery")
 
-@Scripts.Render("~/bundles/jqueryval", "~/j*@s/jquery.mCustomScrollbar.concat.min.js")
-@*<script src="~/js/require.js"></script>*@
+        @Scripts.Render("~/bundles/jqueryval", "~/js/jquery.mCustomScrollbar.concat.min.js")
+    <script src="~/js/require.js"></script>*@
+
 <style>
     .blackToltop {
+    }
+
+
+    .icheckbox_futurico {
+        border: 1px solid;
+        border-color: #363636;
     }
 
     .validation-summary-errors {
@@ -30,11 +51,15 @@
     }
 
     .blackToltop .tooltip-arrow {
-        top: -3px !important;
+        /*top: -3px !important;*/
         left: 5px !important;
         margin-left: 0px !important;
         border-bottom-color: #000;
-        border-width: 0 14px 11px !important;
+        /*border-width: 0 14px 11px !important;*/
+    }
+
+    a {
+        cursor: pointer;
     }
 </style>
 
@@ -42,9 +67,9 @@
 {
     <div class="container-fluid">
         <div class="container">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pricing-hd register-sec " style="margin-top: 68px;">
-                <h1>Get Started with <strong>Mondo<span>fi</span></strong> Hospitality for Venue Management System</h1>
-                <p>We love talking with customers about their unique businesses. Give us a ring at (001) 123-6541, send an email to <br><a href="mailto:accounts@mondofi.com">accounts@mondofi.com</a>, or tell us a little bit about you and your venue.</p>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pricing-hd register-sec setFromTop ">
+                <h1>Get Started with the <strong>Mondo<span>fi</span></strong> Venue Management System</h1>
+                <p>We love hearing from people about their unique businesses. Fill out the form below or send an email to <br><a href="mailto:accounts@mondofi.com">accounts@mondofi.com</a> and tell us a little bit about you and your venue.</p>
 
             </div>
 
@@ -54,39 +79,31 @@
             @Html.Hidden("Address.State", "test")
             @Html.Hidden("Address.PostalCode", "test")
             @Html.Hidden("Address.CountryId", "2")
+            @Html.Hidden("price", price.ToString());
             @Html.ValidationSummary(true)
 
             <div class="col-xs-12  col-sm-12 col-md-12 reg-form">
                 <div class="col-lg-12 center-block noLeft clearfix">
                     <div class="col-lg-12 col-sm-12 clearfix">
                         <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 fname-fld">
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group f-left">
-                                    <div class="cust-field">
 
-                                        @*<span class="holder" >FIRST NAME<span class="small">*</span></span>*@
-                                        @*<input class="form-control" type="text" />*@
-                                        @Html.TextBoxFor(m => m.FirstName, new { @required = "required", @id = "FirstName", @name = "Venue Name", @class = "form-control", @placeholder = "FIRST NAME" })
-                                        @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-
-                                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 form-group f-right">
-                                    <div class="cust-field">
-                                        @*<span class="holder">SURNAME<span class="small">*</span></span>*@
-                                        @Html.TextBoxFor(m => m.LastName, new { @id = "LastName", @class = "form-control", @required = "required", @placeholder = "SURNAME" })
-                                        @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
-
-
-                            </div>
                             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
 
                                 <div class="cust-field">
-                                    @*<span class="holder">Venue Name <span class="small">*</span></span>*@
-                                    @Html.TextBoxFor(m => m.RestaurantName, new { @id = "RestaurantName", @class = "form-control", @placeholder = "Venue Name", @required = "required" })
-                                    @Html.ValidationMessageFor(model => model.RestaurantName, "", new { @class = "text-danger" })
+                                    @*<span class="holder" >FIRST NAME<span class="small">*</span></span>*@
+                                    @*<input class="form-control" type="text" />*@
+                                    @Html.TextBoxFor(m => m.FirstName, new { @required = "required", @id = "FirstName", @name = "Venue Name", @class = "form-control", @placeholder = "FIRST NAME" })
+                                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
+
+                                <div class="cust-field">
+                                    @*<span class="holder">SURNAME<span class="small">*</span></span>*@
+                                    @Html.TextBoxFor(m => m.LastName, new { @id = "LastName", @class = "form-control", @required = "required", @placeholder = "SURNAME" })
+                                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
                                 </div>
 
                             </div>
@@ -99,11 +116,32 @@
                                 </div>
 
                             </div>
+
+
+
                         </div>
                     </div>
                     <div class="col-xs-12 col-sm-12 clearfix">
                         <div class="row">
-                            <div class="col-sm-4 col-md-4 col-lg-4 form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
+
+                                <div class="cust-field">
+                                    @*<span class="holder">Venue Name <span class="small">*</span></span>*@
+                                    @Html.TextBoxFor(m => m.VenueName, new { @id = "VenueName", @class = "form-control", @placeholder = "Venue Name", @required = "required", @data_toggle = "tooltip", @title = "eg. The Carvery Steakhouse & Bar" })
+                                    @Html.ValidationMessageFor(model => model.VenueName, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
+
+                                <div class="cust-field">
+                                    @*<span class="holder">Venue Name <span class="small">*</span></span>*@
+                                    @Html.TextBoxFor(m => m.RestaurantName, new { @id = "RestaurantName", @class = "form-control", @placeholder = "Venue Short Name", @required = "required", @data_toggle = "tooltip", @title = "For online reservation URL – eg. “Carvery” (mondofi.com/carvery/online) vs. “The Carvery Steakhouse & Bar”" })
+                                    @Html.ValidationMessageFor(model => model.RestaurantName, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
 
                                 <div class="cust-field">
                                     @*<span class="holder"> VENUE PHONE # <span class="small">*</span></span>*@
@@ -113,7 +151,14 @@
 
                             </div>
 
-                            <div class="col-sm-4 col-md-4 col-lg-4 form-group">
+
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 clearfix">
+                        <div class="row">
+
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
 
                                 <div class="cust-field">
                                     @*<span class="holder">PASSWORD <span class="small">*</span></span>*@
@@ -123,7 +168,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-sm-4 col-md-4 col-lg-4 form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 form-group">
 
                                 <div class="cust-field">
                                     @*<span class="holder">CONFIRM PASSWORD <span class="small">*</span></span>*@
@@ -139,13 +184,14 @@
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group cust-field">
                         @*<textarea name="" id="input" class="form-control" rows="3" placeholder="Additional Comments" required="required"></textarea>*@
 
-                        @Html.TextAreaFor(m => m.Notes, new { @id = "Notes", @placeholder = "Additional Comments", @rows = "3", @required = "required", @class = "form-control" })
+                        @Html.TextAreaFor(m => m.Notes, new { @id = "Notes", @placeholder = "Additional Comments", @rows = "3", @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-group terms-cond ">
-                        @Html.CheckBoxFor(m => m.TermAndCondition, new { @required = "required" })
+                        @Html.CheckBoxFor(m => m.TermAndCondition, new { @required = "required",  })
+
+                        @*<input id="rembMe" type="checkbox">*@ <label for="rembMe"><a data-toggle="modal" data-target="#TermsConditions" style="color:white; cursor:pointer"> &nbsp;&nbsp;I Agree with the Terms & Conditions</a>  </label><br />
                         @Html.ValidationMessageFor(model => model.TermAndCondition, "", new { @class = "text-danger" })
-                        @*<input id="rembMe" type="checkbox">*@ <label for="rembMe"><a data-toggle="modal" data-target="#TermsConditions" style="color:white">I Agree with the Terms & Conditions</a>  </label>
                     </div>
 
                     <div class="form-group clearfix">
@@ -168,7 +214,9 @@
     </div>
 
 }
-<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript">
+</script>
 <!--/container-->
 <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
 <script>
@@ -180,11 +228,16 @@
     //var widgetId1;
     var widgetId2;
     var onloadCallback = function () {
-
+        ///live  mondofi.com ////
         widgetId2 = grecaptcha.render('example2', {
             'sitekey': '6LcKww0TAAAAAAph6oaAsQHAtxilh01F8LQ8oZdV',
             'theme': 'light'
         });
+
+        //widgetId2 = grecaptcha.render('example2', {
+        //    'sitekey': '6LdNJhETAAAAAKZuRaS9uqJ9yEWUnYl6H596_dIP',
+        //    'theme': 'light'
+        //});
 
     };
 
@@ -205,17 +258,35 @@
 
     $("#Password").tooltip({
         html: true,
-        placement: 'bottom',
+        placement: 'top',
         //trigger:'click',
         template: '<div class="tooltip blackToltop" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
 
 
     })
 
+    $("#RestaurantName").tooltip({
+        html: true,
+        placement: 'top',
+        //trigger:'click',
+        template: '<div class="tooltip blackToltop" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+
+
+    })
+
+    $("#VenueName").tooltip({
+        html: true,
+        placement: 'top',
+        //trigger:'click',
+        template: '<div class="tooltip blackToltop" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+
+    })
+
+
     var specialKeys = new Array();
     specialKeys.push(8); //Backspace
     function IsNumeric(e) {
-       
+
         var keyCode = e.which ? e.which : e.keyCode
         var ret = ((keyCode >= 48 && keyCode <= 57) || specialKeys.indexOf(keyCode) != -1);
         return ret;
@@ -231,31 +302,31 @@
 @*<script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>*@
 
 <script type="text/javascript">
-        $(function () {
-            $(".buttonClick").blur(function () {
-                //alert("ok");
-                $(".buttonClick").each(function () {
+    $(function () {
+        $(".buttonClick").blur(function () {
+            //alert("ok");
+            $(".buttonClick").each(function () {
 
-                    var validated = true;
-                    if (this.value.length < 7)
-                        validated = false;
-                    //if (!/\d/.test(this.value))
-                    //    validated = false;
-                    if (!/[a-z]/.test(this.value))
-                        validated = false;
-                    if (!/[A-Z]/.test(this.value))
-                        validated = false;
-                    if (!/[0-9]/.test(this.value))
-                        validated = false;
-                    $("#passwordcheck").html(validated ? "<i class='halflings-icon ok green'></i>" :
+                var validated = true;
+                if (this.value.length < 7)
+                    validated = false;
+                //if (!/\d/.test(this.value))
+                //    validated = false;
+                if (!/[a-z]/.test(this.value))
+                    validated = false;
+                if (!/[A-Z]/.test(this.value))
+                    validated = false;
+                if (!/[0-9]/.test(this.value))
+                    validated = false;
+                $("#passwordcheck").html(validated ? "<i class='halflings-icon ok green'></i>" :
 
-                        alert("Must be at least 7 characters and contain at least one capital letter, one number and one lowercase letter.", $("#passwordcheck").empty())
-                   
-                         );
-                });
+                    alert("Must be at least 7 characters and contain at least one capital letter, one number and one lowercase letter.")
+
+                     );
             });
         });
-    </script>
+    });
+</script>
 
 
 <script type="text/javascript">
@@ -277,12 +348,19 @@
                     validated = false;
                 $("#passwordcheck").html(validated ? "<i class='halflings-icon ok green'></i>" :
 
-                    alert("Must be at least 7 characters and contain at least one capital letter, one number and one lowercase letter.", $("#passwordcheck").empty())
+                    alert("Must be at least 7 characters and contain at least one capital letter, one number and one lowercase letter.")
 
                      );
             });
         });
     });
+
+
+    function Privacy() {
+        $("#TermsConditions").parents().addClass("modal-open");
+    }
+
+
 </script>
 
 
@@ -297,14 +375,422 @@
                 <h4 class="modal-title">Terms & Conditions</h4>
             </div>
             <div class="modal-body">
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.&hellip;</p>
+                <p>
+                    By accessing or using the Mondofi Site, you agree to and accept this Terms of Use Agreement (“Agreement”). If you do not agree with this Agreement do not access or use this Mondofi Site.
+                </p>
+
+                <p>
+                    If you are an individual acting as a representative of a corporation or other legal entity which wishes to use the Service, then you represent and agree that you have the authority to accept this Agreement and the <a data-toggle="modal" data-target="#Privacy"> Privacy Policy</a> on behalf of such corporation or other legal entity and that all provisions of this Agreement and the<a data-toggle="modal" data-target="#Privacy"> Privacy Policy</a> will bind that corporation or other legal entity as if it were named in this Agreement.
+                </p>
+
+                <p>
+                    1. General. The "Service" shall mean the provision by Mondofi Media Ltd. ("Mondofi") of access to certain application software, content and information, and other content and information owned or licensed by Mondofi and/or its suppliers, licensors or other third parties (the "Contributors") as provided to the end user ("User") by Mondofi at its websites (the "Site(s)"). Mondofi makes available to you the Site subject to your acceptance of and compliance with this Agreement.
+                </p>
+
+                <p>
+                    2. Mondofi reserves the right to modify this Agreement at any time without prior notice by posting such modifications on the Sites. Your continued access or use of the Sites after such modifications have been posted shall indicate your acceptance of and agreement to be bound by this Agreement as modified. It is your responsibility to regularly review this legal notice.
+                </p>
+
+                <p>
+                    3. Restricted Access. Subject to the terms and conditions of this Agreement, Mondofi hereby grants to User and User hereby accepts a non-exclusive, non-transferable authorization to access and use the Service in accordance with the terms and conditions of this Agreement. Mondofi and/or the Contributors hereby reserve all rights not expressly granted to User. Mondofi and the Contributors shall have the right to assert and enforce the provisions of this Article 3 directly on their own behalf. User agrees:
+                </p>
+
+                <p>
+                    i. to abide by this Agreement and any and all access or similar agreements between the Contributors and User (collectively, the "Accessing Documents"); and
+                </p>
+
+                <p>
+                    ii. to keep User’s authorized account (the "Account") information confidential, including User password, User name and any other information related to the Service (the "Account Information"), and to inform Mondofi promptly in case of any unintended and/or unauthorized disclosure of any portion of such Account Information.
+                </p>
+
+                <p>
+                    4. Lawful Purposes. User agrees to only use the Service for lawful purposes. In using the Service, User agrees it will not:
+                </p>
+
+                <p>
+                    i. upload, publish, distribute or disseminate any content that is offensive, including blatant expressions of bigotry, prejudice, racism, hatred or profanity or post any obscene, lewd, lascivious, sexually explicit, violent, harassing or otherwise objectionable content;
+                </p>
+
+                <p>
+                    ii. post or disclose any personally identifying information or private information about children under the age of 18 without their parents' consent;
+                </p>
+
+                <p>
+                    iii. introduce viruses, worms, harmful code and/or Trojan horses on the Internet;
+                </p>
+
+                <p>
+                    iv. engage in any libelous, defamatory, scandalous, threatening, or harassing activity;
+                </p>
+
+                <p>
+                    v. post any content that advocates, promotes or otherwise encourages violence against any governments, organizations, groups or individuals or which provides instruction, information or assistance in causing or carrying out such violence;
+                </p>
+
+                <p>
+                    vi. provide material that is false, deceptive or misleading; or
+                </p>
+
+                <p>
+                    vii. provide Content (as defined below) without the express written consent of the Content owner.
+                </p>
+
+                <p>
+                    Furthermore, the User agrees it will not:
+                </p>
+
+                <p>
+                    i. access the Service if it is a direct competitor of Mondofi, except with Mondofi's prior written consent;
+                </p>
+
+                <p>
+                    ii. access the Service for purposes of monitoring its availability, performance or functionality, or for any other benchmarking or competitive purposes; or
+                </p>
+
+                <p>
+                    iii. interfere with or disrupt the integrity or performance of the Service or the data contained therein or attempt to gain unauthorized access to the Service or its related systems or networks.
+                </p>
+
+                <p>
+                    5. Trademarks and Marketing Communications. Nothing in this Agreement or in its performance will grant either party any right, title, interest, or license in or to the other’s names, logos, trade dress, designs, or other trademarks. Mondofi is a registered trademark of Mondofi. Other trademarks used in this Agreement or in providing the Service are trademarks of their respective owners. Mondofi will have the right to include Mondofi trademarks or slogans on or in data reports (hard copy and electronic) generated by the Services. Mondofi may include its logo, as well as advertising for Mondofi, its partners, or its Sites, on any Services interface, including those interfaces that the User may see.
+                </p>
+
+                <p>
+                    6. Intellectual Property Rights. It is hereby understood and agreed that as between Mondofi and User, Mondofi is the owner of all rights, title, and interest, including all Intellectual Property Rights (as defined below), to the Service, the Site, and any comments and suggestions, ideas, graphics, questions or other information submitted by User through the Site or the Service (the "Submissions"). Mondofi shall be entitled to use such Submissions for any commercial or other purposes whatsoever without compensation to User or anyone else. User hereby warrants that no Submissions shall violate any Intellectual Property Right of any third party. For purposes of this Agreement, "Intellectual Property Rights" shall mean any and all of the following: (a) rights associated with works of authorship throughout the world, including but not limited to copyrights, moral rights, and mask-works; (b) trademark, trade name rights and similar rights: (c) trade secret rights; (d) patents, designs, algorithms and other industrial property rights; (e) all other intellectual and industrial property rights of every kind and nature throughout the world and however designated, including but not limited to logos, "rental rights", rights of publicity, and rights to remuneration, whether arising by operation of law, contract, license, or otherwise; and (f) all registrations, initial applications, renewals, extensions, continuations, divisions or re-issues hereof now or hereafter in force.
+                </p>
+
+                <p>
+                    Except as expressly provided herein, User does not acquire any rights to the Service through the use of the Service or the Site pursuant to this Agreement. User may not reverse engineer, de-compile, disassemble, or otherwise attempt to discern the source code (i.e., the human-readable form of any computer programming code) (the "Source Code") of the components of the Service, or create derivative works based thereon. User also may not download, republish, reproduce, copy, post, transmit, or in any way distribute any material from the Site unless such activities are in direct furtherance of User’s permitted use of the Service and do not in any way violate this Agreement or any Accessing Documents.
+                </p>
+
+                <p>
+                    User is not permitted to: (a) rent, lease, assign or transfer all or any part of the Service and/or User’s Account Information to any person or entity without the prior written consent of Mondofi; (b) remove any proprietary notices, labels, or marks on any component of the Service (or the Service or Site generally), whether in machine language or Source Code; (c) use the Service to provide a service bureau by which the Service can be accessed by third parties or by which information produced pursuant to the Service is sold, transferred, or given to third parties via pay per call or other arrangements; or (d) license, assign, delegate or otherwise transfer its rights or any of its related rights or obligations under this Agreement for any reason without the prior written consent of Mondofi. Any attempt to license, assign, delegate or transfer, either by contract, statute, corporate merger of any sort, regulation or court order, without the prior written consent of Mondofi shall be voidable at Mondofi's sole and absolute discretion. Failure to comply with these restrictions will result in automatic termination of this Agreement without prejudice to all other rights and remedies that may accrue to Mondofi by virtue of this Agreement and by law.
+                </p>
+
+                <p>
+                    7. Privacy. Unless previously authorized in writing by User, Mondofi will not disclose any personal information other than as required to schedule an appointment. Please review our full <a data-toggle="modal" data-target="#Privacy"> Privacy Policy</a> for further details.
+                </p>
+
+                <p>
+                    8. Personal Information. If User sends or receives protected health information in connection with the Service, User does so at its own risk, and User expressly agrees to defend and indemnify Mondofi for any claim relating to the noncompliance of the Service as it applies to the compliance of Personal Information.
+                </p>
+
+                <p>
+                    9. Client Support. User agrees to release Mondofi from any and all liability associated with providing support to the User.
+                </p>
+
+                <p>
+                    10. Termination. Either Party may terminate this Agreement without notice to the other Party. Mondofi may immediately terminate this Agreement and User’s Account upon (a) User’s breach of any provision of this Agreement or (b) any action by User thatMondofi determines, in its sole judgment, to interfere with the operation or use of the Mondofi's Service at large. Upon termination by Mondofi, the User’s right to access or use of data immediately ceases and Mondofi will have no obligation to maintain or forward any data to the User. Upon termination by the User, the User’s right to access or use of data immediately ceases and Mondofi will have no obligation to maintain or forward any data the User.
+                </p>
+
+                <p>
+                    11. Equipment Operation. User is solely responsible for acquiring and maintaining all computer hardware and software, telephone, and other equipment, and all communications and other services needed for access to and use of the Service. Mondofireserves the right, at any time and for any reason, to modify or discontinue any aspect or feature of the Service and/or the Site, including, but not limited to, the Service’s content, functionality, and the equipment to access or use the Service.
+                </p>
+
+                <p>
+                    12. Hyperlinked Material. The Site may contain hyperlinks to other sites on the Internet that are not owned or controlled by Mondofi. Mondofi does not assume any responsibility for any material on such sites, or any other material outside of the Site, which is accessed directly or indirectly by any such hyperlink.
+                </p>
+
+                <p>
+                    13. Security and Data Storage. User shall not permit or allow other persons to have access to or to use User’s Account Information other than User’s employees, consultants or agents who have been notified of the restrictions set forth in this Agreement and Mondofi’s <a data-toggle="modal" data-target="#Privacy"> Privacy Policy</a>. Any exceptions require Mondofi's prior written consent. User agrees to maintain the confidentiality of all User Account Information and agrees to be primarily responsible for all activity pursuant to User Account. Although Mondofihas taken significant measures to ensure the security of information submitted by User in using the Service, Mondofi cannot guarantee the security of information collected during User’s use of the Service and shall not be liable in any way for compromise of User’s data.
+                </p>
+
+                <p>
+                    14. Relationship of the Parties - Independent Contractor. It is expressly understood and agreed that the relationship between Users, Contributors and Mondofi is as follows: each Party to this Agreement is acting as an independent contractor and is not an agent, partner, or joint venture with the other Party for any purpose. The Parties have no authority to assume or create any obligation for or on behalf of either Party, express or implied, with respect to the Terms and Conditions herein or otherwise.
+                </p>
+
+                <p>
+                    15. Mondofi Warranties. Notwithstanding any provision of this Agreement, the Service is furnished "as is" and with all faults. Mondofi makes and User receives no warranties, express, implied, statutory, or in any communication with User. Mondofi and its Contributors expressly disclaim all other warranties and conditions, either express or implied, including, but not limited to, implied warranties or conditions of merchantability, fitness for a particular purpose, availability, security, title and non-infringement, any warranty that operation of the Service will be uninterrupted or error free, and/or the failure to provide adequate support for the Service. Mondofi does not warrant that the Service is free of inaccuracies, errors, bugs, interruptions or other program limitations. Nor does Mondofi warrant that the Site, or server that makes it available, is free of viruses or other harmful components. The entire risk arising out of the use or performance of the Service remains with User, and User agrees to assume the entire cost of all necessary servicing repair or correction of problems to its own computers or equipment caused by viruses or other harmful components.
+                </p>
+
+                <p>
+                    User specifically agrees that Mondofi shall not be responsible for the unauthorized access to or alteration of User’s transmission(s) or data. User agrees that Mondofi is not responsible for any material or data sent or received or not sent or received, any transmission(s) entered in through the Service, any expenses, damages or injury caused by any failure of performance error, omissions, interruption, deletion, defect, delay in operation or transmission of computer virus, communication line failure, theft or destruction or use of record, whether for breach of contract, tortuous behavior, negligence, or for any other cause of action. User also agrees that Mondofi is not responsible for the conduct of any third party or any infringement of another’s rights, including Intellectual Property Rights.
+                <p>
+
+                <p> 16. Data Rights and Conversion. Mondofi does not guarantee the accuracy or completeness of any data conversion or data import or export to or from the User to Mondofi.</p>
+
+                <p>i. Mondofi will not be responsible or liable for the deletion, correction, destruction, damage, loss or failure to store any data relating to the User.</p>
+
+                <p> ii. Mondofi has the right to use for legitimate business purposes all data and information collected in connection with this Agreement.</p>
+
+                <p> 17. Limitation of Liability. User acknowledges that the operation and availability of the communications systems, including, without limitation, telephone service, computer networks and the Internet, used for accessing and interacting with the Service can be unpredictable and may, from time to time, interfere with or prevent access to or operation of the Service. User acknowledges that Mondofi is not responsible for any such interference with or prevention of User’s use of or access to the Service. Except for the obligations of indemnity hereinafter set forth, neither Party (nor its suppliers or Contributors) shall be liable to the other Party for any damages for loss of profits or business, loss or damage to data or failure to realize expected savings, or for any punitive, consequential, incidental or indirect damages, related to the use of or inability to use the Service, even if the Party could reasonably foresee or has been advised of the possibility of such damages.</p>
+
+                <p>18. Indemnification. User agrees to indemnify and hold harmless Mondofi and any of its Contributors, and their respective affiliates, officers, directors, employees, consultants, agents, licensees and licensors from any claim, demand, or damages, including reasonable attorneys’ fees, asserted by any third party due to, arising out of, or in any way related to, the use of the Service. As used in this Agreement, "affiliate", means any entity, which controls, is controlled by, or is under common control with the named entity.</p>
+
+                <p> 19. Equitable Relief. Nothing in this Agreement shall be interpreted as prohibiting Mondofi from pursuing or obtaining any other remedies as otherwise available to it for such actual or threatened breach, including recovery of damages.</p>
+
+                <p> 20. Governing Law / Jurisdiction. This Agreement shall be governed by and constructed under the laws of the Province of British Columbia, Canada, without reference to principles of conflict of laws, and any action brought by the parties to this Agreement to enforce or interpret any provisions of this Agreement shall be brought to and subject to the exclusive jurisdiction of the courts of Vancouver, British Columbia, Canada. The Parties hereby consent to such jurisdiction and waive any objection to such venue.</p>
+
+                <p>21. General. This Agreement sets forth the entire agreement and understanding of the Parties & relating to the subject matter herein and supersedes all prior agreements and understandings, oral and written, between the Parties hereto with respect to the subject matter herein. Failure by Mondofi to enforce any provision of this Agreement will not be deemed a waiver of future enhancement of that or any other provision.</p>
+
+                <p>  Nonperformance of either Party shall be excused to the extent that performance is rendered impossible by strike, fire, flood, governmental acts or orders or restrictions, failure of suppliers, or any other reason where failure to perform is beyond the control and not caused by the negligence of the non-performing Party. This Agreement shall be construed within its fair meaning and no inference shall be drawn against the drafting Party in interpreting this Agreement. Headings used in this Agreement are for reference purposes only and in no way define, limit, construe or describe the scope or extent of such section or in any way affect this Agreement.</p>
+
+                <p>
+                    Mondofi Media Ltd.<br />
+                    Suite 604 - 280 Nelson St.<br />
+                    Vancouver, BC<br />
+                    V6B 2E2
+                <p>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+
+
+
+<div class="modal fade" id="Privacy">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color:#3b3b41; color:white">
+                <button type="button" style="color: white;" class="close " onclick="Privacy();" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Privacy and Security Policy</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    At Mondofi Media Ltd. ("the Company", “we”), we respect your privacy. We have established this Privacy and Security Policy so that you may better understand what information we collect and how we collect, use and disclose the information collected. In this way, you may make an informed decision when using the Company's software as a service (including the Company hosted website(s)), (collectively "Company Services").
+                </p>
+
+                <p>
+                    The Company Services are used by businesses (incorporated or otherwise) ("Businesses") who register for the Company Services and by the customers and/or potential customers of such Businesses ("Consumers", “you”). We collect information from the Businesses and Consumers. We also collect information in connection with the operation, maintenance and usage of the Company Services.
+                </p>
+
+                <p>
+                    By using or accessing the Company Services, you accept and agree to the practices described in this Privacy and Security Policy.
+                </p>
+
+                <p>
+                    Information You Provide
+                </p>
+
+                <p>
+                    In connection with the Company Services, Businesses and/or Consumers may choose to upload, publish or otherwise display, or share with others (collectively "provide") certain material, including contact information, photos, personal information, messages, notes, text, and/or any other content (collectively the "User Content") on or through the Company Services. You agree that you are providing the User Content at your own risk and the Company and its directors, employees, partners or agents are not responsible for the use, confidentiality, disclosure or security of such User Content; This Privacy and Security Policy is not applicable to User Content you publicly provide.
+                </p>
+
+                <p>
+                    The Types of Information We Collect
+                </p>
+
+                <p>
+                    1. Registration Information for Businesses:
+                </p>
+
+                <p>
+                    When a Business registers to use the Company Services, we collect certain registration information from the Business. This includes the Business name, a user name and password to be used by the Business, and other contact information for the Business representative(s), such as email, mailing address and telephone number, etc. (collectively "Registration Information").
+                </p>
+
+                <p>
+                    2. Billing Information:
+                </p>
+
+                <p>
+                    When a Business purchases fee-based services/products from us, we will also collect billing information from the Business such as credit card number(s).
+                </p>
+
+                <p>
+                    3. Other Information Collected from Businesses and Consumers in connection with Company Service offerings:
+                </p>
+
+                <p>
+                    (a) Information about the Business Operations:
+                </p>
+
+                <p>
+                    In connection with the Company Services, we may also collect certain information about the Business and its operations, including, the geographic location of the Business, the services and/or products offered by the Business, a general description of the Business operations (including hours of operation), pricing, policies, names of staff members/contractors, contact information for staff members/contractors (including, but not limited to, email addresses, phone numbers, names of such personnel), photographs of business and/or staff members/contractors, etc. (collectively "Business Information").
+                </p>
+
+                <p>
+                    (b) Consumer Information:
+                </p>
+
+                <p>
+                    In connection with the Company Services, we may also collect certain information (including personal information) about the Consumers of the Businesses. For example, Businesses may input and/or upload certain information about their Consumers and the Consumers of the Business may input and/or upload such information about them (collectively "Consumer Information").
+                </p>
+
+                <p>
+                    (c) Aggregate Site Usage Information:<?p>
+
+                <p>
+                    We also collect aggregate information from the users of the Company Services regarding the users systems and their usage of the Company Services (“Aggregate Site Usage Information”). This includes, but is not limited to:
+                    information derived from the web browser's of the users of the Company Services including information derived from "cookies" or similar technology,
+                    Internet Protocol addresses collected from server logs, traffic and volume statistical data,<br />
+                    frequency of visits,<br />
+                    type and time of transactions,<br />
+                    statistical data,<br />
+                    browser type,<br />
+                    operating system,<br />
+                    activity on site,<br />
+                    links to external sites,<br />
+                    clicks on advertisements,<br />
+                    volume statistical information, etc.
+                </p>
+
+                <p>
+                    How and When We Use Information Collected
+                </p>
+
+                <p>
+                    The Company and/or its business partners or contractors my collect the information provided by Businesses and/or Consumers for the following purposes.
+                </p>
+
+                <p>
+                    1. General purposes
+                </p>
+                <p>
+                    (a) to provide, maintain, administer, and update the Company Services;<br />
+
+                    (b) to analyze and evaluate usage of the Company Services;<br />
+
+                    (c) to support the users of the Company Services, including correcting any errors or failures of the Company Services;<br />
+
+                    (d) to customize any marketing, advertising, and/or other content presented to users of the Company Services;<br />
+
+                    (e) to fulfill requests for Company Services and/or products;<br />
+
+                    (f) to improve Company Services;<br />
+
+                    (g) to conduct research; and/or<br />
+
+                    (h) to provide anonymous reporting and/or data for internal and external clients.
+                </p>
+                <p> 2. Specific purposes</p>
+
+                <p>
+                    (a) Registration Information to authenticate the representatives of the Business, to contact and communicate with the Business and its representatives, to provide information regarding service updates, to provide service updates and/or other useful information to the Business;<br />
+
+                    (b) Billing Information to charge for services and/or products purchased;<br />
+
+                    (c) Business Information is deemed public information (including any personal information provided as contact information) and may be published on the internet, including to third party web sites in order to advertise or promote the Business products/services;<br />
+
+                    (d) Aggregate Site Usage Information to diagnose technical problems, to administer the Company Services, for product development and testing, for backup/recovery purposes, to improve the quality and types of Company Services delivered, to analyze the usage and customize the content and/or advertising appropriately, and/or to market/validate services and products offered;<br />
+
+                    (e) the Company (and/or its business partners or contractors) may use "cookies" or similar technologies to identify user traffic patterns and user technology, to collect usage information and aggregate demographic information, to assist the Company in delivering the Company Services, to improve the Company's offerings and/or services, to authenticate users, to identify users, to provide a more positive and/or personalized user experience and/or to facilitate access to user accounts, etc. The Company (and/or its business partners or contractors) may use third party advertising companies to serve ads and these third parties may send cookies or similar technologies to your computer. Such technologies may be used to tailor the content of information delivered to you. You may refuse the use of cookies by selecting the appropriate settings on your browser; however, please note that if you do this it may interfere with your use of some of the Company Services.<br />
+
+                    (f) the Company (and/or its business partners or contractors) may also use the Business and/or Consumer contact information to communicate with the Business and Consumers. The Company may also facilitate the transfer of information between Businesses and their Consumers. For example, as a Consumer, we may send you emails containing information you requested from the relevant Business. If you are the Business, we may send you emails containing information you have requested from the Consumers.<br />
+
+                    Generally, you may configure your personal account settings to set the frequency of emails or opt-out of certain promotional emails. For details, see the section on Communications Email Opt-out below.<br />
+                </p>
+                <p>
+                    How and When We Share Information Collected
+                </p>
+
+                <p> 1. Consumer’s Personal Information with a Business</p>
+
+                <p> We will share the information we collected from you as necessary and contemplated by the Company Services in order to provide Company Services. For example, we will share your name/contact information with the Business you are contacting. By using Company Services you agree that you are consenting to disclosure of your personal information but only to the extent disclosure is necessary to enable us to provide or facilitate providing the Company Services to you.  <p>
+
+                <p>
+                    2. Consumer’s Personal Information with our Agents/Contractors
+                </p>
+
+                <p>
+                    We may contract with third parties to perform certain tasks on our behalf. We might share certain information we collect with such third parties in order to perform those tasks. These tasks include sending emails, text messages, credit card payment services and Internet and hosting services. Unless we otherwise inform you, our agents/contractors will not have access to your personal information beyond what is necessary to perform such services.
+                </p>
+                <p>
+                    3. Company Business Partners
+                </p>
+                <p>
+                    In certain instances, Company Services are offered jointly with our business partners. For example, we may partner with third parties to offer a private labeled hosted service or a co‑branded service. You can easily recognize when our business partner is associated with a particular service offering/opportunity/transaction. In this case, we will share user information that is related to such service offering/opportunity/transaction with that affiliated business partner. Disclosure of such information to our business partner is subject to them agreeing contractually to comply with the terms of this Aggregate Non-Identifying Information. We may provide aggregate non-identifying information (specifically including Aggregate Site Usage Information) to these partners in order to market our products/services and to demonstrate the value we deliver.
+                </p>
+                <p>
+                    4. Third Party Advertisers
+                <p>
+                <p>
+                    Advertisers that may advertise on the Company hosted site(s) have no access to any personal information unless you choose to share it with them. However, these advertisers may have access to anonymous usage data in order to target contextually relevant advertisements. Advertisements may be served directly to users by these advertisers. In such cases, the advertiser may automatically receive your IP address. These advertisers may also download cookies to your computer, or use other technologies such as JavaScript and "web beacons" to measure the effectiveness of their ads and to personalize advertising content. We do not have control over the cookies that may be placed by these advertisers on your computer.
+                </p>
+                <p>
+                    5. Sale or Merger of the Business or Portions of the Business
+                </p>
+                <p>
+                    If we sell all or a portion of the Company’s assets, or we merge with another entity, or if the Company goes out of business or enters bankruptcy, the Company data (including user information collected) may be transferred or acquired by a third party in an asset sale or transfer. After such a transaction, the third party that becomes the custodian of the information/data purchased would have the right to continue using the information/data as set forth in this policy. You acknowledge that such transfers may occur, and that any acquirer may continue to use your information as set forth in this policy in accordance with applicable privacy legislation.
+                </p>
+                <p>
+                    6. Compliance with Laws; Protection of Company and Others
+                </p>
+                <p>
+                    We may release information collected (including personal information) for the purposes of complying with laws or regulations, subpoenas, or the authorized requests of law enforcement or other government authorities or that disclosure is reasonably necessary to enforce/apply Company's Terms of Service or other agreements, or that disclosure is required in order to protect the rights, property, or safety of the Company, its employees, our users, or other third parties. This includes, without limitation, exchanging information with other companies and organizations for fraud protection. Where legally required, we will take all reasonable steps to notify you when your personal information may be shared with third parties so you can choose to prevent the sharing of this information.
+                </p>
+                <p>
+                    Relationship and Disclosures between the Consumers and Businesses
+                </p>
+                <p>
+                    To the extent you are the Consumer and you provide information to the Business via Company Services or otherwise (including but not limited to any personal information you provide to the Business), we are not responsible for the Business' collection, use or disclosure of such information. For example, if you provide your email address or other personal information to a Business via the Company Services or otherwise, the Business may use that information and contact you with promotional or other information or disclose that information to others. The Company is not responsible in any way in how you exchange information (including your personal information) between you and the Business.
+                </p>
+                <p>
+                    Similarly, to the extent you are the Business and provide information to the Consumers via Company Services or otherwise (including personal information), the Company is not responsible in any way in how the Business exchanges information (including personal information) between it and Consumers.
+
+                    Third Party Sites
+
+                    Our site is collaborative, and may contain links to other third party websites, including many that have different privacy and security policies and practices. No endorsement or approval of any third party or its advice, opinions, information, products or services is expressed or implied by any content provided through these third party sites. We urge you to consult the policies available on those sites to further understand your rights and their practices.
+                </p>
+                <p>
+                    Security
+
+                    The Company has implemented technologies, processes and procedures (collectively “Safeguards”) designed to protect the information it collects and stores, including Consumer personal information. These Safeguards include:<br />
+                    Enhanced Compliance Mode options for companies in the health care industry:<br />
+                    Audit tags that log who and when any personal information or financial information is created or modified.<br />
+                    Consumers must confirm the release of personal information for every appointment they electronically request.<br />
+                    A minimum eight character password for all users of the system.<br />
+                    A user interface with permission levels and encrypted passwords designed to prevent user access to data of third parties.<br />
+                    Authentication verification standards upon Consumer registration through email verification.<br />
+                    128 - 256 bit SSL encryption of all data transmissions via the Company and on all of the appointment booking screens. SSL is the industry standard security technology for establishing an encrypted link between a web server and a browser.<br />
+                    A secure hosting environment.<br />
+                </p>
+                <p>
+                    Daily system backups.
+                </p>
+                <p>
+                    Encrypted server access based on permissions by the Company’s employees and system administrators.
+                </p>
+                <p>
+                    Registered users are assigned a unique user name and password, which are required to access their account. It is the user's responsibility to protect the security of their user name and password.
+                </p>
+                <p>
+                    The Company has employed firewalls and other advanced security technologies, which we believe are reasonably sufficient to safeguard against unauthorized access from outside intruders. Unauthorized entry or use or disclosures, hardware or software failures, and other factors may compromise the security of the information we collect and store. We are not responsible for circumvention of any privacy settings or Safeguards used in connection with Company Services.
+                </p>
+                <p>
+                    Privacy
+                </p>
+                <p>
+                    The Service is hosted in Canada. If you use the Service from outside of Canada, you are voluntarily transferring information (potentially including personal information) and content to Canada.
+                </p>
+                <p>
+                    Accessing, Correcting and Revising Registration and Contact Information
+                </p>
+                <p>
+                    To update your record/account information, log on to the service and select the available user account management pages.
+                </p>
+                <p>
+                    If you choose to cancel your account, please be aware that we may retain residual/historical information in our data bases for audit, legal or other purposes.
+                </p>
+                <p>
+                    Communications; Email Opt-Out
+                </p>
+                <p>
+                    As part of our Services, you agree that we may contact you and send you communications as part of our ongoing business relationship. We may also, from time-to-time, send you certain promotional emails/communications so that you are aware of our products and services. If you wish to stop receiving promotional emails/communications you may opt out by checking the unsubscribe option on such communications.
+                </p>
+                <p>
+                    Compliance with Children's Online Privacy Protection Act<br />
+
+                    As a business service, Company does not target its offerings toward, and does not knowingly collect any personal information from users under 13 years of age without parent's consent.
+                </p>
+                <p>
+                    Changes to the Privacy and Security Policy
+                </p>
+                </p>
+                We reserve the right to change this Privacy and Security Policy and will provide notification of any material change. We will indicate in the notification of the effective date of the change. If you do not agree with the changes, you always have the option of terminating your account and stop using the Company Services.
+                <p>
+                <p>
+                    You may contact us with any questions pertaining to this policy at privacy@Mondofi.com.
+                </p>
+                <p>
+                    Privacy related Inquires
+                </p>
+                <p>
+                    We will respect your request for access to your information. Send all requests or questions about our privacy practices to us in writing by email. In your correspondence, please describe your questions in as much detail as possible. We will investigate your concerns promptly and will respond to you within 10 business days.
+                </p>
             </div>
 
         </div><!-- /.modal-content -->

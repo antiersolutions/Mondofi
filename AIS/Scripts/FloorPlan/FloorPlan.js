@@ -81,7 +81,7 @@ function Floor() {
 
                 //$('#floorSideTabs').show();
                 //$('#floorSideAddRes').hide();
-
+               
                 BindALLPopovers('ul.reslist li.popUp', '.popUpContent');
             }
         });
@@ -102,12 +102,12 @@ function Floor() {
         }
         else {
 
-            //debugger;
+            // 
             var useReservationFloor = false;
             var reloadOptions = false;
             StopSlideTimer();
             self.UpdateCurrentValues();
-            //debugger;
+            // 
             var url = baseUrl + "GetAddReservtionPartial";
 
             var dataObj = {
@@ -189,7 +189,7 @@ function Floor() {
     self.OpenAddWaiting = function (covers) {
         //StopSlideTimer();
         self.UpdateCurrentValues();
-        //debugger;
+        // 
         var url = "/Waiting/GetAddToWaiting";
 
         var dataObj = {
@@ -246,7 +246,7 @@ function Floor() {
 
     self.UpdateWaitingList = function () {
         self.UpdateCurrentValues();
-        //debugger;
+        // 
         var url = "/Waiting/GetAllWaitingList";
 
         var dataObj = {
@@ -261,7 +261,7 @@ function Floor() {
             url: url,
             data: dataObj,
             beforeSend: function () {
-                //debugger;
+                // 
                 if (updatingReservationList != null) {
                     updatingReservationList.abort();
                 }
@@ -341,7 +341,7 @@ function Floor() {
                 data: dataObj,
                 url: url,
                 beforeSend: function () {
-                    //debugger;
+                    // 
                     if (updatingReservationList != null) {
                         updatingReservationList.abort();
                     }
@@ -424,7 +424,7 @@ function Floor() {
                 data: dataObj,
                 url: url,
                 beforeSend: function () {
-                    //debugger;
+                    // 
                     if (updatingReservationList != null) {
                         updatingReservationList.abort();
                     }
@@ -440,7 +440,7 @@ function Floor() {
                     //HideClueTip();
                     HidePopovers();
 
-                    //debugger;
+                    // 
                     $('.frnt-right-rowb #tabs ' + targetElementUpdate)
                         .empty()
                         .append(data.HTMLArray.join(''));
@@ -489,7 +489,7 @@ function Floor() {
                 }
                 //            case "SHIFTCHANGE":
                 //                {
-                //                    debugger;
+                //                     
                 //                    url += 'UpdateFloorPlan';
                 //                    dataObj.time = $('#open :selected').val();
                 //                    dataObj.shift = $("#shift").next().text();
@@ -509,7 +509,7 @@ function Floor() {
             data: dataObj,
             url: url,
             beforeSend: function () {
-                //debugger;
+                // 
                 if (updatingFloorPlan != null) {
                     updatingFloorPlan.abort()
                 }
@@ -544,7 +544,7 @@ function Floor() {
         });
 
         //$('#floorArea').load(url, dataObj, function () {
-        //    //debugger;
+        //    // 
         //    //if (MergeTableService == null) {
         //    //    self.BindFloorTableEvents();
         //    //}
@@ -608,7 +608,7 @@ function Floor() {
     };
 
     self.SetRotateToTableSeats = function (table) {
-        //debugger;
+        // 
         var seatCount = $(table).parents('.table-main').find('.seat').length;
         var angle = (360 / seatCount);
         var sumAngl = 0;
@@ -761,7 +761,7 @@ function EditReservationButtonEvent(resId) {
 }
 
 function AddReservationTimeChange(ddlTime, considerResFloor) {
-    //debugger;
+    // 
     var parentForm = $(ddlTime).parents('.resOptParent');
 
     if (considerResFloor) {
@@ -789,7 +789,7 @@ function AddReservationTimeChange(ddlTime, considerResFloor) {
 }
 
 function SelectTableInDDL(sourceTable) {
-    //debugger;
+    // 
     if ($(sourceTable).parents('.table-main').find('.show-tooltip-left').length === 0) {
         if ($('#floorSideAddRes').css('display') != 'none') {
             var adResTbl = $('#AdResDDL #ddlTable');
@@ -807,7 +807,7 @@ function SelectTableInDDL(sourceTable) {
             var ddlVal = $(sourceTable).parents('.table-main').find('#FloorTableId').val();
 
             if (adResTbl.val() != ddlVal && IsValueExistInDDl(adResTbl, ddlVal)) {
-                // debugger;
+                //  
                 adResTbl.val(ddlVal).change();
             }
         }
@@ -916,7 +916,7 @@ function ScrollToCurrentTime() {
     var currentResItem = $("#ResAllList ul li").filter(function () {
         return $(this).attr("data-time") < currentSlideTimeValue;
     }).last();
-    //debugger;
+    // 
     if (currentResItem.length > 0) {
         var top = currentResItem.offset().top - 138;
         var scrollTopToValue = $("#ResAllList").scrollTop() + top;

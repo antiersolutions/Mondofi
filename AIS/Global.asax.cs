@@ -47,6 +47,10 @@ namespace AIS
             "savewaiting",
             "updatewaiting"};
 
+            //var excludeTableAvailabilityActions = new string[]{
+            //"checktableavailabity"
+            //};
+
             //Configure a conditional filter
             var conditions = new Func<ControllerContext, ActionDescriptor, object>[] {
                     ( c, a ) => !c.IsChildAction ? new CompressContentAttribute() : null,
@@ -65,6 +69,11 @@ namespace AIS
                     ( c, a ) => a.ControllerDescriptor.ControllerName.Contains("Waiting") && !c.IsChildAction 
                         && !excludedWaitingActions.Contains( a.ActionName.ToLower())
                         ? new MinifyHtmlAttribute() : null,
+
+                    //TableAvailability Controller
+                    //( c, a ) => a.ControllerDescriptor.ControllerName.Contains("TableAvailablity") && !c.IsChildAction 
+                    //    && !excludeTableAvailabilityActions.Contains( a.ActionName.ToLower())
+                    //    ? new MinifyHtmlAttribute() : null,
             };
 
             var provider = new ConditionalFilterProvider(conditions);

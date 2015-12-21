@@ -1,11 +1,22 @@
 ﻿@model AIS.Models.OnlineAvailTables
+@using AIS.Models
+@using AIS.OnlineExtensions;
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_LayoutOnline.cshtml";
     var date = (DateTime)ViewBag.date;
     AISModels.Reservation Reservation = ViewBag.CurrentReservation;
     string company = ViewBag.company;
+    int count = 1;
+    UsersContext db = new UsersContext(company);
+    var Address = db.tabSettings.Where(s => s.Name.Contains("Address")).Single().Value;
+    var PhoneSetting = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single().Value;
+    string[] values = Address.Split(',');
+    string laststring = Address.Split(',').Last();
+    int stringcount = values.Count();
+    var today = DateTime.UtcNow.ToDefaultTimeZone(company);
 }
+
 @section styles{
     @Styles.Render("~/Content/themes/base/minified/jquery-ui.min.css",
     "~/Content/themes/base/minified/jquery.ui.datepicker.min.css")
@@ -26,9 +37,11 @@
             text-align: center;
             font-size: 14px;
         }
+
         .result-sec {
             font-weight: normal;
         }
+
         .s-date input {
             cursor: pointer;
         }
@@ -59,7 +72,7 @@
             $("#date").datepicker();
             //$('#date').datepicker("option", "dateFormat", 'mm/dd/yy');// live
             $('#date').datepicker("option", "dateFormat", 'dd/MM/yy');// local
-            $("#date").datepicker("option", "minDate", new Date());
+            $("#date").datepicker("option", "minDate", new Date('@today.Year', '@(today.Month - 1)', '@today.Day'));
             $('#date').datepicker('setDate', new Date('@date.Year', '@(date.Month - 1)', '@date.Day'));
         });
 
@@ -67,7 +80,7 @@
             $.ajax({
                 url: '/online/UpdateTime',
                 type: 'GET',
-                data: { date: $(datepicker).val(), company: company },
+                data: { date: $(datepicker).val(), company: "@company" },
                 success: function (data) {
                     if (data) {
                         var options = '<option value="">-Select Time-</option>';
@@ -75,9 +88,8 @@
                             options += '<option value="' + item.Value + '">' + item.Text + '</option>';
                         });
 
+                        $('select#time').empty()
                         $('select#time').html(options)
-                            .selectpicker('refresh');
-                        $('.bootstrap-select').removeClass('input-validation-error');
                     }
                 }
             });
@@ -97,10 +109,23 @@
 
     <ul class="col-xs-6 col-sm-8 col-md-8 Address pull-right">
         <li><span>Restaurant Address</span></li>
-        <li>1517 Anderson St.</li>
-        <li>Granville Island, Vancouver, BC</li>
-        <li>V6H 3R5</li>
-        <li>Canada</li>
+        @foreach (var item in values)
+        {
+            if (stringcount - 1 == count)
+            {
+                <li>@item,@laststring</li>
+            }
+            else if (stringcount > count)
+            {
+
+                <li>@item,</li>
+            }
+
+
+            count++;
+        }
+        <li><span>Call us at</span></li>
+        <li>@PhoneSetting</li>
     </ul>
 
 </div>
@@ -176,7 +201,7 @@
             </div>*@
         <div class="col-md-12 ">
             <div class="col-md-12" style="padding:0px;">
-                <button type="button" class="Cancel-btn" onclick="window.location.href='/@company/online'"> Cancel</button>
+                <button type="button" class="Cancel-btn" onclick="window.location.href='/@company/online'">  Cancel Edit</button>
             </div>
         </div>
     }
@@ -188,7 +213,7 @@
 
         <div class="col-md-12 ">
             <div class="col-md-6" style="padding:0px;">
-                <button type="button" class="Cancel-btn" onclick="window.location.href='/@company/online'"> Cancel</button>
+                <button type="button" class="Cancel-btn" onclick="window.location.href='/@company/online'"> Cancel Edit</button>
             </div>
             <div class="col-md-6" style="padding:0px;">
                 @using (Html.BeginForm("Update", "Online", new AIS.Models.ReservationVM
@@ -217,7 +242,7 @@
             </div>*@
         <div class="col-md-12 ">
             <div class="col-md-12" style="padding:0px;">
-                <button type="button" class="Cancel-btn" onclick="window.location.href='/online'"> Cancel</button>
+                <button type="button" class="Cancel-btn" onclick="window.location.href='/@company/online'"> Cancel Edit</button>
             </div>
         </div>
     }

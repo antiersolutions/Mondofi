@@ -327,7 +327,7 @@
         }
 
         function SetRotateToTableSeats(table) {
-            //debugger;
+            // 
             var seatCount = $(table).parents('.table-main').find('.seat').length;
             var angle = (360 / seatCount);
             var sumAngl = 0;
@@ -730,6 +730,7 @@
         }
 
         function changeCdate(e) {
+             
             $("#udate").val($.datepicker.formatDate('d D, MM yy', $('#cdate').datepicker('getDate')));
 
             e = $(e).val();
@@ -775,7 +776,7 @@
         @Html.Action("_FloorPlanPartial")
     </div>
 </div>
-<div class="manage-section">
+<div class="manage-section" id="swipeBox" ontouchstart="touchStart(event,'swipeBox');" ontouchend="touchEnd(event);" ontouchmove="touchMove(event);" ontouchcancel="touchCancel(event);">
     <div class="m-right-btn">
     </div>
     <div class="frnt-right-rowA">
@@ -802,7 +803,8 @@
     </div>
     <div>
         <h1 class="add-new-reser form">
-            Edit Reservation</h1>
+            Edit Reservation
+        </h1>
         <div class="frnt-right-rowb reservation-tabs">
             <div id="tabs">
                 <ul class="main">
@@ -821,20 +823,23 @@
                             @Html.Hidden("Status")
 
                             @Html.HiddenFor(p => p.Duration)
-                            
-                            
-                            
+
+
+
                             @Html.Hidden("TablePositionLeft")
                             @Html.Hidden("TablePositionTop")
                             <label>
-                                First Name <span>*</span></label>
-                            @Html.TextBox("FirstName", Model.Customers.FirstName, new { @readonly = "readonly" })                        
+                                First Name <span>*</span>
+                            </label>
+                            @Html.TextBox("FirstName", Model.Customers.FirstName, new { @readonly = "readonly" })
                             <label>
-                                Last Name <span>*</span></label>                            
+                                Last Name <span>*</span>
+                            </label>
                             @Html.TextBox("LastName", Model.Customers.LastName, new { @readonly = "readonly" })
                             <label>
-                                Mobile Phone Name <span>*</span></label>
-                            @Html.TextBox("MobileNumber", Model.Customers.customerPhoneNumbers.FirstOrDefault().PhoneNumbers, new { @readonly = "readonly" })                        
+                                Mobile Phone Name <span>*</span>
+                            </label>
+                            @Html.TextBox("MobileNumber", Model.Customers.customerPhoneNumbers.FirstOrDefault().PhoneNumbers, new { @readonly = "readonly" })
                             <label>
                                 Email <span></span>
                             </label>
@@ -842,29 +847,31 @@
                             <div class="row">
                                 <div class="left-s">
                                     <label>
-                                        Covers <span>*</span></label>
+                                        Covers <span>*</span>
+                                    </label>
                                     <div class="select-main">
                                         @Html.DropDownList("Covers", new SelectList(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 }))
                                     </div>
                                 </div>
                                 <div class="right-s">
                                     <label>
-                                        Start <span>*</span></label>
+                                        Start <span>*</span>
+                                    </label>
                                     <div class="select-main">
-                                        <select id="open" onchange="getTable()">
-                                        </select>
+                                        <select id="open" onchange="getTable()"></select>
                                     </div>
                                 </div>
                             </div>
                             <label>
-                                Table <span>*</span></label>
+                                Table <span>*</span>
+                            </label>
                             <div class="select-main s-table">
-                                <select id="restable" onchange="setTable()">
-                                </select>
+                                <select id="restable" onchange="setTable()"></select>
                             </div>
                             <p>
                                 There are <span id="tcount"></span>available for this time and group size (excluding
-                                table combinations).</p>                        
+                                table combinations).
+                            </p>
                         }
                     </div>
                 </div>
@@ -872,12 +879,15 @@
                     <div class="additional-info content_1">
                         <div class="pop-sec-a">
                             <div class="colA">
-                                <img src="/images/icon-pop-name.png" /></div>
+                                <img src="/images/icon-pop-name.png" />
+                            </div>
                             <div class="colB">
                                 @(Model.Customers.FirstName + " " + Model.Customers.LastName)<br />
-                                <span>@(Model.Customers.customerPhoneNumbers.FirstOrDefault().PhoneNumbers)</span></div>
+                                <span>@(Model.Customers.customerPhoneNumbers.FirstOrDefault().PhoneNumbers)</span>
+                            </div>
                             <div class="colC">
-                                <img src="/images/red-s.png" width="15" height="18" /></div>
+                                <img src="/images/red-s.png" width="15" height="18" />
+                            </div>
                         </div>
                         <div class="pop-sec-b">
                             <span class="sebHd">Guest Notes @*<img src="/images/icon-note.png" width="12" height="12">*@</span>
@@ -889,7 +899,8 @@
                             @foreach (var it in @Model.Customers.customerSpecialStatus)
                             {
                                 <a href="javascript:(void)" class="@(it.SpecialStatus.Status == "VIP" ? "btnvip" : "btnhip")">
-                                    @it.SpecialStatus.Status</a>
+                                    @it.SpecialStatus.Status
+                                </a>
                             }
                         </div>
                         <div class="pop-sec-b">
@@ -979,6 +990,6 @@
     <div class="t-bottom">
         <input type="button" value="Save" onclick="save()" />
         <input type="button" onclick="javascript:window.location.href='/Floor/FloorPlan'"
-            value="Cancel" />
+               value="Cancel" />
     </div>
 </div>

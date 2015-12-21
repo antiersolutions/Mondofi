@@ -3,10 +3,17 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutBase.cshtml";
 
-    var array = new string[] { "Sofa", "Chair", "SofaTable", "Wall", "SolidWall", "GlassWall", "BarTable", "Fence", "Pillar" };    
+    var array = new string[] { "Sofa", "Chair", "SofaTable", "Wall", "SolidWall", "GlassWall", "BarTable", "Fence", "Pillar" };
 }
 @if (Model.Count() > 0)
 {
+
+    <style>
+        .changebackgroung {
+            background-color: #e8867c !important;
+            color: #fff !important;
+        }
+    </style>
     @section scripts{
         <script type="text/javascript">
             $(document).ready(function () {
@@ -15,6 +22,8 @@
                 //$('.m-left-btn, .m-right-btn, .rooftop-toggle').off('click');
 
                 $('.m-left-btn').click(function () {
+
+                   
                     //$('.menu-bar').toggleClass('menu-bar-toggle');
                     //$('.m-left-btn').toggleClass('m-left-btn-toggle');
                     //$('.middle-section').toggleClass('middle-section-toggle1');
@@ -28,12 +37,25 @@
                     //$('.middle-section').toggleClass('middle-section-toggle2');
                 });
 
-                $('.rooftop-toggle').click(function (e) {
+                $('.toggleTr').click(function (e) {
+                    debugger;
+                    var classname = e.currentTarget.className;
                     var container = jQuery(".rooftop-toggle td .edit-img-link, .rooftop-toggle td .select-t");
                     // if the target of the click isn't the container...
                     if (!container.is(e.target) && container.has(e.target).length === 0) // ... nor a descendant of the container
                     {
-                        //container.hide();                        
+                        if (classname==("rooftop-toggle toggleTr")) {
+                            $(this).removeClass("rooftop-toggle toggleTr");
+                            $(this).addClass("rooftop-toggleDown toggleTr");
+                        }
+                        else {
+                           
+                            $(this).removeClass("rooftop-toggleDown toggleTr");
+                            $(this).addClass("rooftop-toggle toggleTr");
+                        }
+                       
+                        //rooftop - toggleDown
+                        //container.hide();
                         $(this).next('.rooftop-info-main').toggle();
                         $($(this).next()).toggleClass('showContent');
                         $('.floor-save').css('display', 'block');
@@ -58,7 +80,18 @@
             var isUpdate = false;
             function updateFloorTableAndLevel() {
                 var tr = $(".floorPlan-edit tbody .rooftop-info-inner");
-                var select = $(".floorPlan-edit .select-t");
+                var select = $(".floorPlan-edit .select-t.slevel");
+                var seatingPriority = $(".changebackgroung");
+
+                var sPriority = [];
+                $.each(seatingPriority, function (i, c) {
+
+                    sPriority.push({
+                        id: c.id,
+                        priority: c.value
+                    });
+                });
+
 
                 var floorTable = [];
                 $.each(tr, function (i, c) {
@@ -86,10 +119,11 @@
                     $.ajax({
                         url: '/Floor/updateFloorTableAndLevel',
                         type: 'POST',
-                        data: { floorTable: JSON.stringify(floorTable), floorLevel: JSON.stringify(floorLevel) },
+                        data: { floorTable: JSON.stringify(floorTable), floorLevel: JSON.stringify(floorLevel), priority: JSON.stringify(sPriority) },
                         success: function (data) {
                             if (data) {
                                 alert("successfully saved.");
+                                $(".floorPlan-edit").find(".changebackgroung").removeClass("changebackgroung")
                             } else {
                                 alert("some error occur.");
                             }
@@ -110,7 +144,162 @@
                     });
                 });
             }
+
+            function changeSeatingPriority(e) {
+                if (e.value == e.defaultValue) {
+                    //var id = parseInt(e.id);
+                    //var priority = parseInt(e.value);
+                    //$.ajax({
+                    //    url: '/FloorItem/UpdateFloorTableSeatingPriority',
+                    //    type: 'POST',
+                    //    data: { id: id, priority: priority },
+                    //    success: function (data) {
+                    //        if (data) {
+                    //            alert("successfully saved.");
+                    //        } else {
+                    //            alert("some error occur.");
+                    //        }
+                    //    }
+                    //});
+
+                    $(e).removeClass("changebackgroung");
+                }
+                else {
+
+                    $(e).addClass("changebackgroung");
+                }
+
+            }
+
+
+            function getDate(str) {
+
+                var ar = /(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2}):(\d{2}) ([AM|PM]+)/
+                     .exec(str)
+
+                return new Date(
+                    (+ar[3]),
+                    (+ar[2]) - 1, // Careful, month starts at 0!
+                    (+ar[1]),
+                    (+ar[4]) + (ar[7] == 'PM' ? 12 : 0),
+                    (+ar[5]),
+                    (+ar[6])
+                );
+            };
+
+            $(function () {
+
+
+                var sorter = {
+
+                    order: [1, -1],
+                    column: 0,
+                    key: 'Priority',
+
+                    setOrder: function (k) {
+
+                        this.order = ({
+                            asc: [1, -1], desc: [-1, 1]
+                        })[k] || this.order;
+
+                        return this;
+                    },
+                    setColumn: function (c) {
+
+                        this.column = c || this.column;
+                        return this;
+                    },
+
+                    setKey: function (k) {
+                        this.key = k || this.key;
+                        return this;
+                    },
+
+                    sort: function (els) {
+                        debugger;
+                        var sortFunc = this.key;
+
+                        return els.sort(this[sortFunc]);
+                    },
+
+                    getValue: function (a, b) {
+
+                        return {
+                            a: $(a).find('td:eq(' + sorter.column + ')').text(),
+                            b: $(b).find('td:eq(' + sorter.column + ')').text()
+                        }
+                    },
+                    getValueselect: function (a, b) {
+
+                        return {
+                            a: $(a).find('td:eq(' + sorter.column + ')').find('select option:selected').val(),
+                            b: $(b).find('td:eq(' + sorter.column + ')').find('select option:selected').val(),
+
+                        }
+                    },
+                    comp: function (val) {
+
+                        if (val.a == val.b) {
+                            return 0;
+                        }
+
+                        return val.a > val.b ?
+                                sorter.order[0] : sorter.order[1];
+
+                    },
+                    Priority: function (a, b) {
+
+                        var val = sorter.getValueselect(a, b);
+
+                        val.a = parseInt(val.a, 10);
+                        val.b = parseInt(val.b, 10);
+
+                        return sorter.comp(val);
+                        //var val = sorter.getValueselect(a, b);
+                        //return sorter.comp(val);
+
+                    },
+
+                    TableName: function (a, b) {
+
+                        var val = sorter.getValue(a, b);
+                        return sorter.comp(val);
+
+                    },
+                    Section: function (a, b) {
+
+                        var val = sorter.getValue(a, b);
+                        return sorter.comp(val);
+
+                    },
+
+                }
+
+                $('table thead').on('click', 'td', function () {
+
+                    var sorted = sorter.setOrder($(this).attr('data-order'))
+                                       .setColumn($(this).attr('data-column'))
+                                       .setKey($(this).attr('data-key'))
+                                       .sort($('table tbody tr.notoggle'));
+
+
+                    $('table tbody tr.rooftop-info-main').empty().append(sorted);
+
+                    $('table thead td').not(this)
+                                       .attr('data-order', 'asc');
+
+                    $(this).attr(
+                        'data-order',
+                        ($(this).attr('data-order') == 'asc' ? 'desc' : 'asc')
+                    );
+
+                });
+            });
+
         </script>
+
+
+
     }
     @Html.Partial("_CurrentFloorPlanPartial")
 }
@@ -118,3 +307,4 @@ else
 {
     @Html.Partial("_EmptyFloorPlansPartial")
 }
+

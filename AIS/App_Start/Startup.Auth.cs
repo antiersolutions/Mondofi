@@ -19,12 +19,14 @@ namespace AIS
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
+
+
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             // Configure the sign in cookie
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                ExpireTimeSpan = TimeSpan.FromHours(3000),
+                ExpireTimeSpan = TimeSpan.FromDays(2),
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Account/Login"),
                 Provider = new CookieAuthenticationProvider
@@ -32,12 +34,12 @@ namespace AIS
                     // Enables the application to validate the security stamp when the user logs in.
                     // This is a security feature which is used when you change a password or add an external login to your account.  
                     OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, UserProfile, long>(
-                        validateInterval: TimeSpan.FromHours(3000),
+                        validateInterval: TimeSpan.FromDays(2),
                         getUserIdCallback: (user) => user.GetUserId<long>(),
                         regenerateIdentityCallback: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
             });
-          
+
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.

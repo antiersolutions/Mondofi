@@ -77,6 +77,7 @@
 }
 @section scripts
 {
+
     <script src="/Scripts/hilitor.js" type="text/javascript"></script>
     <script src="/Scripts/sorttable.js" type="text/javascript"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
@@ -87,6 +88,7 @@
         var sortColumn;
         var auditAction;
         $(document).ready(function () {
+
             $('.m-left-btn').off('click');
             $('.m-left-btn').click(function () {
                 $('.menu-bar').toggleClass('menu-bar-toggle');
@@ -143,7 +145,7 @@
                 success: function (data) {
                     $("#grid").html(data);
                     //var newTableObject = document.getElementsByClassName("cal-tab-inner sortable")[0];
-                    //   debugger;
+                    //      
                     //sorttable.makeSortable(newTableObject);
                     $("#search").val(srh);
                     $("#search").keypress(function (e) {
@@ -169,7 +171,7 @@
             $('#startDate').datepicker('setDate', newDate);
             $("#endDate").datepicker("option", "dateFormat", 'mm/ dd/ yy');
             $('#endDate').datepicker('setDate', nextDate);
-            getDayList();
+            getDayList(); 
         }
 
         function addReservation() {
@@ -224,6 +226,7 @@
         <div class="select-t">
             @Html.DropDownList("shiftddl", (SelectList)ViewBag.shiftDdl, "All Shift")
         </div>
+
         <div class="select-t">
             @Html.DropDownList("auditAction", new List<SelectListItem> {
            new SelectListItem { Text="Created", Value="Created" },

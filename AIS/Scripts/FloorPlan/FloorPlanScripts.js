@@ -16,9 +16,9 @@ var currentDateRefreshVal = 'Today';
 var tempTimeRemaining = 60;
 var pinEnabled = false;
 var hideWaitPopUpOnClick = false;
-var _alert;
+//var _alert;
 
-// window onload code starts here
+// window onload code starts hereclose
 
 window.onload = function () {
     AssignLemonSlider('#bottomslider', false); // Bind lemmon slider to Sections at bottom of floor.
@@ -86,7 +86,7 @@ $(function () {
     // Binding top Level tabs events
 
     $('.top-bar ul li a').click(function () {
-        //debugger;
+        // 
         if (isAddEditResPanelOpen) {
             //            if (confirm("This will close the ADD/EDIT Reservation panel on right side and you will lost all the pending changes. Do you still want to continue?")) {
             //                isAddEditResPanelOpen = false;
@@ -237,7 +237,7 @@ $(function () {
                 Floor.UpdateFloorPlan(hours + ':' + minutes, 'TIMESLIDE');
 
                 //                if ((ui.value % 15) == 14) {
-                //                    //debugger;
+                //                    // 
                 //                    $('#EndResPopUp #ResDate').val(Floor.currentDate);
                 //                    $('#EndResPopUp #TimeInMin').val(ui.value);
                 //                    $('#EndResPopUp').submit();
@@ -321,33 +321,34 @@ $(function () {
     ScrollToCurrentTime();
     BindALLPopovers('ul.reslist li.popUp', '.popUpContent');
 
-    consume_alert();
+   // consume_alert();
 });
 
-function consume_alert() {
-    if (_alert) return;
-    _alert = window.alert;
-    window.alert = function (message, options) {
-        var defaultOptions = {
-            title: false,
-            text: message,
-            addclass: 'custom',
-            styling: 'fontawesome',
-            nonblock: {
-                nonblock: true,
-                nonblock_opacity: .2
-            },
-            delay: 8000
-        };
+//function consume_alert() {
+//    if (_alert) return;
+//    _alert = window.alert;
+//    window.alert = function (message, options) {
+//        var defaultOptions = {
+//            title: false,
+//            text: message,
+//            addclass: 'custom',
+//            styling: 'fontawesome',
+//            nonblock: {
+//                nonblock: true,
+//                nonblock_opacity: .2
+//            },
+//            delay: 8000
+//        };
 
-        if (arguments.length > 1)
-            $.extend(defaultOptions, options);
+//        if (arguments.length > 1)
+//            $.extend(defaultOptions, options);
 
-        new PNotify(defaultOptions);
-    };
-}
+//        new PNotify(defaultOptions);
+//    };
+//}
 
 function changeCdate(e) {
+     
     e = $(e).val();
     var da = e.replace(',', '').split(' ');
     $(".date").text(da[1]);
@@ -356,7 +357,7 @@ function changeCdate(e) {
 
     Floor.UpdateCurrentValues();
     Floor.IsDateChanged = IsDateNotToday();
-    //debugger;
+    // 
     if (Floor.IsDateChanged === true) {
         $('#currentDateRef').val((da[2].replace(',', '')) + ' ' + da[1]).css('background', 'Red');
         currentDateRefreshVal = (da[2].replace(',', '')) + ' ' + da[1];
@@ -497,7 +498,7 @@ function UpdateTimer() {
     //var curMin = (new Date()).getMinutes();
     var curMin = (serverDateTime).getMinutes();
     if (updatedTime != (curMin)) {
-        //debugger;
+        // 
         SlideTime(false);
         updatedTime = curMin;
     }
@@ -636,7 +637,7 @@ function BindClueTip(selector) {  //'a.jt'
 
 function BindClueTipNEW(selector) {  //'a.jt'
     $(selector).mouseover(function (event) {
-        //debugger;
+        // 
         var self = $(this);
 
         if (!self.data('cluetip-initd')) {
@@ -741,11 +742,13 @@ function BindPopovers(selector, contentSelector) {
             }
         }
     }).on('show.bs.popover', function (e) {
+      
         if (hidePopUpOnClick) {
             return false;
         }
     }).on('shown.bs.popover', function (e) {
         $('div.popover .close').off('click').on('click', function () {
+          
             closedPopUpOnClick = true;
             popOver.popover('hide');
         });
@@ -803,13 +806,14 @@ function BindALLPopovers(selector, contentSelector) {
                 },
                 trigger: 'hover',
                 placement: function (tip, element) {
+                   
                     var $element, TopLimit, BottomLimit;
                     $element = $(element);
                     pos = $.extend({}, $element.offset(), {
                         width: element.offsetWidth,
                         height: element.offsetHeight
                     });
-
+                   
                     TopLimit = 265;
                     BottomLimit = $(document).height() - TopLimit;
 
@@ -824,6 +828,7 @@ function BindALLPopovers(selector, contentSelector) {
                     }
                 }
             }).on('show.bs.popover', function (e) {
+                   
                 if (hidePopUpOnClick) {
                     return false;
                 }
@@ -840,6 +845,7 @@ function BindALLPopovers(selector, contentSelector) {
                     }
                 }
             }).on('hidden.bs.popover', function (e) {
+               
                 if (hidePopUpOnClick && closedPopUpOnClick) {
                     closedPopUpOnClick = false;
                     RefreshFloorTime();
@@ -859,6 +865,7 @@ function BindALLPopovers(selector, contentSelector) {
                     .text()
                     .trim();
 
+                   
                     var splitTime = time.split(':');
                     var hrs = parseInt(splitTime[0]);
                     var splitMin = splitTime[1].split(' ');
@@ -939,6 +946,7 @@ function BindALLWaitListPopovers(selector, contentSelector) {
 }
 
 function HidePopovers() {
+    
     closedPopUpOnClick = false;
     hidePopUpOnClick = false;
     hideWaitPopUpOnClick = false;
@@ -1117,7 +1125,7 @@ function CheckForReservationEnding() {
         //var eResCurMin = (new Date()).getMinutes();
         var eResCurMin = (serverDateTime).getMinutes();
         if (resChkTimerMinute != (eResCurMin)) {
-            //debugger;
+            // 
             //$('#EndResPopUp #ResDate').val(Floor.currentDate);
             //$('#EndResPopUp #ResDate').val($.datepicker.formatDate('DD, d M, y', new Date()));
             $('#EndResPopUp #ResDate').val($.datepicker.formatDate('DD, d M, y', serverDateTime));

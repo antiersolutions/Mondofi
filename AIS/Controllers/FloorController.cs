@@ -29,15 +29,25 @@ namespace AIS.Controllers
 
         public ActionResult Index()
         {
-            if (Session["EditFloorId"] == null)
+            var companyUserManger = ApplicationUserManager.Create(Db.Database.Connection.Database);
+            var roles = companyUserManger.GetRoles(User.Identity.GetUserId<long>());
+
+            if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))
             {
-                var model = Db.tabFloorPlans.Include("FloorTables").Include("Sections").ToList();
-                return View(model);
+                if (Session["EditFloorId"] == null)
+                {
+                    var model = Db.tabFloorPlans.Include("FloorTables").Include("Sections").ToList();
+                    return View(model);
+                }
+                else
+                {
+                    var floorId = (Int64)Session["EditFloorId"];
+                    return RedirectToAction("Edit", new { id = floorId });
+                }
             }
             else
             {
-                var floorId = (Int64)Session["EditFloorId"];
-                return RedirectToAction("Edit", new { id = floorId });
+                return RedirectToAction("FloorPlan", "FloorPlan");
             }
         }
 
@@ -600,7 +610,17 @@ namespace AIS.Controllers
 
             Db.SaveChanges();
 
+            ClearTableCache();
+
             return RedirectToAction("Index");
+        }
+
+
+        private void ClearTableCache()
+        {
+            //cache.RemoveByPattern(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN);
+            cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN_TableAvailability, User.Identity.GetDatabaseName()));
+            cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_ONLY, User.Identity.GetDatabaseName()));
         }
 
         [HttpPost]
@@ -1181,12 +1201,13 @@ namespace AIS.Controllers
             return System.Text.RegularExpressions.Regex.Matches(sourceString, subString).Cast<System.Text.RegularExpressions.Match>().Select(m => m.Value);
         }
 
-        public JsonResult updateFloorTableAndLevel(string floorTable, string floorLevel)
+        public JsonResult updateFloorTableAndLevel(string floorTable, string floorLevel, string priority)
         {
             try
             {
                 var fl = (new JavaScriptSerializer()).Deserialize<List<updateFloorPlanLevelVM>>(floorLevel);
                 var fT = (new JavaScriptSerializer()).Deserialize<List<updateFloorTableVM>>(floorTable);
+                var sp = (new JavaScriptSerializer()).Deserialize<List<SeatingPriorityTable>>(priority);
 
 
                 foreach (var item in fl)
@@ -1203,6 +1224,14 @@ namespace AIS.Controllers
                     Db.tabFloorTables.Single(p => p.FloorTableId == item.floorTableId).IsTemporary = item.isTemp;
                 }
 
+                foreach (var item in sp)
+                {
+                   var tb= Db.tabFloorTables.Find(item.id);
+                   tb.SeatingPriority = item.priority;
+                   tb.UpdatedOn = DateTime.UtcNow.ToDefaultTimeZone(User.Identity.GetDatabaseName());
+                   Db.Entry(tb).State = EntityState.Modified;
+
+                }
                 Db.SaveChanges();
 
                 ClearFloorCache();
@@ -1250,8 +1279,15 @@ namespace AIS.Controllers
         private void ClearFloorCache()
         {
             //cache.RemoveByPattern(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN);
-            cache.RemoveByPattern(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_COMPANY_PATTREN,User.Identity.GetDatabaseName()));
+            cache.RemoveByPattern(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_COMPANY_PATTREN, User.Identity.GetDatabaseName()));
         }
+        //private void ClearTableCache()
+        //{
+        //    cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN_TableAvailability, User.Identity.GetDatabaseName()));
+        //    cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_ONLY, User.Identity.GetDatabaseName()));
+        //}
+
+
 
         protected override void Dispose(bool disposing)
         {

@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutBase.cshtml";
+    var tabMatrixVal = ViewBag.TabMatrixVal;
 }
 @section styles
 {
@@ -9,6 +10,8 @@
     <link href="../../css/jquery.onoff.css" rel="stylesheet" type="text/css" />
     <link href="../../css/TableAvailability/TACommon.css" rel="stylesheet" type="text/css" />
     <link href="../../css/jquery.cluetip.css" rel="stylesheet" type="text/css" />
+    <link href="../../css/drag-slider.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/style.css" rel="stylesheet" />
     <style>
         .hasDatepicker {
             margin-bottom: 10px;
@@ -277,43 +280,55 @@
                             border-left: 1px solid #000000;
                         }
 
-            /* shift status colors */
-            .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft0 {
-                padding: 10px 0 6px 0px;
-                border-bottom: 4px solid transparent;
-            }
+        .pop-sec-b pre {
+            color: #333333;
+            font-size: 13px;
+            float: left;
+            margin: 0;
+            white-space: pre-wrap;
+            white-space: -moz-pre-wrap;
+            white-space: -pre-wrap;
+            white-space: -o-pre-wrap;
+            word-wrap: break-word;
+        }
 
-            .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft1 {
-                padding: 10px 0 6px 0px;
-                border-bottom: 4px solid #A9D0F5;
-            }
+        /* shift status colors */
+        .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft0 {
+            padding: 10px 0 6px 0px;
+            border-bottom: 4px solid transparent;
+        }
 
-            .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft2 {
-                padding: 10px 0 6px 0px;
-                border-bottom: 4px solid #F7BE81;
-            }
+        .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft1 {
+            padding: 10px 0 6px 0px;
+            border-bottom: 4px solid #A9D0F5;
+        }
 
-            .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft3 {
-                padding: 10px 0 6px 0px;
-                border-bottom: 4px solid #F5A9A9;
-            }
+        .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft2 {
+            padding: 10px 0 6px 0px;
+            border-bottom: 4px solid #F7BE81;
+        }
 
-            .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft4 {
-                padding: 10px 0 6px 0px;
-                border-bottom: 4px solid #F2F5A9;
-            }
+        .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft3 {
+            padding: 10px 0 6px 0px;
+            border-bottom: 4px solid #F5A9A9;
+        }
 
-            .tblvail-sec .avail-main-tab table.avail-table thead tr td span {
-                left: -7px;
-                position: relative;
-            }
+        .tblvail-sec .avail-main-tab table.avail-table thead tr td.shft4 {
+            padding: 10px 0 6px 0px;
+            border-bottom: 4px solid #F2F5A9;
+        }
 
-                .tblvail-sec .avail-main-tab table.avail-table thead tr td span.arw {
-                    background: url("/images/1403094036_icon-arrow-down-b.png") no-repeat scroll 0px 13px rgba(0, 0, 0, 0);
-                    color: #000000;
-                    font-weight: bold;
-                    padding: 0 4px 10px;
-                }
+        .tblvail-sec .avail-main-tab table.avail-table thead tr td span {
+            left: -7px;
+            position: relative;
+        }
+
+            .tblvail-sec .avail-main-tab table.avail-table thead tr td span.arw {
+                background: url("/images/1403094036_icon-arrow-down-b.png") no-repeat scroll 0px 13px rgba(0, 0, 0, 0);
+                color: #000000;
+                font-weight: bold;
+                padding: 0 4px 10px;
+            }
 
         /**/
         .btmDiv {
@@ -525,6 +540,10 @@
 
         /* Notes edit css ends here */
 
+        .mCSB_scrollTools {
+            z-index: 100;
+        }
+
         /********/
     </style>
 }
@@ -537,8 +556,50 @@
     <script src="../../js/jquery.cluetip.js" type="text/javascript"></script>
     <script src="../../Scripts/TableAvailability/TACommon.js" type="text/javascript"></script>
     <script src="../../Scripts/Floor/Reservations.js" type="text/javascript"></script>
+    <script src="../../js/lemmon-slider.js" type="text/javascript"></script>
     <script type="text/javascript">
         var hidePopUpOnClick = false;
+
+
+
+         //jQuery to collapse the navbar on scroll
+        $(window).scroll(function () {
+            var y = $(".setmanu").offset().top;
+            var scrollY = $(window).scrollTop();
+
+
+            if (scrollY > 71) {
+                var padY = scrollY - y;
+                $(".calendar-top-row").css({
+                    position: 'relative',
+                    left: 0,
+                    'z-index': 10,
+                    'background-color': '#FFFFFF',
+                    top: padY - 71
+                });
+                $(".avail-table > thead").css({
+                    position: 'relative',
+                    left: 0,
+                    'z-index': 10,
+                    //'margin-top': '12px',
+                    top: padY - 71
+                });
+            }
+            else {
+                $(".calendar-top-row").css({
+                    position: 'initial',
+                    left: '',
+                    top: ''
+                });
+                $(".avail-table > thead").css({
+                    position: 'initial',
+                    left: '',
+                    top: ''
+                });
+            }
+
+
+        });
 
         $(function () {
             $('body').css('overflow-x', 'hidden');
@@ -588,11 +649,62 @@
 
             $("#datepicker").change();
         }
+
+
+
+        var $slideMe = $("<div/>")
+        .css({ position: 'absolute', top: 30, left: 0, border: '1px solid #E8867C', background: '#E8867C', color: '#FFFFFF', padding: '3px', 'border-radius': '2px' })
+        .text("@tabMatrixVal")
+        .show()
+
+        $("#slider").slider({
+            min: 0,
+            max: 100,
+            step: 10,
+            //disabled: true,
+            value: "@tabMatrixVal",
+            //values: [60, 100],
+            slide: function (event, ui) {
+                if (ui.value >= 60) {
+                    $slideMe.text(ui.value);
+                }
+                else {
+                    $slideMe.text(60);
+                    return false
+                }
+
+            },
+            stop: function (event, ui) {
+
+                if (ui.value >= 60) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Setting/UpdateTabMatrix",
+                        data: { val: ui.value },
+                        success: function (data) {
+                            $('#datepicker').change();
+                        }
+                    });
+                    $(".demo-x").mCustomScrollbar('update');
+                }
+
+
+
+            }
+        })
+        .find(".ui-slider-handle")
+        .append($slideMe)
+        .hover(function () {
+            $slideMe.show();
+        });
+
+
         function getTableAvailability(filters) {
             $("#tabody").load('/TableAvailablity/getTableAvailablityNew', filters + '&date=' + $("#datepicker").val() + '&shiftId=' + $("#shift").val(), function () {
 
                 $(".demo-x").mCustomScrollbar({
                     axis: "x",
+                    scrollInertia: 0,
                     advanced: { autoExpandHorizontalScroll: true }
                 });
 
@@ -682,7 +794,7 @@
         })
 
         function UpdateFilter() {
-            //debugger;
+            //
             filterForm = $('#filterForm').serialize();
         }
 
@@ -712,43 +824,56 @@
     </script>
 }
 <div class="middle-section tblvail-sec">
-    <div class="top-filter">
-        <ul style="width: auto;">
-            <li><a href="/Setting/Index">Settings</a></li>
-            <li><a href="/User/Index">Users</a></li>
-            <li><a href="/ShiftHour/Index">Hours</a></li>
-            <li><a href="/Floor/Index">Floorplan</a></li>
-            <li><a class="active" href="/TableAvailablity/Index">Table Availability</a></li>
-            
-        </ul>
-        <div class="ta-search-main">
-            <p>
-                Filter
-            </p>
-            <div class="onoffswitch">
-                <input id="onoffswitch1" class="onoffswitch-checkbox" type="checkbox" />
-                <label class="onoffswitch-label" for="onoffswitch1">
-                    <div style="" class="onoffswitch-inner">
-                    </div>
-                    <div style="" class="onoffswitch-switch">
-                    </div>
-                </label>
+    <div class="setmanu">
+        <div class="top-filter">
+            <ul style="width: auto;">
+                <li><a href="/Setting/Index">Settings</a></li>
+                <li><a href="/User/Index">Users</a></li>
+                <li><a href="/ShiftHour/Index">Hours</a></li>
+                <li><a href="/Floor/Index">Floorplan</a></li>
+                <li><a class="active" href="/TableAvailablity/Index">Table Availability</a></li>
+
+            </ul>
+            <div class="ta-search-main">
+                <p>
+                    Filter
+                </p>
+                <div class="onoffswitch">
+                    <input id="onoffswitch1" class="onoffswitch-checkbox" type="checkbox" />
+                    <label class="onoffswitch-label" for="onoffswitch1">
+                        <div style="" class="onoffswitch-inner">
+                        </div>
+                        <div style="" class="onoffswitch-switch">
+                        </div>
+                    </label>
+                </div>
             </div>
         </div>
+
+
+
     </div>
     <div id="tblAvailTable">
-        <div class="calendar-top-row">
-            <div style="float: left; padding: 19px;">
+        <div class="calendar-top-row setCalendar">
+            <div style="float: left; padding: 19px; width:500px;">
                 <h1>
                     Table Availability
                 </h1>
+                <div class="top-bar" style=" float: right; width: 416px; position: relative; left: 156px; top: -29px;">
+                    <div style="float: left; margin-top: 8px; margin-left: 15px; width: auto;">
+                        Grid size
+                    </div>
+                    <div id="slider" style="float: left; margin-top: 8px; margin-left: 15px; width: calc(100% - 140px);">
+                    </div>
+
+                </div>
             </div>
             <div style="float: right">
                 <input type="button" name="" value="Today" class="today-btn" onclick="setTodayDate()" />
                 <div class="date-picker">
                     <div class="cleft" style="width: 100px;" onclick="setDateFun('p')">
                     </div>
-                    <input type="text" id="datepicker" />
+                    <input type="text" id="datepicker" readonly="readonly" />
                     <div class="cright" style="width: 100px;" onclick="setDateFun('n')">
                     </div>
                 </div>

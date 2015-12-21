@@ -145,6 +145,18 @@ ul.login-navigation {
             font-weight: 300;
         }
 
+            ul.login-navigation li a.btn-login:hover {
+                background: #f37709;
+                border: 1px solid #3f4344;
+                font-size: 14px;
+                color: #ffffff;
+                padding: 8px 13px;
+                text-decoration: none;
+                border-radius: 2px;
+                font-family: 'Oxygen', sans-serif;
+                font-weight: 300;
+            }
+
         ul.login-navigation li a.btn-free-demo {
             background: #f37709 none repeat scroll 0 0;
             border-radius: 23px;
@@ -265,6 +277,16 @@ ul.login-navigation {
         background: url(../images/premium-arrow.png) 25px 50% no-repeat;
     }
 
+    .pricing-plans li.list-txtgrey {
+        text-align: left;
+        padding-left: 55px;
+        font-size: 15px;
+        color: #868686;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        /*background: url(../images/premiumgrey-arrow.png) 25px 50% no-repeat;*/
+    }
+
     .pricing-plans li.validity {
         border-top: 1px solid #2f2f2f;
         border-bottom: 1px solid #2f2f2f;
@@ -293,6 +315,7 @@ ul.login-navigation {
             text-transform: uppercase;
             padding-left: 25px;
             padding-right: 25px;
+            margin-bottom: 17px;
             border-radius: 35px;
             -webkit-transition: all .25s;
             -o-transition: all .25s;
@@ -452,7 +475,7 @@ ul.login-navigation {
 a.regNow {
     font-size: 16px;
     color: rgba(255,255,255,0.40);
-    text-decoration: none;
+    /*text-decoration: none;*/
     font-weight: 300;
 }
 
@@ -602,6 +625,7 @@ a.regNow {
     position: absolute;
     right: 0px;
     top: 0px;
+    /*left: 652px;*/
     text-align: left;
 }
 
@@ -646,7 +670,7 @@ a.regNow {
     width: 37px;
     height: 37px;
     text-indent: -9999px;
-    background: url(../images/slider-arrow.png) -38px 0 no-repeat;
+    background: url(../images/slider-arrow.png) -39px 0 no-repeat;
 }
 
 .cta-section {
@@ -657,7 +681,7 @@ a.regNow {
 
     .cta-section h1 {
         color: #cecfd2;
-        font-size: 40px;
+        font-size: 34px;
         font-weight: 300;
     }
 
@@ -668,12 +692,12 @@ a.regNow {
     }
 
 /* section seamless Table Management */
-#seamLessTM {
+#Table_Management {
     background: #fff;
     padding: 200px 0 70px 0;
 }
 
-    #seamLessTM .sec-left h1 {
+    #Table_Management .sec-left h1 {
         font-size: 77px;
         color: #e47825;
         font-family: 'Rouge Script', cursive;
@@ -681,14 +705,14 @@ a.regNow {
         line-height: 77px;
     }
 
-    #seamLessTM .sec-left h2 {
+    #Table_Management .sec-left h2 {
         font-size: 48px;
         color: #1f1f1f;
         font-weight: 300;
         margin: -15px 0 0 0;
     }
 
-    #seamLessTM .sec-left p {
+    #Table_Management .sec-left p {
         font-size: 15px;
         color: #868789;
         font-weight: 400;
@@ -697,14 +721,14 @@ a.regNow {
 /* section seamless Table Management Ends*/
 
 /* section Online Reservation made easy*/
-#onlineReser {
+#Online_Reservations {
     background: url(../images/bg_black.jpg) center top;
     background-size: 100% 100%;
     min-height: 646px;
     padding: 140px 0 0 0;
 }
 
-    #onlineReser .sec-left h1 {
+    #Online_Reservations .sec-left h1 {
         font-size: 77px;
         color: #e47825;
         font-family: 'Rouge Script', cursive;
@@ -712,14 +736,14 @@ a.regNow {
         line-height: 77px;
     }
 
-    #onlineReser .sec-left h2 {
+    #Online_Reservations .sec-left h2 {
         font-size: 48px;
         color: #f6f6f6;
         font-weight: 300;
         margin: -15px 0 0 0;
     }
 
-    #onlineReser .sec-left p {
+    #Online_Reservations .sec-left p {
         font-size: 15px;
         color: #868789;
         font-weight: 400;
@@ -728,7 +752,7 @@ a.regNow {
 /* section Online Reservation made easy*/
 
 /* section Online Reservation made easy*/
-#streamlineWait {
+#Wait_List {
     background: url(../images/bg-sec.jpg) center top;
     background-size: 100% 100%;
     background-attachment: fixed;
@@ -736,7 +760,7 @@ a.regNow {
     padding: 140px 0 0 0;
 }
 
-    #streamlineWait .sec-left h1 {
+    #Wait_List .sec-left h1 {
         font-size: 77px;
         color: #e47825;
         font-family: 'Rouge Script', cursive;
@@ -746,7 +770,7 @@ a.regNow {
         z-index: 1;
     }
 
-    #streamlineWait .sec-left h2 {
+    #Wait_List .sec-left h2 {
         font-size: 48px;
         color: #0e0e0e;
         font-weight: 300;
@@ -755,7 +779,7 @@ a.regNow {
         z-index: 1;
     }
 
-    #streamlineWait .sec-left p {
+    #Wait_List .sec-left p {
         font-size: 15px;
         color: #0e0e0e;
         font-weight: 400;
@@ -763,7 +787,7 @@ a.regNow {
         z-index: 1;
     }
 
-    #streamlineWait .sec-left::before {
+    #Wait_List .sec-left::before {
         background: rgba(255, 255, 255, 0.5) none repeat scroll 0 0;
         border-radius: 100%;
         content: "";
@@ -775,7 +799,7 @@ a.regNow {
         z-index: 0;
     }
 
-    #streamlineWait .sec-left {
+    #Wait_List .sec-left {
         padding: 0 65px 0 60px;
     }
 
@@ -783,12 +807,12 @@ a.regNow {
 /* section Online Reservation made easy*/
 
 /* section Make Guest easy*/
-#makeGuest {
+#Guestbook {
     background: #fff;
     padding: 100px 0 0 0;
 }
 
-    #makeGuest .sec-left h1 {
+    #Guestbook .sec-left h1 {
         font-size: 77px;
         color: #e47825;
         font-family: 'Rouge Script', cursive;
@@ -796,14 +820,14 @@ a.regNow {
         line-height: 77px;
     }
 
-    #makeGuest .sec-left h2 {
+    #Guestbook .sec-left h2 {
         font-size: 44px;
         color: #252527;
         font-weight: 300;
         margin: -15px 0 0 0;
     }
 
-    #makeGuest .sec-left p {
+    #Guestbook .sec-left p {
         font-size: 15px;
         color: #474747;
         font-weight: 400;
@@ -813,7 +837,7 @@ a.regNow {
 /* section Make Guest easy Ends*/
 
 /* Gallery Section */
-#more {
+#More {
     background: #fff;
     padding-top: 85px;
 }
@@ -915,14 +939,93 @@ a.regNow {
         width: 100%;
         z-index: 10000;
     }
+
+.slider-textChnage {
+    position: absolute;
+    right: 84px;
+    top: 280px;
+    text-align: center;
+}
+
+.slider-textChnagespan {
+    position: absolute;
+    right: 84px;
+   top: 350px;
+    text-align: center;
+}
+
+.slider-textChangeSlider {
+    position: absolute;
+    right: 50px;
+    top: 135px;
+    /* left: 652px; */
+    text-align: left;
+}
+
+
+@media(width: 1280px) {
+    .slider-textChnage {
+        position: absolute;
+        right: -65px;
+        /*text-align: left;*/
+        top: 270px;
+    }
+
+    .slider-textChangeSlider {
+        position: absolute;
+        right: -80px;
+        top: 135px;
+        /* left: 652px; */
+        text-align: left;
+    }
+}
+
+@media(width: 1024px) {
+    .slider-textChnage {
+        position: absolute;
+        right: -65px;
+        text-align: left;
+        top: 220px;
+    }
+
+    .slider-textChangeSlider {
+        position: absolute;
+        right: -110px;
+        top: 135px;
+        /* left: 652px; */
+        text-align: left;
+    }
+}
+@media(width: 1920px) {
+    .slider-textChnage {
+        position: absolute;
+        right: 84px;
+        text-align: center;
+        top: 490px;
+    }
+}
+
 /* Gallery Section */
 
 /* Home Page Ends Here */
 /* Register Style Ends*/
+@media(width: 1600px) {
+    .slider-text {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        left: 622px;
+        text-align: left;
+    }
+}
 
 @media(max-width: 1366px) {
     .login-section {
         padding-top: 10%;
+    }
+
+    .setFromTop {
+        margin-top: 68px;
     }
 
     .register-sec {
@@ -939,7 +1042,7 @@ a.regNow {
         width: 100%;
     }
 
-    #onlineReser .sec-left h1 {
+    #Online_Reservations .sec-left h1 {
         margin-top: 17%;
     }
 
@@ -947,7 +1050,7 @@ a.regNow {
         top: 50px;
     }
 
-    #onlineReser {
+    #Online_Reservations {
         padding-top: 190px;
     }
 }
@@ -959,6 +1062,10 @@ a.regNow {
         width: 150px;
         background-size: 100% auto;
         height: 50px;
+    }
+
+    .setFromTop {
+        margin-top: 68px;
     }
 
     ul.site-navigation li a {
@@ -1002,11 +1109,19 @@ a.regNow {
     body {
         margin-bottom: 87px;
     }
+
+    .setFromTop {
+        margin-top: 68px;
+    }
 }
 
 @media(max-width: 1074px) {
     ul.site-navigation li a {
         font-size: 13px;
+    }
+
+    .setFromTop {
+        margin-top: 68px;
     }
 
     ul.login-navigation li {
@@ -1031,41 +1146,45 @@ a.regNow {
         display: none;
     }
 
-    #streamlineWait .sec-left h1 {
+    #Wait_List .sec-left h1 {
         margin-top: 30%;
     }
 
-    #streamlineWait .sec-left::before {
+    #Wait_List .sec-left::before {
         height: 134%;
     }
 }
 
 @media(max-width: 1024px) {
-    #seamLessTM {
+    #Table_Management {
         padding: 76px 0 70px;
     }
 
-        #seamLessTM .sec-left h1 {
-            margin-top: 9px;
-        }
+    .setFromTop {
+        margin-top: 68px;
+    }
 
-        #seamLessTM .sec-left h2 {
-            font-size: 38px;
-        }
+    #Table_Management .sec-left h1 {
+        margin-top: 9px;
+    }
 
-    #onlineReser {
+    #Table_Management .sec-left h2 {
+        font-size: 38px;
+    }
+
+    #Online_Reservations {
         padding-top: 76px;
     }
 
-        #onlineReser .sec-left h1 {
+        #Online_Reservations .sec-left h1 {
             margin-top: 10%;
         }
 
-        #onlineReser .sec-left h2 {
+        #Online_Reservations .sec-left h2 {
             font-size: 33px;
         }
 
-    #onlineReser {
+    #Online_Reservations {
         min-height: inherit;
     }
 
@@ -1085,24 +1204,28 @@ a.regNow {
         padding: 0px;
     }
 
-    #makeGuest .sec-left h1 {
+    .setFromTop {
+        margin-top: 68px;
+    }
+
+    #Guestbook .sec-left h1 {
         margin: 7% 0 0 -8px;
     }
 
-    #makeGuest .sec-left h2 {
+    #Guestbook .sec-left h2 {
         font-size: 66px;
         font-size: 30px;
     }
 
-    #streamlineWait .sec-left::before {
+    #Wait_List .sec-left::before {
         border-radius: 0px;
     }
 
-    #streamlineWait .sec-left h1 {
+    #Wait_List .sec-left h1 {
         margin-top: 4%;
     }
 
-    #makeGuest .sec-left h1 {
+    #Guestbook .sec-left h1 {
         margin-top: 0px;
     }
 
@@ -1122,6 +1245,10 @@ a.regNow {
     .carousel {
         position: relative;
         top: 0px;
+    }
+
+    .setFromTop {
+        margin-top: 68px;
     }
 
     .carousel-inner > .item {
@@ -1261,15 +1388,15 @@ a.regNow {
         font-size: 12px;
     }
 
-    #seamLessTM .sec-left h1, #onlineReser .sec-left h1, #streamlineWait .sec-left h1, #makeGuest .sec-left h1 {
+    #Table_Management .sec-left h1, #Online_Reservations .sec-left h1, #Wait_List .sec-left h1, #Guestbook .sec-left h1 {
         font-size: 48px;
     }
 
-    #seamLessTM .sec-left h2, #onlineReser .sec-left h2, #streamlineWait .sec-left h2, #makeGuest .sec-left h2 {
+    #Table_Management .sec-left h2, #Online_Reservations .sec-left h2, #Wait_List .sec-left h2, #Guestbook .sec-left h2 {
         font-size: 24px;
     }
 
-    .h-localDine h1 {
+    eamLessTM .h-localDine h1 {
         font-size: 50px;
     }
 
@@ -1281,19 +1408,19 @@ a.regNow {
         padding-top: 0px;
     }
 
-    #makeGuest {
+    #Guestbook {
         padding: 4px 0;
     }
 
-    #seamLessTM {
+    #Table_Management {
         padding: 10px 0;
     }
 
-    #streamlineWait {
+    #Wait_List {
         padding: 7px 0 0 0;
     }
 
-    #onlineReser {
+    #Online_Reservations {
         padding-top: 0px;
     }
 

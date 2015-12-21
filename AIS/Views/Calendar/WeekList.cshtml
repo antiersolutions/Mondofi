@@ -1,4 +1,5 @@
 ﻿@model AIS.Models.WeekVM
+        
 <div class="for-edit-section">
     <ul class="day-week-links">
         <li><a href="/Calendar/Days">DAY</a></li>
@@ -47,61 +48,93 @@
                         var RCount = day.Reservations.Count;
                         var i = 1;
 
-                        <td style="@(day.day == ViewBag.date ? "background-color:#F8F8F8;" : string.Empty)" class="@(RCount > 0 ? (j <= 3 ? "reser-tool-tip" : "reser-tool-tip-l") : string.Empty)">
+                        <td style="@(day.day == ViewBag.date ? "background-color:#F8F8F8;" : string.Empty)" class="@(RCount > 0 ? (j <= 3 ? "reser reser-tool-tip" : "reser reser-tool-tip-l") : string.Empty)">
                             @if (RCount > 0)
                             {
-                                <a href="javascript:void(0)" class="jt" rel="#resPop@(day.day.Day)@(time.time.Hours)">
-                                    <p>
+                                <span>
+
+                                </span>
+                                <a href="javascript:void(0)" class="jt" rel="#resPop@(day.day.Day)" data-placement="@(j <= 3 ? "right" : "left")">
+                                    <p @Html.Raw(day.day == ViewBag.date ? "style=\"color:#fff;\"" : null)>
                                         <span>@RCount</span> Reservations
                                     </p>
                                 </a>
-                                <div class="@(j <= 3 ? "show-tooltip-right" : "show-tooltip-left")" id="resPop@(day.day.Day)@(time.time.Hours)" style="position:relative;">
-                                    <div class="table-tooltip-inner content_1">
-                                        @foreach (var res in day.Reservations)
-                                        {
-                                            <div class="row" id="@res.ReservationId">
-                                                <h2>
-                                                    @(i). @res.Customers.FirstName @res.Customers.LastName
-                                                    <br />
-                                                    <span>@res.TimeForm.ToString("hh:mmtt") <strong>@res.FoodMenuShift.MenuShift</strong></span>
-                                                </h2>
-                                                <h3>
-                                                    Covers<br />
-                                                    <strong>@res.Covers Guests</strong>
-                                                </h3>
-                                                <h3 class="rowtbl">
-                                                    Table<br />
-                                                    <strong>@(res.FloorTableId > 0 ? res.FloorTable.TableName : res.MergedFloorTable.TableName)</strong>
-                                                </h3>
-                                                <img class="status-img" src="/images/@(res.StatusId == null ? "not-confirmed" : res.Status.StatusName).png" alt="" />
-                                            </div>
-                                            { i++; }
-                                        }
-                                    </div>
-                                    <div class="tool-bottom-bar">
-                                        <h5>
-                                            Total <strong>@RCount Reservations</strong>
-                                        </h5>
-                                        <ul class="tool-icon">
-                                            @*<li class="add-tool"><a href="/FloorPlan/FloorPlan"></a></li>*@
-                                            <li class="add-tool">
-                                                @Html.ActionLink(" ",
+                                @*<div class="@(j <= 3 ? "show-tooltip-right" : "show-tooltip-left")" id="resPop@(day.day.Day)" style="position:relative;">*@
+                                <div class="popUpContent" style="display:none;">
+                                    <div id="cluetip" class="cluetip ui-widget ui-widget-content ui-cluetip clue-right-jtip cluetip-jtip">
+                                        <div class="cluetip-outer">
+                                            <h3 class="cluetip-title ui-widget-header ui-cluetip-header">&nbsp;</h3><div class="cluetip-inner ui-widget-content ui-cluetip-content">
+
+                                                <div class="show-tooltip" id="resPop2">
+
+                                                    <div class="" id="resPopUpTTip@(day.day.Day)">
+
+                                                        <div style="padding:10px;">
+                                                            <div><strong><b>@day.day.ToString("ddd, MMM d, yyyy")</b></strong> </div>
+                                                            <div onclick="closebox(this)" style="float:right; margin-top:-18px;">
+                                                                <a href="javascript:void(0)" class="close"><img alt="close" src="/images/btn-close.png"></a>
+                                                                @*<a href="javascript:void(0)"> <img src="~/Images/btn-close.png" class="clo" /></a>*@
+                                                            </div>
+                                                        </div>
+
+
+                                                        @*<a href="#" title="This is some information for our tooltip." class="tooltip"><span title="More">CSS3 Tooltip</span></a>*@
+                                                        <div class="table-tooltip-inner content_1 mCustomScrollbar _mCS_1 mCS_no_scrollbar">
+
+                                                            @foreach (var res in day.Reservations)
+                                                            {
+                                                                <div class="row" id="@res.ReservationId" onclick="SetRow(this)">
+                                                                    <h2>
+                                                                        @(i). @res.Customers.FirstName @res.Customers.LastName
+                                                                        <br />
+                                                                        <span>@res.TimeForm.ToString("hh:mmtt") <strong>@res.FoodMenuShift.MenuShift</strong></span>
+                                                                    </h2>
+                                                                    <h3>
+                                                                        Covers<br />
+                                                                        <strong>@res.Covers Guests</strong>
+                                                                    </h3>
+                                                                    <h3 class="rowtbl tooltipstable" data-toggle="tooltip" title="@(res.FloorTableId > 0 ? res.FloorTable.TableName : res.MergedFloorTable.TableName)">
+                                                                        Table<br />
+                                                                        <strong>
+
+                                                                            @Html.Raw(string.Format("{0}...", res.FloorTableId > 0 ? res.FloorTable.TableName : res.MergedFloorTable.TableName.Substring(0, 2)))
+                                                                        </strong>
+                                                                        @*<strong>@(res.FloorTableId > 0 ? res.FloorTable.TableName : res.MergedFloorTable.TableName)</strong>*@
+                                                                    </h3>
+                                                                    <img class="status-img" src="/images/@(res.StatusId == null ? "not-confirmed" : res.Status.StatusName).png" alt="" />
+
+                                                                </div>
+                                                                { i++; }
+                                                            }
+                                                        </div>
+                                                        <div class="tool-bottom-bar">
+                                                            <div style="width: 100%;background: #f3f3f3; height: 39px;">
+
+                                                                <h5>
+                                                                    Total <strong>@RCount Reservations</strong>
+                                                                </h5>
+                                                                <ul class="tool-icon">
+                                                                    @*<li class="add-tool"><a href="/FloorPlan/FloorPlan"></a></li>*@
+                                                                    <li class="add-tool">
+                                                                        @Html.ActionLink(" ",
                                                     "FloorPlan",
                                                     "FloorPlan",
                                                     new
                                                     {
-                                                        resDate = day.day.ToString("dddd, dd MMM, yy"),
-                                                        time = new DateTime().AddHours(time.time.Hours).ToString("ddMMyyyyhhmmtt") +
-                                                               " - " +
-                                                               new DateTime().AddHours(time.time.Hours).AddMinutes(15).ToString("ddMMyyyyhhmmtt") +
-                                                               " - " +
-                                                               day.Reservations.First().FoodMenuShiftId
+                                                        resDate = day.day.ToString("dddd, dd MMM, yy")
                                                     },
                                                     null)
-                                            </li>
-                                            <li class="edit-tool"><a href="javascript:void(0)"></a></li>
-                                            <li class="delete-tool"><a href="javascript:void(0)"></a></li>
-                                        </ul>
+                                                                    </li>
+                                                                    <li class="edit-tool" onclick="EditRow(this)"><a href="javascript:void(0)"></a></li>
+                                                                    <li class="delete-tool" onclick="deleteReservation()"><a href="javascript:void(0)"></a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             }

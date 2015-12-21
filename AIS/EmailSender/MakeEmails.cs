@@ -39,7 +39,9 @@ namespace AIS.EmailSender
                       "<p>First Name: " + model.FirstName + "</p>" +
                    "<p>Last Name: " + model.LastName + "</p>" +
                        "<p>Email: " + model.UserName + "</p>" +
-                        "<p>Venue Name: " + model.RestaurantName + "</p>" +
+                        "<p>Venue Name: " + model.VenueName + "</p>" +
+                        "<p>Venue Short Name: " + model.RestaurantName + "</p>" +
+                        "<p>Plan : " + model.price + "</p>" +
                             "<p>Venue Phone #: " + model.phone + "</p>" +
                             "<p>Notes: " + model.Notes + "</p>" +
 

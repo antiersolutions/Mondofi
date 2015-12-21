@@ -1097,6 +1097,9 @@ namespace AIS.Controllers
             cache.RemoveByPattern(string.Format(CacheKeys.FILTERED_RESERVATION_COMPANY_PATTREN, User.Identity.GetDatabaseName()));
             //cache.RemoveByPattern(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN);
             cache.RemoveByPattern(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_COMPANY_PATTREN, User.Identity.GetDatabaseName()));
+           
+            cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN_TableAvailability, User.Identity.GetDatabaseName()));
+            cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_ONLY, User.Identity.GetDatabaseName()));
 
             if (date.HasValue)
             {

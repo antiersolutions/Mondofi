@@ -553,6 +553,7 @@
         });
 
         function changeCdate(e) {
+             
             e = $(e).val();
             var da = e.replace(',', '').split(' ');
             $(".date").text(da[1]);
@@ -1027,7 +1028,7 @@
         });
 
         function SlideTime(isPageRefresh) {
-            //debugger;
+            // 
             var now = new Date();
             now = (now.getHours() * 60) + now.getMinutes();
 
@@ -1160,7 +1161,7 @@
         }
 
         function SetRotateToTableSeats(table) {
-            //debugger;
+            // 
             var seatCount = $(table).parents('.table-main').find('.seat').length;
             var angle = (360 / seatCount);
             var sumAngl = 0;
@@ -1226,7 +1227,7 @@
                 <a href="#" class="prev-slide">Prev Slide</a> <a href="#" class="next-slide">Next Slide</a>
             </div>
         </div>
-        <ul class="top-view-btn">
+        <ul class="top-view-btn"
             <li class="toggle-btn"></li>
             <li class="full-screen-view"></li>
         </ul>
@@ -1235,7 +1236,7 @@
         @Html.Action("_FloorPlanPartial")
     </div>
 </div>
-<div class="manage-section" style="background: #EEEEEE; z-index: 4;">
+<div class="manage-section"  >
     <div class="m-right-btn">
     </div>
     <div class="frnt-right-rowA">

@@ -8,10 +8,11 @@ using AISModels;
 using System.Globalization;
 using System.Threading;
 using AIS.Helpers.Caching;
+using  Microsoft.AspNet.Identity;
 
 namespace AIS.Controllers
 {
-    [Authorize]
+    //[Authorize(Roles = "SuperAdmin,Admin")]
     public class SettingController : Controller
     {
         private UsersContext db = new UsersContext();
@@ -22,12 +23,43 @@ namespace AIS.Controllers
 
         public ActionResult Index()
         {
-            var logoSetting = db.tabSettings.Where(s => s.Name.Contains("Logo")).Single();
-            ViewBag.Phone = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single();
-            ViewBag.Address = db.tabSettings.Where(s => s.Name.Contains("Address")).Single();
+            var companyUserManger = ApplicationUserManager.Create(db.Database.Connection.Database);
+             var roles = companyUserManger.GetRoles(User.Identity.GetUserId<long>());
 
-            return View(logoSetting);
+             if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))
+             {
+                var logoSetting = db.tabSettings.Where(s => s.Name.Contains("Logo")).Single();
+                ViewBag.Phone = db.tabSettings.Where(s => s.Name.Contains("Phone")).Single();
+                ViewBag.OnlineResosL = db.tabSettings.Where(s => s.Name.Contains("OnlineResosL")).Single();
+                ViewBag.Address = db.tabSettings.Where(s => s.Name.Contains("Address")).Single();
+                ViewBag.ReplyToEmail = db.tabSettings.Where(s => s.Name.Contains("ReplyToEmail")).Single();
+                ViewBag.BCCEmail = db.tabSettings.Where(s => s.Name.Contains("BCCEmail")).Single();
+                ViewBag.Salutation = db.tabSettings.Where(s => s.Name.Contains("Salutation")).Single();
+                ViewBag.timeSet = db.tabSettings.Where(s => s.Name.Contains("SetTime")).Single().Value;
+                return View(logoSetting);
+            }
+            else
+            {
+                return RedirectToAction("FloorPlan", "FloorPlan"); 
+            }
+           
         }
+
+        public ActionResult UpdateTimeSet(string time)
+        {
+            if (time!=null)
+            {
+                var timeSet = db.tabSettings.Where(s => s.Name.Contains("SetTime")).Single();
+                timeSet.Value = time;
+                db.Entry(timeSet).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                ClearSettingCache("SetTime");
+            }
+          
+            return Json("Ok", JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult UpdatePhone(string phone)
         {
@@ -35,6 +67,52 @@ namespace AIS.Controllers
             phoneNumber.Value = phone;
             db.Entry(phoneNumber).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
+
+            ClearSettingCache("Phone");
+
+            return Json("Ok", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UpdateTabMatrix(string val)
+        {
+            var tabVal = db.tabSettings.Where(s => s.Name.Contains("TabVal")).Single();
+            tabVal.Value = val;
+            db.Entry(tabVal).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            ClearSettingCache("TabVal");
+
+            return Json("Ok", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UpdateReplyToEmail(string ReplyToEmail)
+        {
+            var replyToEmail = db.tabSettings.Where(s => s.Name.Contains("ReplyToEmail")).Single();
+            replyToEmail.Value = ReplyToEmail;
+            db.Entry(replyToEmail).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            ClearSettingCache("ReplyToEmail");
+            return Json("Ok", JsonRequestBehavior.AllowGet);
+        }
+
+
+        [ValidateInput(false)]
+        public ActionResult UpdateSalutation(string Salutation)
+        {
+            var salutation = db.tabSettings.Where(s => s.Name.Contains("Salutation")).Single();
+            salutation.Value = Salutation;
+            db.Entry(salutation).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            ClearSettingCache("Salutation");
+            return Json("Ok", JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UpdateBCCEmail(string BCCEmail)
+        {
+            var bCCEmail = db.tabSettings.Where(s => s.Name.Contains("BCCEmail")).Single();
+            bCCEmail.Value = BCCEmail;
+            db.Entry(bCCEmail).State = System.Data.Entity.EntityState.Modified;
+            db.SaveChanges();
+            ClearSettingCache("BCCEmail");
             return Json("Ok", JsonRequestBehavior.AllowGet);
         }
 
@@ -44,86 +122,26 @@ namespace AIS.Controllers
             getAddress.Value = address;
             db.Entry(getAddress).State = System.Data.Entity.EntityState.Modified;
             db.SaveChanges();
+            ClearSettingCache("Address");
             return Json("Ok", JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public JsonResult Update(List<WeekDayShift> hours, string timezone)
+        public JsonResult Update(string timezone)
         {
-            using (var context = new UsersContext())
-            {
-                // delete existing records
-                context.Database.ExecuteSqlCommand(@"truncate table MenuShiftHours");
-            }
-
-            bool isSucess = false;
             if (ModelState.IsValid)
             {
-                foreach (var day in hours)
-                {
-                    var breakfast = new MenuShiftHours
-                    {
-                        DayId = day.DayId,
-                        FoodMenuShiftId = 1,
-                        OpenAt = day.BreakfastOpen == null ? null : Convert.ToDateTime(day.BreakfastOpen, CultureInfo.CurrentCulture).ToString("hh:mm tt"),
-                        CloseAt = day.BreakfastClose == null ? null : Convert.ToDateTime(day.BreakfastClose, CultureInfo.CurrentCulture).ToString("hh:mm tt"),
-                        IsNext = day.BreakfastClose == null ? 0 : Convert.ToDateTime(day.BreakfastClose, CultureInfo.CurrentCulture).Date == DateTime.Now.AddDays(1).Date ? 1 : 0
-                    };
-
-                    db.tabMenuShiftHours.Add(breakfast);
-
-                    var brunch = new MenuShiftHours
-                    {
-                        DayId = day.DayId,
-                        FoodMenuShiftId = 2,
-                        OpenAt = day.BrunchOpen == null ? null : Convert.ToDateTime(day.BrunchOpen, CultureInfo.CurrentCulture).ToString("hh:mm tt"),
-                        CloseAt = day.BrunchClose == null ? null : Convert.ToDateTime(day.BrunchClose, CultureInfo.CurrentCulture).ToString("hh:mm tt"),
-                        IsNext = day.BrunchClose == null ? 0 : Convert.ToDateTime(day.BrunchClose, CultureInfo.CurrentCulture).Date == DateTime.Now.AddDays(1).Date ? 1 : 0
-                    };
-
-                    db.tabMenuShiftHours.Add(brunch);
-
-                    var lunch = new MenuShiftHours
-                    {
-                        DayId = day.DayId,
-                        FoodMenuShiftId = 3,
-                        OpenAt = day.LunchOpen == null ? null : Convert.ToDateTime(day.LunchOpen, CultureInfo.CurrentCulture).ToString("hh:mm tt"),
-                        CloseAt = day.LunchClose == null ? null : Convert.ToDateTime(day.LunchClose, CultureInfo.CurrentCulture).ToString("hh:mm tt"),
-                        IsNext = day.LunchClose == null ? 0 : Convert.ToDateTime(day.LunchClose, CultureInfo.CurrentCulture).Date == DateTime.Now.AddDays(1).Date ? 1 : 0
-                    };
-
-                    db.tabMenuShiftHours.Add(lunch);
-
-                    var dinner = new MenuShiftHours
-                    {
-                        DayId = day.DayId,
-                        FoodMenuShiftId = 4,
-                        OpenAt = day.DinnerOpen == null ? null : Convert.ToDateTime(day.DinnerOpen, CultureInfo.CurrentCulture).ToString("hh:mm tt"),
-                        CloseAt = day.DinnerClose == null ? null : Convert.ToDateTime(day.DinnerClose, CultureInfo.CurrentCulture).ToString("hh:mm tt"),
-                        IsNext = day.DinnerClose == null ? 0 : Convert.ToDateTime(day.DinnerClose, CultureInfo.CurrentCulture).Date == DateTime.Now.AddDays(1).Date ? 1 : 0
-                    };
-                    db.tabMenuShiftHours.Add(dinner);
-
-                }
-
                 var timezoneSetting = db.tabSettings.Where(s => s.Name.Contains("TimeZone")).Single();
                 timezoneSetting.Value = timezone;
                 db.Entry(timezoneSetting).State = System.Data.Entity.EntityState.Modified;
 
                 db.SaveChanges();
-
+                //ClearSettingCache("TimeZone");
+                cache.Remove(string.Format(CacheKeys.FOOD_MENUSHIFT_SHIFTHOURS, User.Identity.GetDatabaseName()));
                 UpdateShiftHoursCache();
 
-                isSucess = true;
-                return Json(new
-                {
-                    IsSucess = isSucess,
-                });
             }
-            return Json(new
-            {
-                IsSucess = isSucess,
-            });
+            return Json("ok", JsonRequestBehavior.AllowGet);
 
         }
 
@@ -134,7 +152,12 @@ namespace AIS.Controllers
             cache.RemoveByPattern(string.Format(CacheKeys.FOOD_MENUSHIFT_COMPANY_PATTERN, User.Identity.GetDatabaseName()));
             // update cache
             db.GetFoodMenuShifts();
-            db.GetMenuShiftHours();
+            //db.GetMenuShiftHours();
+        }
+
+        private void ClearSettingCache(string settingName)
+        {
+            cache.RemoveByPattern(string.Format(CacheKeys.SETTING_BY_NAME_KEY, User.Identity.GetDatabaseName(), settingName));
         }
 
         protected override void Initialize(System.Web.Routing.RequestContext requestContext)

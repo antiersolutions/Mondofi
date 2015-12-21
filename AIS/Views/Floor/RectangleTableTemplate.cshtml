@@ -152,6 +152,7 @@
         @Html.HiddenFor(m => m.Angle)
         @Html.HiddenFor(m => m.TTop)
         @Html.HiddenFor(m => m.TLeft)
+    @Html.HiddenFor(m => m.SeatingPriority)
         @Html.Hidden("IsTemporary", (Model.IsTemporary.HasValue ? Model.IsTemporary.Value : false))
     }
     @if (isServerAvailable)

@@ -28,45 +28,65 @@ namespace AIS.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.shiftDDl = new SelectList(db.tabFoodMenuShift, "FoodMenuShiftId", "MenuShift");
-            return View();
+            var companyUserManger = ApplicationUserManager.Create(db.Database.Connection.Database);
+            var roles = companyUserManger.GetRoles(User.Identity.GetUserId<long>());
+
+            ViewBag.tabMatrixVal = db.GetSettingByName("TabVal").Value;
+            if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))
+            {
+                ViewBag.shiftDDl = new SelectList(db.tabFoodMenuShift, "FoodMenuShiftId", "MenuShift");
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("FloorPlan", "FloorPlan");
+            }
         }
 
         public ActionResult getTableAvailablityNew(TableAvailabilityFilter filters, string date, Int64? shiftId)
         {
+
             var obj = new TimeAvailablityVM();
             var dat = Convert.ToDateTime(date, CultureInfo.InvariantCulture);
-
+            ViewBag.TabMatrix = db.GetSettingByName("TabVal").Value;
             var startTime = dat.AddTicks(DateTime.Parse("4:00:00").TimeOfDay.Ticks);
             var endTime = startTime.AddHours(23).AddMinutes(45);
 
             var array = new string[] { "Sofa", "Chair", "SofaTable", "Wall", "SolidWall", "GlassWall", "BarTable", "Fence", "Pillar" };
-            var tableDB = db.tabFloorTables.Include("Reservations").Where(p => p.IsDeleted == false).ToList().Where(p => !array.Contains(p.TableName.Split('-')[0])).ToList();
-
+            var tableDB = db.GetFloorTable().Where(p => p.IsDeleted == false).ToList().Where(p => !array.Contains(p.TableName.Split('-')[0])).ToList();
+            List<MenuShiftHours> menuShifts;
             var day = dat.DayOfWeek.ToString();
-            var menuShifts = db.tabMenuShiftHours.Where(s => s.WeekDays.DayName.Equals(day, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            try
+            {
+                menuShifts = db.GetMenuShiftHours().Where(s => s.WeekDays.DayName.Equals(day, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }
+            catch (Exception)
+            {
+                cache.Remove(string.Format(CacheKeys.FOOD_MENUSHIFT_SHIFTHOURS, User.Identity.GetDatabaseName()));
+                menuShifts = db.GetMenuShiftHours().Where(s => s.WeekDays.DayName.Equals(day, StringComparison.CurrentCultureIgnoreCase)).ToList();
+            }
+
 
             var dId = db.GetWeekDays().Single(p => p.DayName.Contains(day)).DayId;
-            var availList = db.tabTableAvailabilities
-                .Include("TableAvailabilityFloorTables")
-                .Include("TableAvailabilityWeekDays")
+            var availList = db.GettabTableAvailabilities()
                 .Where(ta => ta.StartDate <= dat && dat <= ta.EndDate
                 && ta.TableAvailabilityWeekDays.Any(taw => taw.DayId == dId)).ToList();
 
             var model = new TableAvailNewVM();
             model.Tables = new List<Table>();
 
-            var cday = db.tabWeekDays.Where(p => p.DayName == dat.DayOfWeek.ToString());
-            var nday = db.tabWeekDays.Where(p => p.DayName == dat.AddDays(1).DayOfWeek.ToString());
+
+            var cday = db.GetWeekDays().Where(p => p.DayName == dat.DayOfWeek.ToString());
+            var nday = db.GetWeekDays().Where(p => p.DayName == dat.AddDays(1).DayOfWeek.ToString());
 
             var shiftStime = new DateTime();
             var shiftEtime = new DateTime();
 
             if (shiftId.HasValue)
             {
-                var dayId = db.tabWeekDays.AsEnumerable().Single(p => p.DayName == dat.DayOfWeek.ToString()).DayId;
+                var dayId = db.GetWeekDays().AsEnumerable().Single(p => p.DayName == dat.DayOfWeek.ToString()).DayId;
 
-                var dday = db.tabMenuShiftHours.Where(p => p.FoodMenuShiftId == shiftId && p.DayId == dayId).SingleOrDefault();
+                var dday = db.GetMenuShiftHours().Where(p => p.FoodMenuShiftId == shiftId && p.DayId == dayId).SingleOrDefault();
 
                 var open = dday.OpenAt;
                 var close = dday.CloseAt;
@@ -171,6 +191,8 @@ namespace AIS.Controllers
         [HttpPost]
         public ActionResult Edit(TableAvailability model, int[] selectedWeekDays, long[] selectedTables, int selectedAvailability)
         {
+
+
             model.CreatedOn = DateTime.UtcNow.ToClientTime();
             model.CreatedBy = User.Identity.GetUserId<long>();
 
@@ -195,6 +217,90 @@ namespace AIS.Controllers
 
             return RedirectToAction("Index");
         }
+
+        public ActionResult CheckTableAvailabity(DateTime startdate, DateTime endDate, string selectedT, string startTime, string endTime)
+        {
+            var split = selectedT.Split(',');
+            split = split.Take(split.Count() - 1).ToArray();
+            long[] selectedTables = Array.ConvertAll(split, s => long.Parse(s));
+
+            var startTimeTicks = Convert.ToDateTime(startTime).TimeOfDay.Ticks;
+            var endTimeTicks = Convert.ToDateTime(endTime).TimeOfDay.Ticks;
+
+            var getDateConflictingAvailabilities = db.tabTableAvailabilities.Where(c => ((c.StartDate <= startdate && c.EndDate >= endDate)
+            || (c.StartDate >= startdate && c.EndDate <= endDate)
+            || (c.StartDate < startdate && c.EndDate > startdate)
+            || (c.StartDate < endDate && c.EndDate > endDate))
+            && c.TableAvailabilityFloorTables.Any(d => selectedTables.Contains(d.FloorTableId))).ToList();
+
+            var getReservation = DBExtensions.GetReservationByDateRange(db, startdate, endDate, false);
+
+            var conflictingReservations = getReservation.Where(r => (r.FloorTableId != 0
+                ? selectedTables.Contains(r.FloorTableId)
+                : r.MergedFloorTable.OrigionalTables.Any(t => selectedTables.Contains(t.FloorTableId)))
+                && ((r.Status.StatusId != ReservationStatus.Cancelled)
+                && (r.Status.StatusId != ReservationStatus.No_show)
+                && (r.Status.StatusId != ReservationStatus.Finished))
+                && ((r.TimeForm <= r.ReservationDate.AddTicks(startTimeTicks) && r.TimeTo >= r.ReservationDate.AddTicks(endTimeTicks))
+                    || (r.TimeForm >= r.ReservationDate.AddTicks(startTimeTicks) && r.TimeTo <= r.ReservationDate.AddTicks(endTimeTicks))
+                    || (r.TimeForm < r.ReservationDate.AddTicks(startTimeTicks) && r.TimeTo > r.ReservationDate.AddTicks(startTimeTicks))
+                    || (r.TimeForm < r.ReservationDate.AddTicks(endTimeTicks) && r.TimeTo > r.ReservationDate.AddTicks(endTimeTicks))))
+                .OrderBy(c => c.ReservationId).ToList();
+
+
+            List<object> conflictTable = new List<object>();
+
+            foreach (var item in conflictingReservations)
+            {
+
+                if (item.FloorTableId == 0)
+                {
+                    foreach (var table in item.MergedFloorTable.OrigionalTables)
+                    {
+                        if (selectedTables.Contains(table.FloorTableId))
+                        {
+                            conflictTable.Add(new
+                            {
+                                id = item.ReservationId,
+                                tableName = table.FloorTable.TableName,
+                                date = item.ReservationDate.ToString(),
+                                timeFrom = item.TimeForm.ToString(),
+                                timeto = item.TimeTo.ToString(),
+                                CurrentStatus = item.Status.StatusName,
+
+                            }
+
+                          );
+                        }
+
+                    }
+
+                }
+                else
+                {
+                    if (selectedTables.Contains(item.FloorTableId))
+                    {
+                        conflictTable.Add(new
+                          {
+                              id = item.ReservationId,
+                              tableName = item.FloorTable.TableName,
+                              date = item.ReservationDate.ToString(),
+                              timeFrom = item.TimeForm.ToString(),
+                              timeto = item.TimeTo.ToString(),
+                              CurrentStatus = item.Status.StatusName,
+
+                          });
+                    }
+
+                }
+
+            }
+
+            return Json(conflictTable, JsonRequestBehavior.AllowGet);
+        }
+
+
+
 
         public PartialViewResult GetDayofWeekList(string selectedDay, DateTime startDate, DateTime endDate, bool? isCheckAll)
         {
@@ -375,6 +481,14 @@ namespace AIS.Controllers
             cache.RemoveByPattern(string.Format(CacheKeys.FILTERED_RESERVATION_COMPANY_PATTREN, User.Identity.GetDatabaseName()));
             //cache.RemoveByPattern(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN);
             cache.RemoveByPattern(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_COMPANY_PATTREN, User.Identity.GetDatabaseName()));
+
+
+
+            //cache.RemoveByPattern(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN);
+            cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_SCREEN_PATTREN_TableAvailability, User.Identity.GetDatabaseName()));
+            cache.Remove(string.Format(CacheKeys.FLOOR_TABLES_ONLY, User.Identity.GetDatabaseName()));
+
+
         }
 
         private Reservation CheckReservationStatus(FloorTable table, DateTime startTime, DateTime endTime, out bool isResStart)

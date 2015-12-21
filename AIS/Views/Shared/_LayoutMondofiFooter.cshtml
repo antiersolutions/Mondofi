@@ -1,15 +1,28 @@
-﻿<div class="footer">
+﻿@functions{
+    private bool IsTabSelected(string tab)
+    {
+        var selectedTab = Response.Cookies["SelectedTab"].Value;
+        return tab == selectedTab;
+    }
+    
+  
+}
+ @{
+
+    var selectedTabSelect = Response.Cookies["SelectedTab"].Value;
+}
+<div class="footer">
     <nav class="navbar navbar-default mainNav">
 
 
         <div class="container noPadd">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="col-xs-12 col-sm-12 col-lg-3 noPadd copyright">
-                <p><img src="~/Content/MondofiThemeNew/images/footer-logo.png" /> <span>Copyright 2016 - Mondofi media Ltd.</span></p>
+                <p><img src="~/Content/MondofiThemeNew/images/footer-logo.png" /> <span>Copyright 2016 - Mondofi Media Ltd.</span></p>
                 
             </div>
 
-            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 noPadd ftr-responsive">
+            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9 noPadd ftr-responsive" style="display:table">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
@@ -23,16 +36,31 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse text-right" id="bs-example-navbar-collapse-1">
                     <ul class="site-navigation">
-                        <li><a href="/Mondofi/Index">Venue Management </a></li>
-                        <li><a href="/Mondofi/Index#onlineReser">Features</a></li>
-                        <li><a href="/Mondofi/Price">Pricing</a></li>
+                        @if (selectedTabSelect == "VenueManagement")
+                        {
+                            <li><a href="#Table_Management">Venue Management</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="/">Venue Management</a></li>
+                        }
+                        @if (selectedTabSelect == "VenueManagement")
+                        {
+                            <li><a href="#Table_Management">Features</a></li>
+                        }
+                        else
+                        {
+                            <li><a href="/?val=Table_Management">Features</a></li>
+                        }
+
+                        <li><a @Html.Raw(IsTabSelected("Price") ? "class='active'" : null) href="@Url.Action("Price", "Mondofi")">Pricing</a></li>
                     </ul>
                     <ul class="login-navigation">
                         <li><a class="btn-login" href="/Account/Login">Log in</a></li>
                         <li><a class="btn-free-demo" href="/Account/register">Free Demo</a></li>
-                        <li class="cont-info">
+                        <li class="cont-info pricing-hd">
                             <strong>Questions?</strong>
-                            <span>1-888-255-5555</span>
+                            <p><a href="mailto:accounts@mondofi.com">accounts@mondofi.com</a></p>
                         </li>
                     </ul>
 

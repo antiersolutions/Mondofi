@@ -25,6 +25,7 @@ namespace AIS.Controllers
     public class UserController : Controller
     {
         private UsersContext db = new UsersContext();
+        private SAASContext saasDb = new SAASContext();
         private ICacheManager cache = new MemoryCacheManager();
 
         public ApplicationUserManager UserManager
@@ -40,9 +41,19 @@ namespace AIS.Controllers
 
         public ActionResult Index(Int64 id = 0)
         {
-            //var model = db.Users.ToList();
-            ViewBag.Id = id;
-            return View();
+            var companyUserManger = ApplicationUserManager.Create(db.Database.Connection.Database);
+            var roles = companyUserManger.GetRoles(User.Identity.GetUserId<long>());
+
+            if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))
+            {
+                //var model = db.Users.ToList();
+                ViewBag.Id = id;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("FloorPlan", "FloorPlan");
+            }
         }
 
         public ActionResult RightSideBarPartial(List<UserProfile> model)
@@ -60,11 +71,17 @@ namespace AIS.Controllers
             {
                 var SuperUserName = string.Empty;
                 sTxt = sTxt.Trim();
-                var sList = db.Users.AsQueryable();
+                var sList = db.Users.Where(c => c.IsDelete == false).AsQueryable();
                 var onlineUserName = db.Users.Where(c => c.Roles.Any(ur => ur.RoleId == db.Roles.Where(r => r.Name == "Online").FirstOrDefault().Id)).Single().UserName;
                 try
                 {
-                    SuperUserName = db.Users.Where(c => c.Roles.Any(ur => ur.RoleId == db.Roles.Where(r => r.Name == "SuperAdmin").FirstOrDefault().Id)).Single().UserName;
+                    var companyUserManger = ApplicationUserManager.Create(db.Database.Connection.Database);
+                    var roles = companyUserManger.GetRoles(User.Identity.GetUserId<long>());
+
+                    if (!roles.Contains("SuperAdmin"))
+                    {
+                        SuperUserName = db.Users.Where(c => c.Roles.Any(ur => ur.RoleId == db.Roles.Where(r => r.Name == "SuperAdmin").FirstOrDefault().Id)).Single().UserName;
+                    }
                 }
                 catch (Exception)
                 {
@@ -113,7 +130,7 @@ namespace AIS.Controllers
         public ActionResult Details(int id = 0)
         {
             UserProfile userprofile = db.Users.Find(id);
-       
+
 
             if (userprofile == null)
             {
@@ -128,12 +145,22 @@ namespace AIS.Controllers
 
         public ActionResult Create()
         {
-            ViewBag.PhoneType = new SelectList(db.tabPhoneTypes.ToList(), "PhoneTypeId", "PhoneType");
-            ViewBag.Designation = new SelectList(db.tabDesignations.ToList(), "DesignationId", "Desgination");
+            var companyUserManger = ApplicationUserManager.Create(db.Database.Connection.Database);
+            var roles = companyUserManger.GetRoles(User.Identity.GetUserId<long>());
 
-            ViewBag.UserCode = GetUniqueCodeForUser();
+            if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))
+            {
+                ViewBag.PhoneType = new SelectList(db.tabPhoneTypes.ToList(), "PhoneTypeId", "PhoneType");
+                ViewBag.Designation = new SelectList(db.tabDesignations.ToList(), "DesignationId", "Desgination");
 
-            return View();
+                ViewBag.UserCode = GetUniqueCodeForUser();
+
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("FloorPlan", "FloorPlan");
+            }
         }
 
         //
@@ -201,7 +228,7 @@ namespace AIS.Controllers
         //}
 
         [HttpPost]
-        public async Task<ActionResult> Create(UserRegisterViewModel model)
+        public ActionResult Create(UserRegisterViewModel model)
         {
             try
             {
@@ -209,7 +236,7 @@ namespace AIS.Controllers
                 {
                     using (var companyUserManger = ApplicationUserManager.Create(User.Identity.GetDatabaseName()))
                     {
-                        var result = await companyUserManger.CreateAsync(new UserProfile
+                        var result = companyUserManger.Create(new UserProfile
                         {
                             Email = model.EmailAddress,
                             FirstName = model.FirstName,
@@ -220,15 +247,22 @@ namespace AIS.Controllers
                             Availability = model.Availability,
                             DesignationId = model.DesignationId,
                             RestaurantName = User.Identity.GetDatabaseName(),
+                            VenueName = User.Identity.GetVenueName(),
                             TermAndCondition = true,
                             EmailConfirmed = true,
-                            Approved = false
+                            EnablePIN = model.EnablePIN,
+                            Approved = false,
+                            IsDelete = false
 
 
 
                         }, model.Password);
 
-                        var getUseradd = await companyUserManger.FindByNameAsync(model.EmailAddress);
+
+                        var ii = result;
+
+                        var getUseradd = db.Users.Where(c => c.Email == model.EmailAddress && c.IsDelete == false).FirstOrDefault();
+
                         if (model.IsAdmin)
                         {
                             companyUserManger.AddToRole(getUseradd.Id, "Admin");
@@ -240,10 +274,12 @@ namespace AIS.Controllers
                         foreach (var phone in phnNumbers)
                         {
                             phone.UserId = getUseradd.Id;
+
                             db.tabUserPhones.Add(phone);
+
                         }
 
-                        var Mondoresult = await UserManager.CreateAsync(new UserProfile
+                        var Mondoresult = UserManager.Create(new UserProfile
                         {
                             Email = model.EmailAddress,
                             FirstName = model.FirstName,
@@ -254,15 +290,18 @@ namespace AIS.Controllers
                             Availability = model.Availability,
                             DesignationId = model.DesignationId,
                             RestaurantName = User.Identity.GetDatabaseName(),
+                            VenueName = User.Identity.GetVenueName(),
                             TermAndCondition = true,
+                            IsDelete = false
 
                         }, model.Password);
 
 
-                        var Useradd = await UserManager.FindByNameAsync(model.EmailAddress);
+                        var Useradd = saasDb.Users.Where(c => c.Email == model.EmailAddress && c.IsDelete == false).FirstOrDefault();
 
                         UserManager.AddToRole(Useradd.Id, "user");
 
+                        db.SaveChanges();
 
                         return RedirectToAction("Index", new { id = getUseradd.Id });
                     }
@@ -297,34 +336,44 @@ namespace AIS.Controllers
 
         public ActionResult Edit(int id = 0)
         {
-            UserProfile userprofile = db.Users.Find(id);
-            if (userprofile == null)
+            var companyUserManger1 = ApplicationUserManager.Create(db.Database.Connection.Database);
+            var roles = companyUserManger1.GetRoles(User.Identity.GetUserId<long>());
+
+            if (roles.Contains("SuperAdmin") || roles.Contains("Admin"))
             {
-                return HttpNotFound();
+                UserProfile userprofile = db.Users.Find(id);
+                if (userprofile == null)
+                {
+                    return HttpNotFound();
+                }
+
+                var model = new UserRegisterViewModel();
+                var companyUserManger = ApplicationUserManager.Create(User.Identity.GetDatabaseName());
+                model.UserId = userprofile.Id;
+                model.FirstName = userprofile.FirstName;
+                model.LastName = userprofile.LastName;
+                model.EmailAddress = userprofile.UserName;
+                model.InitialEmail = userprofile.UserName;
+                model.PhotoPath = userprofile.PhotoPath;
+                var userrole = companyUserManger.IsInRole(userprofile.Id, "Admin");
+                //var roles = companyUserManger.(userprofile.Id);
+
+                //model.IsAdmin = (roles.Length > 0 && roles[0] == "Admin") ? true : false;
+                model.IsAdmin = userrole;
+                model.Availability = userprofile.Availability ?? false;
+                model.DesignationId = userprofile.DesignationId;
+                model.UserCode = userprofile.UserCode;
+                model.EnablePIN = userprofile.EnablePIN;
+
+                ViewBag.PhoneType = db.tabPhoneTypes.ToList();
+                ViewBag.PhoneNumbers = db.tabUserPhones.Where(p => p.UserId == id).ToList();
+                ViewBag.Designation = new SelectList(db.tabDesignations.ToList(), "DesignationId", "Desgination", userprofile.DesignationId);
+                return View(model);
             }
-
-            var model = new UserRegisterViewModel();
-            var companyUserManger = ApplicationUserManager.Create(User.Identity.GetDatabaseName());
-            model.UserId = userprofile.Id;
-            model.FirstName = userprofile.FirstName;
-            model.LastName = userprofile.LastName;
-            model.EmailAddress = userprofile.UserName;
-            model.InitialEmail = userprofile.UserName;
-            model.PhotoPath = userprofile.PhotoPath;
-            var userrole = companyUserManger.IsInRoleAsync(userprofile.Id, "Admin");
-            //var roles = companyUserManger.(userprofile.Id);
-
-            //model.IsAdmin = (roles.Length > 0 && roles[0] == "Admin") ? true : false;
-            model.IsAdmin = userrole.Result;
-            model.Availability = userprofile.Availability ?? false;
-            model.DesignationId = userprofile.DesignationId;
-            model.UserCode = userprofile.UserCode;
-            model.EnablePIN = userprofile.EnablePIN;
-
-            ViewBag.PhoneType = db.tabPhoneTypes.ToList();
-            ViewBag.PhoneNumbers = db.tabUserPhones.Where(p => p.UserId == id).ToList();
-            ViewBag.Designation = new SelectList(db.tabDesignations.ToList(), "DesignationId", "Desgination", userprofile.DesignationId);
-            return View(model);
+            else
+            {
+                return RedirectToAction("FloorPlan", "FloorPlan");
+            }
         }
 
         //
@@ -422,16 +471,28 @@ namespace AIS.Controllers
         {
             var user = db.Users.Find(model.UserId);
             var companyUserManger = ApplicationUserManager.Create(User.Identity.GetDatabaseName());
+            var userP = companyUserManger.FindByEmail(model.InitialEmail);
             try
             {
+
                 model.PhoneNumbers = model.PhoneNumbers.Replace("/", "\\/");
                 List<UserPhones> phnNumbers = (new JavaScriptSerializer()).Deserialize<List<UserPhones>>(model.PhoneNumbers);
 
-                var token = companyUserManger.GeneratePasswordResetToken(user.Id);
+                var resetToken = companyUserManger.GeneratePasswordResetToken(userP.Id);
 
-                if (model.IsPasswordChanged && !this.ResetPasswordWithToken(token, model.Password))
+                //var password =  ResetPassword(user.Id, token, model.Password);
+                if (model.IsPasswordChanged)
                 {
-                    throw new Exception("Failed to update password.");
+
+                    string hashedPassword = Crypto.HashPassword(model.Password);
+
+                    user.PasswordHash = hashedPassword;
+                    companyUserManger.Update(userP);
+                    // var result = companyUserManger.ResetPassword(user.Id, resetToken, model.Password);
+                    // if (!result.Succeeded)
+                    // {
+                    //     throw new Exception("Failed to update password.");
+                    //}
                 }
 
                 var DBPhones = user.PhoneNumbers.ToList();
@@ -447,7 +508,8 @@ namespace AIS.Controllers
                     else
                     {
                         phone.UserId = user.Id;
-                        user.PhoneNumbers.Add(phone);
+                        //user.PhoneNumbers.Add(phone);
+                        db.tabUserPhones.Add(phone);
                     }
                 }
 
@@ -455,7 +517,8 @@ namespace AIS.Controllers
                 {
                     if (!phnNumbers.Any(p => p.PhoneNumber == dbphone.PhoneNumber))
                     {
-                        user.PhoneNumbers.Remove(dbphone);
+                        db.Entry(dbphone).State = EntityState.Deleted;
+                        //user.PhoneNumbers.Remove(dbphone);
                     }
                 }
 
@@ -521,53 +584,92 @@ namespace AIS.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<JsonResult> DeleteConfirmed(long id)
         {
-
+            var user = db.Users.Find(id);
             try
             {
-                using (var companyUserManger = ApplicationUserManager.Create(User.Identity.GetDatabaseName()))
-                {
-                    var user = companyUserManger.FindById(id);
-                    //var logins = user.Logins;
+                //using (var companyUserManger = ApplicationUserManager.Create(User.Identity.GetDatabaseName()))
+                //{
+                //var user = companyUserManger.FindById(id);
+                user.UserName = user.Email + "," + Guid.NewGuid();
+                user.IsDelete = true;
+                db.Entry(user).State = EntityState.Modified;
+                //companyUserManger.Update(user);
 
-                    //foreach (var login in logins.ToList())
-                    //{
-                    //    await companyUserManger.RemoveLoginAsync(login.UserId, new UserLoginInfo(login.LoginProvider, login.ProviderKey));
-                    //}
+                //var rolesForUser = await companyUserManger.GetRolesAsync(user.Id);
 
-                    var rolesForUser = await companyUserManger.GetRolesAsync(user.Id);
+                //if (rolesForUser.Count() > 0)
+                //{
+                //    foreach (var item in rolesForUser.ToList())
+                //    {
+                //        // item should be the name of the role
+                //        var result = await companyUserManger.RemoveFromRoleAsync(user.Id, item);
+                //    }
+                //}
+                //if (user.PhoneNumbers.Count > 0)
+                //{
+                //    //db.Database.ExecuteSqlCommand("DELETE FROM USERPHONES WHERE USERID = {0}", user.Id);
+                //    var phone = db.tabUserPhones.Where(c => c.UserId == user.Id).ToList();
+                //    foreach (var item in phone)
+                //    {
+                //        db.tabUserPhones.Remove(item);
+                //        db.SaveChanges();
+                //    }
 
-                    if (rolesForUser.Count() > 0)
-                    {
-                        foreach (var item in rolesForUser.ToList())
-                        {
-                            // item should be the name of the role
-                            var result = await companyUserManger.RemoveFromRoleAsync(user.Id, item);
-                        }
-                    }
-                    if (user.PhoneNumbers.Count > 0)
-                    {
-                        //db.Database.ExecuteSqlCommand("DELETE FROM USERPHONES WHERE USERID = {0}", user.Id);
-                        var phone = db.tabUserPhones.Where(c => c.UserId == user.Id).ToList();
-                        foreach (var item in phone)
-                        {
-                            db.tabUserPhones.Remove(item);
-                            db.SaveChanges();
-                        }
-
-                        //
-                    }
-                    var users = db.Users.Where(c => c.Id == id).FirstOrDefault();
-                    db.Users.Remove(users);
-                    db.SaveChanges();
+                //    //
+                //}
+                //var users = db.Users.Where(c => c.Id == id).FirstOrDefault();
+                //db.Users.Remove(users);
 
 
 
-                    //((SimpleMembershipProvider)Membership.Provider).DeleteAccount(userprofile.UserName);
-                    //Membership.Provider.DeleteUser(userprofile.UserName, true);
-                    //Membership.DeleteUser(userprofile.UserName, true);
+                ///////delete user form mondofi ////////
 
-                    return Json(true);
-                }
+
+
+                //foreach (var login in logins.ToList())
+                //{
+                //    UserManager.RemoveLogin(login.UserId, new UserLoginInfo(login.LoginProvider, login.ProviderKey));
+                //}
+
+                //var MondorolesForUser = UserManager.GetRoles(Mondouser.Id);
+
+                //if (MondorolesForUser.Count() > 0)
+                //{
+                //    foreach (var item in rolesForUser.ToList())
+                //    {
+                //        // item should be the name of the role
+                //        var result = UserManager.RemoveFromRole(Mondouser.Id, item);
+                //    }
+                //}
+
+                //UserManager.Delete(Mondouser);
+
+                //db.SaveChanges();
+
+                //((SimpleMembershipProvider)Membership.Provider).DeleteAccount(userprofile.UserName);
+                //Membership.Provider.DeleteUser(userprofile.UserName, true);
+                //Membership.DeleteUser(userprofile.UserName, true);
+
+
+                //}
+
+
+                var Mondouser = saasDb.Users.Where(c => c.UserName == user.Email && c.IsDelete == false).FirstOrDefault();
+                Mondouser.UserName = Mondouser.Email + "," + Guid.NewGuid();
+                Mondouser.IsDelete = true;
+                saasDb.Entry(Mondouser).State = EntityState.Modified;
+
+                db.SaveChanges();
+                saasDb.SaveChanges();
+                //UserManager.Update(Mondouser);
+                //var logins = user.Logins;
+                return Json(true);
+
+
+
+
+
+
             }
             catch (Exception)
             {
@@ -588,9 +690,18 @@ namespace AIS.Controllers
             }
             else
             {
-                var user = db.Users.Where(c => c.Email == EmailAddress).FirstOrDefault();
 
-                return Json(user == null);
+                SAASContext SAASdb = new SAASContext();
+                var user = db.Users.Where(c => c.UserName == EmailAddress && c.IsDelete == false).FirstOrDefault();
+                var mondouser = SAASdb.Users.Where(c => c.UserName == EmailAddress && c.IsDelete == false).FirstOrDefault();
+                if (mondouser == null && user == null)
+                {
+
+                    return Json(true, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(false, JsonRequestBehavior.AllowGet);
+
             }
         }
 
@@ -665,6 +776,28 @@ namespace AIS.Controllers
             }
 
         }
+
+
+        private bool ResetPasswordUser(long id, string token, string newPassword)
+        {
+
+            var dta = User.Identity.GetDatabaseName();
+
+            var companyUserManger = ApplicationUserManager.Create(dta);
+            var getuser = companyUserManger.FindById(id);
+            var result = companyUserManger.ResetPassword(id, token, newPassword);
+            if (result.Succeeded)
+            {
+
+            }
+            //string hashedPassword = Crypto.HashPassword(newPassword);
+
+            //getuser.PasswordHash = hashedPassword;
+            //companyUserManger.Update(getuser);
+
+            return true;
+        }
+
 
         protected override void Dispose(bool disposing)
         {

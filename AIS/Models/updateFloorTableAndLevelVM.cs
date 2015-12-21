@@ -11,6 +11,12 @@ namespace AIS.Models
         public bool isTemp { get; set; }
     }
 
+    public class SeatingPriorityTable
+    {
+        public Int64 id { get; set; }
+        public int priority { get; set; }
+    }
+
     public class updateFloorPlanLevelVM
     {
         public Int64 floorPlanId { get; set; }
